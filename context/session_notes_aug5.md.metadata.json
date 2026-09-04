@@ -1,0 +1,5 @@
+{
+  "summary": "Comprehensive session memory document covering:\n1. Aug 5 meeting update — professor clarified the exact scope: replace VAE with multimodal LLM for multi-sensor input + voice, edge deployment required\n2. Full codebase analysis of MTP_TESTING — existing pipeline (semantic seg camera → VAE → PPO → steer+throttle) with PIL edge deployment over TCP sockets\n3. 10 critical flaws identified in the existing work (semantic seg cheating, no braking, single sensor blind spots, weak reward function, no normalization, etc.)\n4. Architecture proposal: use only VLM vision encoder (not full LLM) for edge compatibility\n5. What to present to professor — structured critique + proposals\n6. Infrastructure decisions: Google Colab for CARLA, Mac for local dev, Azure still pending",
+  "updatedAt": "2026-08-07T16:56:01.620605Z",
+  "userFacing": true
+}

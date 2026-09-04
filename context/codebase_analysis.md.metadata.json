@@ -1,0 +1,5 @@
+{
+  "summary": "Deep technical analysis of the existing MTP_TESTING codebase. Covers:\n1. Complete architecture mapping of what exists (VAE + PPO + CARLA environment + edge deployment via socket PIL)\n2. File-by-file breakdown of every component\n3. The exact pipeline: Semantic Segmentation Camera → VAE Encoder (Conv2D → latent z∈ℝ95) → concat with nav_obs → PPO Actor-Critic (MLP 500→300→100→2) → steer+throttle\n4. Edge deployment architecture: CARLA sim sends frames over TCP socket → edge device runs VAE+Actor inference → sends actions back\n5. TFLite conversion for edge (FP16 + INT8 quantization)\n6. Critical gaps and what needs to be modified for the BTP project\n7. Specific code locations where changes need to happen",
+  "updatedAt": "2026-08-05T16:18:43.605971Z",
+  "userFacing": true
+}

@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<!-- saved from url=(0253)https://8ac2d63a-27e9-4cd6-b298-b84ffd623d72.frame.claudeusercontent.com/_f/1788169544-bb56/?__frame_t=YhCUt0F2vBcSCsspBjWTYTaH.660bcc46-e66b-46ff-90f3-18d1c74a44d1.3d890d74-81e2-41f2-b751-7acee65af854.1788173145&__frame_v=manifest.155e997702a4b8fc.json -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><!-- frame-runtime --><!--<base href="/_f/1788169544-bb56/">--><base href="."><script>window.__FRAME_PREAMBLE={"v":1,"capabilities":{"artifact":"artifact.D_F1mx8d.js","assets":"assets.8Gk803W0.js","comments":"comments.GLuHR3zP.js","db":"db.h-3sndFg.js","downloads":"downloads.C3GSvEDP.js","embed":"embed.CxGAyc-v.js","mcp":"mcp.Bvma3qD7.js","network":"network.B5UA9Su4.js","notifications":"notifications.ssU4jy7G.js","permissions":"permissions.BNySkLV5.js","room":"room.BMMoe2BY.js","sample":"sample.BW2Uysoh.js","self":"artifact.D_F1mx8d.js","user":"user.BpKav-Rf.js"},"transforms":"_transforms.DSB5x63f.js","comments":"_comments.BoakUwmM.js","translate":"_translate.5HCW4BJh.js"}</script><script>(function(){"use strict";var te=["light","dark","system"],re=/^[A-Za-z0-9_-]{1,64}$/,$=/^[a-zA-Z_:][a-zA-Z0-9_:.-]{0,127}$/,ne=new Set(["class","hidden","value","checked","style","title","alt","placeholder","lang","dir","role","tabindex","disabled","readonly","contenteditable","open","colspan","rowspan"]);function oe(e){const t=e.toLowerCase();return t.startsWith("data-")||t.startsWith("aria-")||ne.has(t)}var Be="http://www.w3.org/1999/xhtml",se="http://www.w3.org/2000/svg",ae=new Set(["script","style","iframe","noscript","noframes","noembed","xmp","plaintext","template","title","textarea","object","embed"]),ie=new Set(["script","style"]);function ce(e){const t=e.localName.toLowerCase();return e.namespaceURI==="http://www.w3.org/1999/xhtml"?!ae.has(t):e.namespaceURI===se?!ie.has(t):!1}function M(e,t){return e===t||(e===160||e===32)&&(t===160||t===32)}function le(e,t){const r=e.length,n=t.length;let s=0;for(;s<r&&s<n&&M(e.charCodeAt(s),t.charCodeAt(s));)s++;let o=0;for(;o<r-s&&o<n-s&&M(e.charCodeAt(r-1-o),t.charCodeAt(n-1-o));)o++;return{p:s,s:o}}function ue(e,t){const r=e.firstChild;if(e.childNodes.length!==1||r===null||r.nodeType!==Node.TEXT_NODE){e.textContent=t;return}const n=r.data,s=n.length,o=t.length,{p:i,s:c}=le(n,t);i===s&&c===0&&s===o||r.replaceData(i,s-i-c,t.slice(i,o-c));const h=r.data,p=e.ownerDocument.getSelection?.()??null,w=p!==null&&p.rangeCount>0&&(p.anchorNode===r||p.focusNode===r)?{anchor:p.anchorNode,anchorOffset:p.anchorOffset,focus:p.focusNode,focusOffset:p.focusOffset}:null;let m=-1,g=-1;for(let f=0;f<h.length&&f<t.length;f++){const v=h.charCodeAt(f),b=t.charCodeAt(f);v!==b&&M(v,b)&&(m<0&&(m=f),g=f)}const a=m>=0;if(a&&r.replaceData(m,g-m+1,t.slice(m,g+1)),a&&w!==null&&w.anchor!==null&&w.focus!==null)try{p.setBaseAndExtent(w.anchor,w.anchorOffset,w.focus,w.focusOffset)}catch{}}var fe=new Set(["html","head","body","frameset"]);function de(e){return e.namespaceURI==="http://www.w3.org/1999/xhtml"&&fe.has(e.localName)}function pe(e){if(e===null||typeof e!="object")return!1;const t=e;if(typeof t.target!="string"||!re.test(t.target)||t.text!==void 0&&typeof t.text!="string")return!1;if(t.attrsSet!==void 0){if(t.attrsSet===null||typeof t.attrsSet!="object")return!1;for(const[r,n]of Object.entries(t.attrsSet))if(!$.test(r)||typeof n!="string")return!1}if(t.attrsRemoved!==void 0){if(!Array.isArray(t.attrsRemoved))return!1;for(const r of t.attrsRemoved)if(typeof r!="string"||!$.test(r))return!1}return!0}function me(e,t){if(e===null||typeof e!="object")return!1;const{seq:r,elements:n}=e;if(typeof r!="number"||!Number.isSafeInteger(r)||!Array.isArray(n)||n.length===0||n.length>64)return!1;for(let s=0;s<n.length;s++)if(!t(n[s]))return!1;return!0}function he(e){return e===null||typeof e!="object"?!1:me(e.__frame_patch,pe)}function _e(e){if(e===null||typeof e!="object")return!1;const t=e.__frame_init;return t!==null&&typeof t=="object"}function ve(e){return e!==null&&typeof e=="object"&&e.__frame_size_poke===!0}function ye(e){if(e===null||typeof e!="object")return!1;const t=e.__frame_theme;if(t===null||typeof t!="object")return!1;const r=t.theme;return typeof r=="string"&&te.includes(r)}var A=/^[\w.-]+\.js$/;function we(e,t,r){return r?"inert":typeof t=="string"&&A.test(t)?e?[t]:"inert":e?"inert":"framed"}function ge(){return{post(e,t){parent.postMessage(e,t)},on(e){const t=r=>{r.source===parent&&e(r.data,r.origin,r.isTrusted)};return addEventListener("message",t),()=>removeEventListener("message",t)}}}function be(){return{post:()=>{},on:()=>()=>{}}}var j="__frame_scroll",Ee=150,Ae=310,Se=160,Te=3e4;function ke(){let e=0,t=!1,r=!1,n=!1,s=0,o=null;const i=l=>{try{sessionStorage.setItem(j,JSON.stringify({y:l}))}catch{}},c=()=>{if(clearTimeout(e),o===null)return;const l=o;o=null,i(l)},h=()=>{if(t){t=!1;return}r=!0,o=scrollY,clearTimeout(e),e=setTimeout(c,Ee)};try{addEventListener("scroll",h,{passive:!0}),addEventListener("pagehide",c)}catch{}const p=()=>{let l;try{l=sessionStorage.getItem(j)}catch{return null}if(l===null)return null;let _;try{_=JSON.parse(l)}catch{_=null}const d=_?.y;if(!(typeof d=="number"&&Number.isFinite(d)&&d>=0)){try{sessionStorage.removeItem(j)}catch{}return null}return d};let w=!1;const m=l=>{try{const _=scrollY;scrollTo({top:l,left:0,behavior:"instant"}),s=l,n=!0,clearTimeout(e),o=null,i(l);const d=scrollY;d!==_&&(t=!0),d!==l&&!w&&(w=!0,addEventListener("load",()=>{try{if(scrollY===d){const T=p();m(T!==null?T:s)}}catch{}},{once:!0}))}catch{}},g=()=>{try{return!!location.hash}catch{return!0}};let a=!1;const f=()=>{try{if(a||innerWidth>Ae||innerHeight>Se)return;a=!0;const l=Date.now(),_=()=>{try{removeEventListener("resize",_)}catch{}if(Date.now()-l>Te||r||g())return;const d=p();m(d!==null?d:s)};addEventListener("resize",_)}catch{}};let v=!1,b=!1;return{restore(){if(v||(v=!0,g()))return;const l=p();l!==null&&(m(l),f())},promoted(){if(b||(b=!0,g()))return;const l=p();l!==null?(m(l),f()):n&&m(s)}}}function Re(e,t,r,n){let s=null;try{s=window.trustedTypes?.createPolicy("frame-runtime",{createScriptURL:h=>h})??null}catch{}const o=window.Worker,i=o?.prototype,c=Object.freeze({Worker:o,workerOn:i?.addEventListener,workerPost:i?.postMessage,workerTerminate:i?.terminate,fetch:window.fetch.bind(window),preventDefault:Event.prototype.preventDefault,policy:s,origins:t});r(e).then(h=>h?.bootTopLevel?h.bootTopLevel(c,n):n.settle()).catch(()=>n.settle())}var De="modulepreload",Ie=function(e){return"/"+e},Ue={},Le=function(t,r,n){let s=Promise.resolve();function o(i){const c=new Event("vite:preloadError",{cancelable:!0});if(c.payload=i,window.dispatchEvent(c),!c.defaultPrevented)throw i}return s.then(i=>{for(const c of i||[])c.status==="rejected"&&o(c.reason);return t().catch(o)})},Oe=window===top,q=Object.getOwnPropertyDescriptor(window,"claude"),k=we(Oe,window.__FRAME_PREAMBLE?.topLevel,q?.writable===!1),N=typeof k=="object"&&k[0],y=N?be():ge();(function(){const e=Object.defineProperty,t=globalThis,r=["RTCPeerConnection","webkitRTCPeerConnection","RTCDataChannel","RTCIceCandidate","RTCSessionDescription","RTCRtpSender","RTCRtpReceiver"];let n=0;for(let s=0;s<r.length;s++){const o=r[s];try{e(t,o,{value:void 0,writable:!1,configurable:!1})}catch{try{delete t[o]}catch{}try{e(t,o,{value:void 0,writable:!1,configurable:!0})}catch{}}typeof t[o]=="function"&&n++}if(n&&k==="framed")try{y.post({__frame_rtc_lockdown_failed:n},"*")}catch{}})();var Pe=1e4,Y=Object.freeze([...window.__FRAME_PREAMBLE?.origins??["https://claude.ai","https://preview.claude.ai"]]);function X(e){for(const t of Y)if(t.endsWith(":*"))try{const r=new URL(e);if(`${r.protocol}//${r.hostname}:*`===t)return!0}catch{}else if(e===t)return!0;return!1}var R=Object.freeze({...window.__FRAME_PREAMBLE?.capabilities}),B=window.__FRAME_PREAMBLE?.transforms,D=window.__FRAME_PREAMBLE?.comments,I=window.__FRAME_PREAMBLE?.translate;function S(e){return Le(()=>import("/_runtime/"+e),void 0)}function G(e,t){return{contract:e.contract,changes:new Set(e.changes??[]),flags:new Set(e.flags??[]),capabilities:e.capabilities??{},capBudgets:e.capBudgets??{},transforms:new Map,shellOrigin:t,mount:x,hooks:O,pipe:()=>({wrap:(r,n)=>(...s)=>{try{return n(...s)}catch(o){return Promise.reject(o)}}})}}var L=null,E=null;function V(e,t,r){try{Object.defineProperty(e,t,{value:r,writable:!1,configurable:!1,enumerable:!0})}catch{try{Object.defineProperty(e,t,{value:r,writable:!1,configurable:!0,enumerable:!0})}catch{}}}var U=!1,O={editBefore:null,edit:null};function Ce(e,t,r=!1){const n=[];let s;if(r)try{O.editBefore?.(e)}catch{}for(const o of e.elements){const i=document.querySelector(`[data-id="${o.target}"]`);if(!i){s=o.target;break}if([...Object.keys(o.attrsSet??{}),...o.attrsRemoved??[]].some(c=>!oe(c))){s=o.target;break}if(o.text!==void 0&&(!ce(i)||de(i))){s=o.target;break}for(const[c,h]of Object.entries(o.attrsSet??{}))if(!J(i,c)){try{i.setAttribute(c,h)}catch{}Z(i,c,h)}for(const c of o.attrsRemoved??[])J(i,c)||(i.removeAttribute(c),Z(i,c,null));typeof o.text=="string"&&ue(i,o.text),n.push(o.target)}if(r)try{O.edit?.(e.seq,n,s)}catch{}if(s!==void 0){y.post({__frame_patch_miss:{seq:e.seq}},t);return}try{document.dispatchEvent(new CustomEvent("claude:edit",{detail:{seq:e.seq,targets:n}}))}catch{}}function Z(e,t,r){if(!(e instanceof HTMLInputElement))return;const n=t.toLowerCase();n==="checked"?e.checked=r!==null:n==="value"&&e.type!=="file"&&(e.value=r??"")}function J(e,t){const r=t.toLowerCase(),n=e;return r==="data-id"||(r==="value"||r==="checked")&&(n.__artifactSecret===!0||/^(password|hidden|file)$/.test(n.type??"")||/(^|\s)(cc-|one-time-code|current-password|new-password)/i.test(`${e.getAttribute("autocomplete")??""} ${n.autocomplete??""}`))}function Q(e){const t=document.documentElement;e==="light"||e==="dark"?(t.dataset.theme=e,t.style.colorScheme=e,U=!0):U&&(delete t.dataset.theme,t.style.colorScheme="",U=!1)}var P=new Map;function Me(){let e;const t={u:new Promise(r=>{e=r}),r:r=>{t.done=!0,e(r)},done:!1,nulled:!1};return t}function F(){for(const e of P.values())e.done||(e.nulled=!0,e.r(null))}var je=Object.freeze(Object.assign(Object.create(null),{call:Function.prototype.call,apply:Function.prototype.apply,bind:Function.prototype.bind})),x=(e,t)=>{const r=P.get(e);if(!r||r.done){r?.nulled&&E&&y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:e}},E);return}const n=typeof t=="function"?Object.setPrototypeOf(t,je):Object.assign(Object.create(null),t);typeof n.then=="function"&&delete n.then,r.r(Object.freeze(n))};function ee(){const e=q?.value??{};V(window,"claude",e);for(const t of Object.keys(R)){if(e[t]!==void 0){V(e,t,e[t]);continue}P.set(t,Me())}if(e.use===void 0){const t=r=>{if(typeof r!="string"||!Object.hasOwn(R,r))return Promise.resolve(null);const n=P.get(r);return n?n.u:Promise.resolve(e[r]??null)};try{Object.defineProperty(e,"use",{value:t,writable:!0,configurable:!0,enumerable:!1})}catch{}}}if(k==="framed"){const e=B&&A.test(B)?S(B).catch(()=>{}):Promise.resolve(void 0),t=a=>{if(a.type==="auxclick"&&a.button!==1)return;const f=a.target,v=f&&f.closest?f.closest("a[href],area[href]"):null;if(!v)return;const b=v.getAttribute("href");if(!b)return;let l;try{l=new URL(b,document.baseURI)}catch{return}if((l.protocol==="http:"||l.protocol==="https:")&&l.origin!==location.origin){a.preventDefault();const _=(v.getAttribute("target")??"").toLowerCase(),d=a.type==="auxclick"||a.metaKey||a.ctrlKey||a.shiftKey||a.altKey||!["","_self","_top","_parent"].includes(_);y.post({__frame_nav:!0,url:l.href,newTab:d},"*")}};addEventListener("click",t,!0),addEventListener("auxclick",t,!0);const r={},n=a=>{a.isTrusted&&(r.pointer=!0)},s=a=>{a.isTrusted&&(r.click=!0)};addEventListener("pointermove",n,{capture:!0,passive:!0}),addEventListener("click",s,{capture:!0,passive:!0}),e.then(a=>{a?.wireNav&&(a.wireNav(),removeEventListener("click",t,!0),removeEventListener("auxclick",t,!0),removeEventListener("pointermove",n,!0),removeEventListener("click",s,!0),a.wireEngagement?.(r))});let o=null;try{o=ke()}catch{}ee();let i=null,c=null,h=0;const p=y.on((a,f)=>{X(f)&&_e(a)&&(i=a.__frame_init,E=f,p(),clearTimeout(h),c?.())});y.post({__frame_connect:!0},"*");const w=new Promise(a=>{c=a,h=setTimeout(()=>{p(),a()},Pe)}),m=document.readyState==="loading"?new Promise(a=>document.addEventListener("DOMContentLoaded",()=>a(),{once:!0})):Promise.resolve();m.then(()=>{try{o?.restore()}catch{}});const g={cb:null};y.on((a,f)=>{if(X(f)&&ve(a)){try{o?.promoted()}catch{}g.cb?.()}}),w.then(async()=>{if(!i||!E){F();return}Q(i.theme);const a=E;let f=!1,v=!1;y.on((u,z,C)=>{if(z!==a)return;ye(u)&&Q(u.__frame_theme.theme),he(u)&&Ce(u.__frame_patch,a,C);const H=u?.__fc_mode;H&&typeof H=="object"&&!f&&D&&A.test(D)&&(f=!0,S(D).then(K=>K.install?.(a,H.on===!0)).catch(()=>{}));const W=u?.__ft_cmd;W&&typeof W=="object"&&!v&&I&&A.test(I)&&(v=!0,S(I).then(K=>K.install?.(a,W)).catch(()=>{}))});const b=Object.keys(i.capabilities??{}).filter(u=>Object.hasOwn(R,u)).map(u=>[u,R[u]]).filter(u=>typeof u[1]=="string"&&A.test(u[1])),l=await Promise.allSettled(b.map(([,u])=>S(u))),_=await e,d=E;if(_?.buildBoot||y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:"_transforms"}},d),_?.buildBoot)try{L=_.buildBoot(i,_.TRANSFORMS??{},{shellOrigin:d,mount:x,hooks:O},u=>y.post({__frame_cap_telemetry:u},d))}catch{y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:"_transforms"}},d),L=G(i,d)}else L=G(i,d);const T=u=>y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:u}},d),Ne=L;l.forEach((u,z)=>{const C=b[z][0];if(u.status!=="fulfilled"){T(C);return}try{u.value?.install?.(Ne)}catch{T(C)}}),F(),await m,y.post({__frame_ready:!0},E),e.then(u=>u?.installSizeReporter?.(d,g))})}else N&&(ee(),Re(N,Y,S,{settle:F,mount:x}))})();</script><!-- /frame-runtime --><meta name="viewport" content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body data-new-gr-c-s-check-loaded="14.1324.0" data-gr-ext-installed="">
+<title>Ladder Precedent Audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link rel="stylesheet" href="./css2">
+
+<style>
+:root {
+  --ground:#EDEFF2; --surface:#FDFDFE; --surface-2:#E4E8ED;
+  --ink:#14181D; --ink-2:#4C5560; --ink-3:#79838F;
+  --rule:#CDD3DA; --rule-soft:#DDE2E8;
+  --accent:#1F4E79; --accent-soft:#DCE7F1;
+  --critical:#A22C1E; --critical-bg:#F3DEDA;
+  --caution:#7E5A0E; --caution-bg:#F2E7CE;
+  --sound:#2C6149; --sound-bg:#DCEBE3;
+  --novel:#5A3A7E; --novel-bg:#E7DFF0;
+  --shadow:0 1px 2px rgba(20,24,29,.06), 0 6px 20px -12px rgba(20,24,29,.22);
+  --serif:"Source Serif 4",Charter,Georgia,serif;
+  --sans:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+  --measure:68ch; --on-accent:#FDFDFE;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground:#10141A; --surface:#171C23; --surface-2:#1F252E;
+    --ink:#E3E7EC; --ink-2:#A7B1BD; --ink-3:#7A8592;
+    --rule:#2B333D; --rule-soft:#232A33;
+    --accent:#86B4E2; --accent-soft:#1B2A3A;
+    --critical:#E4897C; --critical-bg:#33201D;
+    --caution:#D9AE55; --caution-bg:#302719;
+    --sound:#74C2A0; --sound-bg:#16291F;
+    --novel:#BCA2DC; --novel-bg:#241C31;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -14px rgba(0,0,0,.7);
+    --on-accent:#10141A;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground:#10141A; --surface:#171C23; --surface-2:#1F252E;
+  --ink:#E3E7EC; --ink-2:#A7B1BD; --ink-3:#7A8592;
+  --rule:#2B333D; --rule-soft:#232A33;
+  --accent:#86B4E2; --accent-soft:#1B2A3A;
+  --critical:#E4897C; --critical-bg:#33201D;
+  --caution:#D9AE55; --caution-bg:#302719;
+  --sound:#74C2A0; --sound-bg:#16291F;
+  --novel:#BCA2DC; --novel-bg:#241C31;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -14px rgba(0,0,0,.7);
+  --on-accent:#10141A;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box;}
+body{background:var(--ground);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;}
+.page{max-width:1200px;margin:0 auto;padding:0 28px 96px;}
+
+.masthead{border-bottom:2px solid var(--ink);padding:56px 0 22px;margin-bottom:34px;}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin:0 0 18px;}
+h1{font-family:var(--sans);font-weight:700;font-size:clamp(34px,5.2vw,54px);line-height:1.04;letter-spacing:-.022em;margin:0 0 16px;text-wrap:balance;}
+.standfirst{font-size:19.5px;line-height:1.55;color:var(--ink-2);max-width:62ch;margin:0 0 26px;}
+.meta-strip{display:flex;flex-wrap:wrap;gap:8px 26px;font-family:var(--mono);font-size:11.5px;color:var(--ink-3);letter-spacing:.02em;}
+.meta-strip b{color:var(--ink-2);font-weight:500;}
+
+section{margin-bottom:64px;scroll-margin-top:20px;}
+h2{font-family:var(--sans);font-weight:600;font-size:13px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin:0 0 22px;padding-bottom:10px;border-bottom:1px solid var(--rule);}
+h3{font-family:var(--sans);font-weight:600;font-size:23px;line-height:1.25;letter-spacing:-.012em;margin:38px 0 14px;text-wrap:balance;}
+h4{font-family:var(--sans);font-weight:600;font-size:16px;letter-spacing:-.005em;margin:26px 0 10px;}
+p,ul,ol{max-width:var(--measure);}
+p{margin:0 0 16px;}
+ul,ol{margin:0 0 16px;padding-left:22px;}
+li{margin-bottom:8px;}
+li::marker{color:var(--ink-3);}
+strong{font-weight:600;}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:2px;}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px;}
+code{font-family:var(--mono);font-size:.855em;background:var(--surface-2);padding:.1em .38em;border-radius:2px;word-break:break-word;}
+
+.pill{display:inline-block;font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:2px;white-space:nowrap;vertical-align:middle;}
+.v-direct{background:var(--sound-bg);color:var(--sound);}
+.v-partial{background:var(--caution-bg);color:var(--caution);}
+.v-novel{background:var(--novel-bg);color:var(--novel);}
+.v-drop{background:var(--critical-bg);color:var(--critical);}
+.v-check{background:var(--surface-2);color:var(--ink-3);}
+
+.tw{overflow-x:auto;margin:22px 0 26px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);}
+table{border-collapse:collapse;width:100%;font-size:14px;}
+.wide table{min-width:1080px;}
+table{min-width:640px;}
+th{font-family:var(--sans);font-weight:600;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:11px 13px;border-bottom:1px solid var(--rule);background:var(--surface-2);vertical-align:bottom;}
+td{padding:12px 13px;border-bottom:1px solid var(--rule-soft);vertical-align:top;line-height:1.46;}
+tr:last-child td{border-bottom:0;}
+td.num,th.num{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12.5px;}
+td.dec{font-family:var(--sans);font-size:13.5px;font-weight:500;}
+td.paper{font-family:var(--sans);font-size:13px;font-weight:500;white-space:nowrap;}
+td.paper span{font-family:var(--mono);font-size:11px;font-weight:400;color:var(--ink-3);display:block;}
+.grp td{background:var(--surface-2);font-family:var(--sans);font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);padding:9px 13px;}
+
+.callout{background:var(--accent-soft);border:1px solid var(--rule-soft);border-radius:3px;padding:18px 22px;margin:24px 0;max-width:none;}
+.callout.warn{background:var(--caution-bg);}
+.callout.stop{background:var(--critical-bg);}
+.callout.good{background:var(--sound-bg);}
+.callout p{max-width:78ch;margin-bottom:10px;}
+.callout p:last-child,.callout ul:last-child{margin-bottom:0;}
+.callout ul{max-width:78ch;}
+.callout .label{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:8px;color:var(--accent);}
+.callout.warn .label{color:var(--caution);}
+.callout.stop .label{color:var(--critical);}
+.callout.good .label{color:var(--sound);}
+
+.rung{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:3px;padding:20px 24px;margin-bottom:14px;max-width:none;box-shadow:var(--shadow);}
+.rung-head{font-family:var(--sans);font-weight:600;font-size:18px;letter-spacing:-.008em;margin-bottom:12px;}
+.rung-head .rid{font-family:var(--mono);color:var(--accent);margin-right:10px;}
+.rung dl{display:grid;grid-template-columns:1fr;gap:9px 20px;margin:0;}
+@media(min-width:880px){.rung dl{grid-template-columns:auto 1fr;}}
+.rung dt{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding-top:3px;white-space:nowrap;}
+.rung dd{margin:0;font-size:15px;color:var(--ink-2);line-height:1.5;}
+.rung dt.hz{color:var(--critical);}
+
+.chal{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:20px 24px;margin-bottom:14px;max-width:none;}
+.chal-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:baseline;margin-bottom:10px;}
+.chal-id{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);}
+.chal-q{font-family:var(--sans);font-weight:600;font-size:17px;letter-spacing:-.008em;flex:1 1 240px;text-wrap:balance;}
+.chal p{max-width:78ch;margin-bottom:12px;}
+.chal p:last-child{margin-bottom:0;}
+.ans{font-family:var(--sans);font-weight:600;font-size:15px;color:var(--ink);display:block;margin-bottom:10px;}
+
+.spec{font-family:var(--mono);font-size:12.5px;line-height:1.7;color:var(--ink-2);background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:16px 18px;margin:18px 0 24px;overflow-x:auto;white-space:pre;max-width:none;}
+
+.steps{counter-reset:st;list-style:none;padding:0;max-width:none;}
+.steps>li{counter-increment:st;position:relative;padding:0 0 20px 46px;margin:0;max-width:80ch;}
+.steps>li::before{content:counter(st);position:absolute;left:0;top:1px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;background:var(--accent);color:var(--on-accent);border-radius:50%;}
+.steps h4{margin:0 0 5px;}
+.steps p{margin:0 0 8px;max-width:none;}
+
+.foot{border-top:1px solid var(--rule);margin-top:20px;padding-top:24px;font-size:14px;color:var(--ink-3);}
+.foot p{max-width:78ch;}
+
+@media(max-width:640px){body{font-size:16px;}.page{padding:0 18px 64px;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+
+<div class="page">
+
+<header class="masthead">
+  <p class="eyebrow">Literature validation gate · Phase 2 · 31 Aug 2026</p>
+  <h1>Ladder Precedent Audit</h1>
+  <p class="standfirst">Every architectural and training decision in the Perception Ladder Spec, checked against the methodology sections of the primary papers — not their abstracts — and marked Direct, Partial, or Novel.</p>
+  <div class="meta-strip">
+    <span><b>Verified in session</b> 9 papers, full text extracted</span>
+    <span><b>Marked for checking</b> 8 claims</span>
+    <span><b>Nothing implemented</b></span>
+  </div>
+</header>
+
+<div class="callout stop">
+  <span class="label">Headline — read this before the tables</span>
+  <p>The literature does not reject this direction, but it contradicts the specification on <strong>two points that matter more than everything else combined</strong>.</p>
+  <p><strong>1 · Every strong CARLA RL result runs PPO on privileged state and trains the encoder end-to-end.</strong> Roach (ICCV 2021) trains PPO on a rendered privileged BEV, then <em>distils to a camera student by imitation</em>. CaRL (CoRL 2025) does the same at 300 M samples on 8×A100 and explicitly states the encoder "is trained with PPO". Nobody in the CARLA literature runs PPO downstream of a <em>frozen learned sensor encoder</em> as the primary driving policy. That paradigm exists — but in robotic manipulation and navigation, not driving.</p>
+  <p><strong>2 · The sample budget is off by more than two orders of magnitude.</strong> The spec proposes 1.5 M steps. Roach needs 10 M for a privileged-BEV policy. CaRL needs 300 M for 64 DS. Even granting that a 2-d residual around a competent nominal trajectory is a far easier RL problem, 1.5 M is not a defensible number and would very likely produce a flat ladder that says nothing about perception.</p>
+</div>
+
+<section id="method">
+<h2>0 · Verification method and its limits</h2>
+
+<p>Nine papers were downloaded as PDFs and converted to text; every claim marked <span class="pill v-direct">verified</span> below was read from the methodology or experiment section, not from an abstract or a secondary description. Several conclusions changed as a result — in particular, TransFuser turned out <em>not</em> to support two things the specification leaned on.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th style="width:26%">Source</th><th class="num" style="width:15%">ID</th><th>Verification status</th></tr></thead>
+<tbody>
+<tr><td class="paper">TransFuser<span>Chitta et al., PAMI 2023</span></td><td class="num">2205.15997</td><td><span class="pill v-direct">verified</span> full text — sensor config, backbones, fusion, GRU decoder, aux tasks, ablations</td></tr>
+<tr><td class="paper">Roach<span>Zhang et al., ICCV 2021</span></td><td class="num">2108.08265</td><td><span class="pill v-direct">verified</span> full text — BEV input, PPO+Beta+exploration loss, distillation targets, sample count</td></tr>
+<tr><td class="paper">CaRL<span>Jaeger et al., CoRL 2025</span></td><td class="num">2504.17838</td><td><span class="pill v-direct">verified</span> full HTML — input channels, reward, architecture, 300 M samples, batch sizes, hardware</td></tr>
+<tr><td class="paper">LMDrive<span>Shao et al., CVPR 2024</span></td><td class="num">2312.07488</td><td><span class="pill v-direct">verified</span> full text — notice instructions, LangAuto tracks, Q-Former, frozen encoder, ablation numbers</td></tr>
+<tr><td class="paper">Learning by Cheating<span>Chen et al., CoRL 2019</span></td><td class="num">1912.12294</td><td><span class="pill v-direct">verified</span> full text — two-stage distillation, DAgger-like on-policy supervision, waypoint output</td></tr>
+<tr><td class="paper">ChauffeurNet<span>Bansal et al., RSS 2019</span></td><td class="num">1812.03079</td><td><span class="pill v-direct">verified</span> full text — trajectory perturbation and recovery-fitting</td></tr>
+<tr><td class="paper">InterFuser<span>Shao et al., CoRL 2022</span></td><td class="num">2207.14024</td><td><span class="pill v-direct">verified</span> full text — multi-view + LiDAR, transformer decoder queries, safety mind map</td></tr>
+<tr><td class="paper">CarLLaVA<span>Renz et al., CARLA Challenge 2024</span></td><td class="num">2406.10165</td><td><span class="pill v-direct">verified</span> full text — camera-only, LLaVA-NeXT encoder, semi-disentangled path+waypoint output</td></tr>
+<tr><td class="paper">PVR for Control<span>Parisi et al., ICML 2022</span></td><td class="num">2203.03580</td><td><span class="pill v-direct">verified</span> full text — frozen pre-trained encoder detached from policy</td></tr>
+<tr><td class="paper">DriveVLM · EMMA</td><td class="num">2402.12289 · 2410.23262</td><td><span class="pill v-direct">verified</span> in the previous audit — dual-pathway structure, text-as-interface</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout warn">
+  <span class="label">What I could not verify this session</span>
+  <p>The web-search quota was exhausted partway through, so the following are <strong>from background knowledge and must be checked before they appear in any write-up</strong>. I would rather flag them than give you a citation I have not opened: residual reinforcement learning (Silver et al. 2018; Johannink et al. 2019); CIRL (Liang et al., ECCV 2018) for IL-initialised RL in CARLA; FitNets-style intermediate-feature distillation; R3M / MVP / VC-1 as further frozen-representation evidence; Hansen et al. on learning-from-scratch baselines being competitive with pre-trained representations — <em>this one matters, because it is the counter-evidence to Parisi</em>; BEVFusion for unified-BEV multimodal fusion; INT8/TensorRT deployment results specific to driving models; and DriveGPT4 / AutoVLA / OpenVLA methodology. Every one is marked <span class="pill v-check">needs check</span> where it appears.</p>
+</div>
+</section>
+
+<section id="evidence">
+<h2>1 · Decision-by-decision evidence table</h2>
+
+<div class="tw wide">
+<table>
+<thead><tr>
+  <th style="width:13%">Our decision</th>
+  <th style="width:11%">Paper</th>
+  <th style="width:26%">Exact mechanism in the paper</th>
+  <th style="width:22%">Does it match ours?</th>
+  <th style="width:8%">Verdict</th>
+  <th>Legitimately cite it for</th>
+</tr></thead>
+<tbody>
+
+<tr class="grp"><td colspan="6">1 · Multi-camera RGB driving</td></tr>
+<tr>
+  <td class="dec">4 cameras, per-view tokens + learned view embeddings</td>
+  <td class="paper">InterFuser<span>2207.14024</span></td>
+  <td>"LiDAR input and multi-view images (left, front, right, and focus)" fed to a transformer encoder-decoder. Views tokenised separately.</td>
+  <td><strong>Yes</strong> — same view layout, same per-view tokenisation.</td>
+  <td><span class="pill v-direct">Direct</span></td>
+  <td>Multi-view camera tokenisation for CARLA closed-loop driving.</td>
+</tr>
+<tr>
+  <td class="dec">4 cameras, per-view tokens</td>
+  <td class="paper">LMDrive<span>2312.07488</span></td>
+  <td>Multi-view multi-modal input; "tokens from different views" are concatenated for global context before the BEV decoder.</td>
+  <td><strong>Yes</strong> for tokenisation; LMDrive adds a focus view and feeds an LLM.</td>
+  <td><span class="pill v-direct">Direct</span></td>
+  <td>Concatenating per-view tokens before a shared fusion stage.</td>
+</tr>
+<tr>
+  <td class="dec">4 cameras, per-view tokens</td>
+  <td class="paper">TransFuser<span>2205.15997</span></td>
+  <td><strong>Not multi-view fusion.</strong> Three cameras (fwd, 60° L, 60° R) at 120° FOV each are cropped and "composed into a single image input to the encoder, which has a resolution of 704 × 160 pixels and 132° FOV".</td>
+  <td><strong>No.</strong> One stitched wide image, one backbone. There are no per-view tokens.</td>
+  <td><span class="pill v-drop">Mismatch</span></td>
+  <td>Only: that a wide horizontal FOV matters. Their ablation finds "Camera FOV has the largest impact on the DS". <em>Do not cite TransFuser for multi-view fusion.</em></td>
+</tr>
+
+<tr class="grp"><td colspan="6">2 · RGB + LiDAR fusion</td></tr>
+<tr>
+  <td class="dec">RGB + BEV LiDAR fused by attention</td>
+  <td class="paper">TransFuser<span>2205.15997</span></td>
+  <td>Modality-specific ResNet backbones. Transformer modules fuse image and LiDAR feature maps <strong>at multiple resolutions</strong>, with positional <em>and</em> velocity embeddings. LiDAR is a 2-bin height histogram over 32 m × 32 m at 0.125 m/px → 256×256.</td>
+  <td><strong>Partly.</strong> We also use separate branches, but fuse <em>once</em> in a single late query stage, not at multiple resolutions.</td>
+  <td><span class="pill v-partial">Partial</span></td>
+  <td>Separate per-modality backbones; attention-based RGB↔LiDAR fusion; the 2-bin height-histogram BEV. <strong>Not</strong> single-stage fusion.</td>
+</tr>
+<tr>
+  <td class="dec">Single shared token pool with modality embeddings</td>
+  <td class="paper">TransFuser · InterFuser</td>
+  <td>Both keep modality-specific encoders and fuse the resulting token sets. Neither runs a shared tokeniser across perspective RGB and top-down BEV.</td>
+  <td><strong>Our framing was loose.</strong> Our spec already uses separate tokenisers, so this is fine — but the legacy docs' "shared tokeniser across RGB and BEV" claim is contradicted outright.</td>
+  <td><span class="pill v-direct">Direct</span></td>
+  <td>Separate tokenisers per modality, joined in one attention stage.</td>
+</tr>
+<tr>
+  <td class="dec">Goal <em>not</em> encoded in the LiDAR BEV</td>
+  <td class="paper">TransFuser<span>2205.15997</span></td>
+  <td>"We also rasterize the 2D goal location in the same 256 × 256 BEV space … and concatenate this channel to the 2 histogram bins" — a 3-channel pseudo-image.</td>
+  <td><strong>Deliberately different.</strong> Their LiDAR branch carries navigation information.</td>
+  <td><span class="pill v-novel">Divergence</span></td>
+  <td>Nothing — but see the R3 confound in §3. This divergence is <em>required</em> for our ablation to be clean.</td>
+</tr>
+
+<tr class="grp"><td colspan="6">3 · Cross-attention / query-based multimodal fusion</td></tr>
+<tr>
+  <td class="dec">Fixed set of learned latent queries cross-attending over all modality tokens</td>
+  <td class="paper">InterFuser<span>2207.14024</span></td>
+  <td>Transformer decoder with learnable queries over fused multi-view + LiDAR tokens, producing waypoints plus an interpretable "safety mind map".</td>
+  <td><strong>Yes.</strong> Same mechanism, same role.</td>
+  <td><span class="pill v-direct">Direct</span></td>
+  <td>Query-based decoding over multimodal driving tokens as the pooling mechanism.</td>
+</tr>
+<tr>
+  <td class="dec">Learned queries compress to a fixed-size output</td>
+  <td class="paper">LMDrive<span>2312.07488</span></td>
+  <td>"We also feed N learnable queries and 1 learnable [token]" producing BEV, waypoint and traffic-light tokens; a Q-Former then compresses for the LLM.</td>
+  <td><strong>Yes</strong> for the mechanism; LMDrive's queries feed a 7 B LLM, ours feed an MLP.</td>
+  <td><span class="pill v-direct">Direct</span></td>
+  <td>Learned-query compression of driving tokens to a fixed small set.</td>
+</tr>
+<tr>
+  <td class="dec">Replacing mean-pooling with query attention</td>
+  <td class="paper">TransFuser<span>2205.15997</span></td>
+  <td>Uses average pooling to 512-d, then MLP to a <strong>64-dimensional feature vector</strong> that initialises the GRU hidden state.</td>
+  <td><strong>Contradicts us.</strong> SOTA-at-the-time used average pooling to a very small vector and still worked.</td>
+  <td><span class="pill v-partial">Partial</span></td>
+  <td>That a compact pooled vector is sufficient for waypoint decoding. Our claim that pooling is harmful is <em>weaker than the audit implied</em> and must be tested, not asserted.</td>
+</tr>
+
+<tr class="grp"><td colspan="6">4 · Language-conditioned driving</td></tr>
+<tr>
+  <td class="dec">Natural-language instructions drive a closed-loop CARLA agent</td>
+  <td class="paper">LMDrive<span>2312.07488</span></td>
+  <td>64 K clips; navigation instructions + optional notice instructions; LangAuto benchmark over 8 towns and 16 environmental conditions.</td>
+  <td><strong>Yes.</strong> Ours is a scaled-down version of the same setting.</td>
+  <td><span class="pill v-direct">Direct</span></td>
+  <td>The entire premise of language-conditioned closed-loop CARLA driving, and the LangAuto evaluation structure.</td>
+</tr>
+<tr>
+  <td class="dec">Suppress <code>nav.command</code> so language is non-redundant</td>
+  <td class="paper">LMDrive<span>2312.07488</span></td>
+  <td>"Unlike Town05 and Longest6 that navigate the agent with discrete driving commands or target waypoints, our benchmark <strong>only provides the AV with a navigation instruction and optional notice instructions</strong> in natural language."</td>
+  <td><strong>They go further.</strong> LMDrive removes the discrete command <em>entirely</em>; we suppress it only at designated junctions.</td>
+  <td><span class="pill v-partial">Partial</span></td>
+  <td>The principle that language must replace the nav channel to be measurable. Our partial suppression is a weaker, more controlled variant — defensible, but say so.</td>
+</tr>
+<tr>
+  <td class="dec">LLM-generated paraphrases for instruction diversity</td>
+  <td class="paper">LMDrive<span>2312.07488</span></td>
+  <td>"diversify instructions into various phrases via prompt engineering on LLMs"; also includes misleading and infeasible instructions, and multi-segment instructions.</td>
+  <td><strong>Yes</strong> — identical technique.</td>
+  <td><span class="pill v-direct">Direct</span></td>
+  <td>LLM paraphrasing of templated driving instructions. Also: <em>adopt their misleading-instruction track</em>, which our spec omitted.</td>
+</tr>
+
+<tr class="grp"><td colspan="6">5 · Driving VLM / VLA architectures</td></tr>
+<tr>
+  <td class="dec">Not calling our model a VLM</td>
+  <td class="paper">LMDrive · CarLLaVA · EMMA</td>
+  <td>LMDrive: 7 B LLaMA/Vicuna/LLaVA-v1.5 backbone. CarLLaVA: LLaVA-NeXT vision encoder + LLaMA. EMMA: everything as text in a Gemini language space.</td>
+  <td><strong>Confirms the terminology call.</strong> All three have an actual language model in the forward path. Ours does not.</td>
+  <td><span class="pill v-direct">Direct</span></td>
+  <td>Establishing what the term requires. Our R4 is language-<em>conditioned</em> perception, and the literature draws the line exactly where the spec drew it.</td>
+</tr>
+<tr>
+  <td class="dec">Frozen visual encoder feeding a downstream reasoning/decision module</td>
+  <td class="paper">LMDrive<span>2312.07488</span></td>
+  <td>Vision encoder pre-trained on perception tasks, "then the encoder is frozen for later use by the large language model". Ablation: <strong>DS 36.2 ± 2.3 with visual pre-training vs 16.9 ± 5.1 without</strong>.</td>
+  <td><strong>Yes for freezing.</strong> Their downstream module is a 7 B LLM; ours is a PPO MLP.</td>
+  <td><span class="pill v-partial">Partial</span></td>
+  <td>Freezing a driving-pretrained encoder before attaching a downstream decision module, and the magnitude of the pre-training effect. <em>Correct the legacy doc: the pre-training tasks were detection / traffic light / waypoints, not steering-and-speed regression.</em></td>
+</tr>
+
+<tr class="grp"><td colspan="6">6–7 · Waypoint prediction from expert demonstrations</td></tr>
+<tr>
+  <td class="dec">Predict K future ego-frame waypoints, execute with a classical controller</td>
+  <td class="paper">TransFuser<span>2205.15997</span></td>
+  <td>Single-layer GRU, autoregressive, predicts differential waypoints; <strong>T = 4</strong>; target point fed to the GRU; PID controller as inverse dynamics model.</td>
+  <td><strong>Yes</strong> — our K = 4 and controller structure match. We use a direct head, they use an autoregressive GRU.</td>
+  <td><span class="pill v-direct">Direct</span></td>
+  <td>Waypoint output representation, K = 4, and PID execution. Consider adopting the GRU decoder, which is the validated variant.</td>
+</tr>
+<tr>
+  <td class="dec">Waypoints supervised from an expert</td>
+  <td class="paper">Learning by Cheating<span>1912.12294</span></td>
+  <td>Sensorimotor agent "produces waypoints in the egocentric camera frame. Waypoints are selected based on the command, projected into the vehicle's coordinate frame, and passed to the low-level controller."</td>
+  <td><strong>Yes.</strong></td>
+  <td><span class="pill v-direct">Direct</span></td>
+  <td>Command-conditioned waypoint imitation with a low-level controller.</td>
+</tr>
+<tr>
+  <td class="dec">Pure waypoint output</td>
+  <td class="paper">CarLLaVA<span>2406.10165</span></td>
+  <td>"waypoints perform poorly in turns, but predicting direct control performs worse in avoiding collisions." Proposes a <strong>semi-disentangled representation: time-conditioned waypoints + space-conditioned path waypoints</strong>. Ranked 1st, CARLA Challenge 2.0.</td>
+  <td><strong>Improves on ours.</strong> Our spec uses time-conditioned waypoints only.</td>
+  <td><span class="pill v-partial">Partial</span></td>
+  <td>A documented weakness of our chosen output representation, and the fix. <strong>This should change the spec.</strong></td>
+</tr>
+
+<tr class="grp"><td colspan="6">8 · Recovery data / covariate shift</td></tr>
+<tr>
+  <td class="dec">Perturb the ego, record the expert's recovery as label</td>
+  <td class="paper">ChauffeurNet<span>1812.03079</span></td>
+  <td>"perturbing the current agent location … away from the lane center and then fitting a new smooth trajectory that brings the agent back to the original target". Notes perturbations "would be difficult to generate with either raw sensor input or direct controller outputs."</td>
+  <td><strong>Yes in principle.</strong> But they synthesise in a mid-level BEV; we must physically displace the ego in CARLA and re-render sensors.</td>
+  <td><span class="pill v-partial">Partial</span></td>
+  <td>Perturbation-and-recovery as the standard fix for BC covariate shift. Note their caveat explicitly — our sensor-space version is more expensive and they flag it as the hard case.</td>
+</tr>
+<tr>
+  <td class="dec">On-policy recovery supervision</td>
+  <td class="paper">Learning by Cheating<span>1912.12294</span></td>
+  <td>"automatic DAgger-like training in which supervision from the privileged agent is gathered adaptively via online rollouts of the sensorimotor agent". Offline BC first, then on-policy.</td>
+  <td><strong>Stronger than ours.</strong> A queryable privileged agent gives supervision in <em>any</em> reached state; perturbation only covers states you thought to synthesise.</td>
+  <td><span class="pill v-partial">Partial</span></td>
+  <td>DAgger-style on-policy supervision. Their approach is better than our perturbation plan if we build a privileged agent — which §6 recommends anyway.</td>
+</tr>
+
+<tr class="grp"><td colspan="6">9–10 · PPO downstream of a learned representation · frozen representation + RL</td></tr>
+<tr>
+  <td class="dec">PPO downstream of a frozen learned perception encoder</td>
+  <td class="paper">Roach<span>2108.08265</span></td>
+  <td><strong>Opposite ordering.</strong> PPO (with a Beta policy and an exploration loss) trains on a privileged rendered BEV; the camera-based student then imitates it. 1.7 M steps × 6 servers = <strong>10 M steps</strong>, ~1 week.</td>
+  <td><strong>No.</strong> RL is upstream, on privileged state; IL is downstream, on sensors.</td>
+  <td><span class="pill v-drop">Contradicts</span></td>
+  <td>That PPO on <em>privileged BEV</em> is the validated way to use RL in CARLA — and for the Beta distribution and exploration loss, both of which we should adopt regardless.</td>
+</tr>
+<tr>
+  <td class="dec">PPO downstream of a frozen encoder</td>
+  <td class="paper">CaRL<span>2504.17838</span></td>
+  <td>PPO on a 256×256 privileged BEV semantic raster (road, A* route mask, lane markings, vehicles, pedestrians, lights, signs…), 6 conv layers, ~2 M params, <strong>trained end-to-end with PPO</strong>. 300 M samples, 128 envs, mini-batch 16 384, 8×A100, ~1 week → 64 DS on longest6 v2.</td>
+  <td><strong>No, on both counts:</strong> privileged input, and the encoder is <em>not</em> frozen.</td>
+  <td><span class="pill v-drop">Contradicts</span></td>
+  <td>The realistic sample and compute cost of PPO in CARLA, and its reward design. <strong>The most important single citation in this document.</strong></td>
+</tr>
+<tr>
+  <td class="dec">Frozen pre-trained encoder detached from the policy</td>
+  <td class="paper">PVR for Control<span>2203.03580</span></td>
+  <td>"the perception module is detached from the policy. First, it is trained once on out-of-domain data and frozen. Then … control policies are trained on the deployment environments re-using the same frozen perception module." Finds frozen PVRs "competitive or even better than ground-truth state representations", while end-to-end from scratch fails at the same data budget.</td>
+  <td><strong>Yes for the paradigm</strong> — but the domains are Habitat, DeepMind Control, Adroit and Franka Kitchen. <em>Not driving.</em> And the headline comparison is imitation-based.</td>
+  <td><span class="pill v-partial">Partial</span></td>
+  <td>Frozen-representation-plus-policy as an established control paradigm. <span class="pill v-check">needs check</span> the counter-literature (Hansen et al.) before leaning on this.</td>
+</tr>
+<tr>
+  <td class="dec">PPO as a bounded residual on an IL policy</td>
+  <td class="paper">Residual RL<span>Silver 2018 · Johannink 2019</span></td>
+  <td>RL learns a corrective term added to a conventional controller's output.</td>
+  <td>Believed to match closely.</td>
+  <td><span class="pill v-check">needs check</span></td>
+  <td>Nothing until verified. This is the load-bearing citation for Decision 2.1 and it has <strong>not</strong> been opened this session.</td>
+</tr>
+
+<tr class="grp"><td colspan="6">11 · Language beyond navigation commands</td></tr>
+<tr>
+  <td class="dec">Hazard-notice instructions supplying information sensors lack (our "IC-5")</td>
+  <td class="paper">LMDrive<span>2312.07488</span></td>
+  <td>Notice instructions are a first-class input: "Please watch out for the pedestrians up ahead." A dedicated <strong>LangAuto-Notice track</strong> evaluates them.</td>
+  <td><strong>Yes — this already exists.</strong></td>
+  <td><span class="pill v-direct">Direct</span></td>
+  <td>The notice-instruction concept and its evaluation track. <strong>Our spec called IC-5 "the strongest possible language result"; it is a good experiment but it is not novel.</strong> Cite LangAuto-Notice and position ours as a controlled replication at smaller scale.</td>
+</tr>
+<tr>
+  <td class="dec">Multi-clause and referential instructions</td>
+  <td class="paper">LMDrive<span>2312.07488</span></td>
+  <td>Multi-segment instructions ("Take a left here, then another left at the next one") and misleading/infeasible instructions the agent must reject.</td>
+  <td><strong>Yes</strong> for multi-clause; we omitted the misleading-instruction case.</td>
+  <td><span class="pill v-direct">Direct</span></td>
+  <td>Instruction taxonomy design. Add a misleading-instruction condition to C2 — it is a cheap, strong test.</td>
+</tr>
+
+<tr class="grp"><td colspan="6">12–13 · Distillation and efficient deployment</td></tr>
+<tr>
+  <td class="dec">Distil a large encoder into a small one by matching latents</td>
+  <td class="paper">Roach<span>2108.08265</span></td>
+  <td>"we demonstrate the effectiveness of using <strong>action distributions, value estimations and latent features</strong> as supervisions"; also notes SAM "matches latent features of the proxy expert and the end-to-end IL agent".</td>
+  <td><strong>Yes</strong> for latent-feature supervision — though theirs is privileged→sensor, ours is large-sensor→small-sensor.</td>
+  <td><span class="pill v-direct">Direct</span></td>
+  <td>Latent-feature matching as a distillation target in CARLA driving. This is the precedent our edge plan needed.</td>
+</tr>
+<tr>
+  <td class="dec">Distil the encoder while reusing the frozen PPO policy unchanged</td>
+  <td class="paper">—</td>
+  <td>No paper found that distils only the perception module while keeping an RL policy head bit-identical.</td>
+  <td>—</td>
+  <td><span class="pill v-novel">Novel</span></td>
+  <td><strong>NOVEL PROPOSAL — NO DIRECT PRECEDENT FOUND.</strong> It follows from the fixed-latent invariant and is worth stating as a contribution, not a citation.</td>
+</tr>
+<tr>
+  <td class="dec">INT8 PTQ/QAT, TensorRT export, on-device p95</td>
+  <td class="paper">—</td>
+  <td>Standard practice, but no driving-specific closed-loop quantisation study opened this session.</td>
+  <td>—</td>
+  <td><span class="pill v-check">needs check</span></td>
+  <td>Nothing yet. Search for closed-loop driving-score-under-quantisation results before claiming a precedent.</td>
+</tr>
+
+<tr class="grp"><td colspan="6">14 · Fixed-dimensional representation across sensor configurations</td></tr>
+<tr>
+  <td class="dec">Identical latent width across all rungs, as an experimental control</td>
+  <td class="paper">TransFuser<span>2205.15997</span></td>
+  <td>Uses a 64-d vector into the GRU across configurations, and runs sensor ablations (camera FOV, LiDAR range) — but does not frame dimensional matching as the control.</td>
+  <td><strong>Suggestive only.</strong> The practice exists; the methodological argument does not.</td>
+  <td><span class="pill v-novel">Novel</span></td>
+  <td><strong>NOVEL PROPOSAL — NO DIRECT PRECEDENT FOUND</strong> for fixed latent width plus parameter matching as an explicit control for perception-richness ablations. This is a genuine methodological contribution and should be argued, not cited.</td>
+</tr>
+
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="contra">
+<h2>2 · Contradictions between the papers</h2>
+
+<p>These are real disagreements in the literature, not variations in wording. The specification must take a side on each and say which.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th style="width:19%">Question</th><th style="width:27%">Position A</th><th style="width:27%">Position B</th><th>What actually differs, and our stance</th></tr></thead>
+<tbody>
+<tr>
+  <td class="dec">Where does RL sit?</td>
+  <td><strong>Upstream, on privileged state.</strong> Roach and CaRL both train PPO on a rendered BEV with full ground truth; the sensor agent is then trained by imitation.</td>
+  <td><strong>Downstream, on frozen features.</strong> Parisi et al. detach a frozen pre-trained encoder and train the policy on top of it.</td>
+  <td>Not a wording difference — <em>opposite orderings</em>. A is validated in driving; B is validated in manipulation and navigation. We are doing B in a domain where only A has been shown. That is our biggest exposure and also, framed properly, our clearest novelty.</td>
+</tr>
+<tr>
+  <td class="dec">Multi-view: fuse tokens or stitch pixels?</td>
+  <td><strong>Stitch.</strong> TransFuser crops three 120° cameras into one 704×160, 132° image and runs a single backbone.</td>
+  <td><strong>Tokenise per view.</strong> InterFuser and LMDrive keep views separate and concatenate tokens.</td>
+  <td>A is cheaper and TransFuser's ablation shows FOV dominates; B scales to non-overlapping views (rear) and lets attention weight views differently. We follow B, and must beat A's FOV effect to show it matters.</td>
+</tr>
+<tr>
+  <td class="dec">RGB+LiDAR: where to fuse?</td>
+  <td><strong>Multi-resolution.</strong> TransFuser fuses at several feature-map scales with self-attention plus velocity embeddings.</td>
+  <td><strong>Once, late.</strong> InterFuser fuses in a single transformer stage over pooled tokens.</td>
+  <td>A is the stronger-validated design for exactly the RGB+LiDAR pairing we are testing; B is what our spec proposes. A genuine risk that our R3 under-reads LiDAR's value because of the fusion stage, not the sensor.</td>
+</tr>
+<tr>
+  <td class="dec">Output representation</td>
+  <td><strong>Waypoints.</strong> TransFuser, LBC, InterFuser, LMDrive.</td>
+  <td><strong>Direct control.</strong> Roach and CaRL both output steering + acceleration; Roach argues explicitly that "a PID-controller is not reliable for trajectory tracking and requires excessive parameter tuning."</td>
+  <td>The split tracks the learner: IL papers predict waypoints, RL papers predict controls. CarLLaVA sits between — waypoints are poor in turns, direct control is poor at collision avoidance — and proposes a semi-disentangled path + waypoint output. Our residual-on-trajectory design is a fourth position and is <strong>not</strong> directly precedented.</td>
+</tr>
+<tr>
+  <td class="dec">Is pooling harmful?</td>
+  <td><strong>No.</strong> TransFuser average-pools to 512-d then compresses to a 64-d vector and was SOTA.</td>
+  <td><strong>Use queries.</strong> InterFuser and LMDrive use learned queries instead.</td>
+  <td>The earlier audit called mean-pooling "the biggest architectural flaw"; that was too strong. TransFuser shows a tiny pooled vector suffices for waypoint decoding. Queries are better motivated for <em>referring expressions</em>, which is a language argument, not a perception one.</td>
+</tr>
+<tr>
+  <td class="dec">Does language need the nav command removed?</td>
+  <td><strong>Remove it.</strong> LangAuto gives no discrete command and no target waypoint — language is the only navigation signal.</td>
+  <td><strong>Keep both.</strong> Most CARLA benchmarks supply a discrete command; language would then be supplementary.</td>
+  <td>Nobody in the verified set keeps both and shows language still helps for <em>navigation</em>. Where language demonstrably adds value alongside a nav channel is the <em>notice</em> case. That should be the centre of our language rung, not the junction case.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="rungs">
+<h2>3 · Rung-by-rung audit</h2>
+
+<div class="rung">
+  <div class="rung-head"><span class="rid">R0</span>Blind — ego + nav only</div>
+  <dl>
+    <dt>Validated by</dt><dd>Roach's ablation is the closest analogue: baseline PPO with a Gaussian policy "is trapped in a local minimum where staying still is the most rewarding strategy." A degenerate-behaviour control is standard practice, though usually reported as a failure mode rather than a designed rung.</dd>
+    <dt>Established</dt><dd>That reward functions in CARLA admit trivial stationary solutions, and that this must be detected explicitly.</dd>
+    <dt>Our adaptation</dt><dd>Promoting it from a footnote to a first-class rung and a hard gate.</dd>
+    <dt>Novel</dt><dd>Using a blind rung as a <em>leakage detector with a numeric threshold</em>. <strong>No direct precedent found.</strong> Defensible and cheap.</dd>
+    <dt class="hz">Hidden confound</dt><dd><strong>Real.</strong> A target point at 25–40 m plus a 6-way command may be sufficient to lane-follow Town01, whose topology is simple and largely orthogonal. If R0 scores well the correct response is to push the target point further out — <em>not</em> to conclude the environment is broken. Decide the threshold before seeing the number.</dd>
+  </dl>
+</div>
+
+<div class="rung">
+  <div class="rung-head"><span class="rid">R1</span>Front RGB</div>
+  <dl>
+    <dt>Validated by</dt><dd>Learning by Cheating (single forward camera → waypoints), CILRS, CarLLaVA (camera-only, 1st in CARLA Challenge 2.0).</dd>
+    <dt>Established</dt><dd>A single forward camera plus a nav command is sufficient for competitive closed-loop CARLA driving.</dd>
+    <dt>Our adaptation</dt><dd>Query-based encoder rather than a ResNet+branch head; PPO residual rather than pure IL.</dd>
+    <dt>Novel</dt><dd>Nothing. This rung is well-trodden, which is exactly what a baseline should be.</dd>
+    <dt class="hz">Hidden confound</dt><dd><strong>Severe, and it propagates to R2.</strong> TransFuser's ablation finds "Camera FOV has the largest impact on the DS", and they reach 132° with three stitched cameras. If R1's front camera uses the legacy 125° FOV, it already covers most of what R2's side cameras add, and R2 will measure near-nothing. <strong>R1's FOV must be pre-registered</strong> — a realistic single production forward camera, ~60–70°, so that R2 has headroom. Otherwise R2 is not a test of multi-view, it is a test of stitching.</dd>
+  </dl>
+</div>
+
+<div class="rung">
+  <div class="rung-head"><span class="rid">R2</span>Four RGB views, per-view tokens</div>
+  <dl>
+    <dt>Validated by</dt><dd>InterFuser (left/front/right/focus + LiDAR, transformer decoder) and LMDrive (multi-view tokens concatenated before the BEV decoder). <strong>Not</strong> TransFuser, which stitches.</dd>
+    <dt>Established</dt><dd>Per-view tokenisation with a shared fusion stage is a working design in CARLA closed-loop driving.</dd>
+    <dt>Our adaptation</dt><dd>A rear view, which neither InterFuser nor TransFuser uses; LMDrive does. And learned view embeddings as the view identifier.</dd>
+    <dt>Novel</dt><dd>Isolating multi-view benefit as a <em>controlled ablation at matched parameters</em>. The papers use multi-view; none ablates it against a single view with parameters held constant.</dd>
+    <dt class="hz">Hidden confound</dt><dd>Two. The FOV issue inherited from R1. And the rear camera contributes almost nothing to forward driving in the CARLA route benchmarks — it matters for lane changes, which our route set may rarely require. Pre-register the sub-metric (junction and side-impact infractions) and check that the route set actually contains lane-change situations.</dd>
+  </dl>
+</div>
+
+<div class="rung">
+  <div class="rung-head"><span class="rid">R3</span>+ LiDAR BEV</div>
+  <dl>
+    <dt>Validated by</dt><dd>TransFuser — the strongest evidence in the set, with explicit sensor ablations, and a stated 48% reduction in collisions per km versus geometry-based fusion. InterFuser corroborates.</dd>
+    <dt>Established</dt><dd>Attention-based RGB+LiDAR fusion reduces collisions in dense CARLA traffic. The 2-bin height-histogram BEV is the validated representation, and it is <em>better than our single max-height channel</em> — adopt theirs.</dd>
+    <dt>Our adaptation</dt><dd>Single late fusion stage instead of multi-resolution fusion; no velocity embedding.</dd>
+    <dt>Novel</dt><dd>Nothing architecturally. The ablation-at-matched-parameters framing is ours.</dd>
+    <dt class="hz">Hidden confound</dt><dd><strong>Two, one of them serious.</strong> (1) TransFuser rasterises the goal location <em>into the LiDAR BEV</em> as a third channel — so their "LiDAR helps" result partly measures a better goal encoding. If we copy their input format we inherit the confound; our spec must keep the goal out of the BEV, and we should say why. (2) Fusing once, late, may under-read LiDAR's contribution relative to TransFuser's multi-resolution fusion — so a null R3 result would be ambiguous between "LiDAR doesn't help" and "our fusion stage is too shallow". Mitigate by running the multi-resolution variant in the R5 family.</dd>
+  </dl>
+</div>
+
+<div class="rung">
+  <div class="rung-head"><span class="rid">R4</span>+ language</div>
+  <dl>
+    <dt>Validated by</dt><dd>LMDrive and the LangAuto benchmark, including the Notice track — thorough precedent for every element: instruction taxonomy, LLM paraphrasing, closed-loop evaluation, and the DS/RC/IS metric set.</dd>
+    <dt>Established</dt><dd>Language-conditioned closed-loop CARLA driving works; notice instructions are a recognised category with a dedicated evaluation track; instruction paraphrasing via LLMs is standard.</dd>
+    <dt>Our adaptation</dt><dd>A frozen sentence encoder with cached embeddings instead of a 7 B LLM; partial rather than total suppression of the nav command; cross-attention conditioning rather than an LLM forward pass.</dd>
+    <dt>Novel</dt><dd>Language conditioning without a language model in the loop, at ~25 M parameters instead of ~7 B, evaluated with a counterfactual triad. <strong>The counterfactual triad specifically (correct / shuffled / null on one trained policy) — no direct precedent found</strong> in the verified set; LMDrive tests misleading instructions, which is adjacent but not the same control.</dd>
+    <dt class="hz">Hidden confound</dt><dd><strong>The redundancy problem, and it is the one that decides this rung.</strong> LMDrive removes the discrete command entirely; we keep it except at designated junctions. Any residual redundancy lets the policy ignore language and still complete routes. The notice-instruction family (IC-5) is the part of R4 least exposed to this, because no nav channel can carry it — <em>make that the primary R4 claim, not the junction case</em>.</dd>
+  </dl>
+</div>
+</section>
+
+<section id="challenges">
+<h2>4 · The eight specific challenges</h2>
+
+<div class="chal">
+  <div class="chal-head"><span class="chal-id">A</span><span class="chal-q">Is a fixed 128-d latent a scientifically defensible control?</span><span class="pill v-novel">Novel</span></div>
+  <span class="ans">Yes, and it is one of the stronger parts of the design — but it is <em>our argument</em>, not a citation.</span>
+  <p>TransFuser passes a 64-d vector to its GRU across configurations, so fixed-width bottlenecks are ordinary practice. What no paper in the verified set does is <strong>hold latent width and parameter count constant specifically so that a sensor ablation is uncontaminated by capacity</strong>. Sensor ablations in TransFuser vary the sensor and let the representation follow.</p>
+  <p>Two caveats worth writing into the methods section. First, a fixed width is not a fixed <em>information capacity</em> — a richer sensor set may saturate 128 dimensions where a poorer one does not, so at some point the bottleneck itself becomes the treatment. Mitigate by running one width sweep (64 / 128 / 256) on the richest rung and showing the result is flat in that range. Second, matched parameters plus matched width still leaves matched FLOPs unmatched; report FLOPs alongside so the reader can see it. <strong>NOVEL PROPOSAL — NO DIRECT PRECEDENT FOUND.</strong> Defensible, and worth arguing explicitly rather than assuming.</p>
+</div>
+
+<div class="chal">
+  <div class="chal-head"><span class="chal-id">B</span><span class="chal-q">Is frozen encoder + PPO defensible given the RL/driving literature?</span><span class="pill v-partial">Partial — with a live contradiction</span></div>
+  <span class="ans">Defensible as a research question. Not defensible as an assumed-standard practice, because in driving it is not standard at all.</span>
+  <p>The paradigm is established in control broadly: Parisi et al. detach a frozen encoder from the policy and find it competitive with ground-truth state features, while end-to-end from scratch fails at the same data budget. That is real support.</p>
+  <p>But in CARLA specifically, the two strongest RL results go the other way. Roach trains PPO on a privileged BEV and <em>distils down</em> to a camera student. CaRL trains its convolutional encoder end-to-end with PPO on a privileged BEV raster, at 300 M samples. Neither runs PPO on frozen learned sensor features. So the honest framing is: <strong>"we test whether the frozen-pre-trained-representation paradigm, established in manipulation and navigation, transfers to closed-loop driving."</strong> That is a legitimate contribution and a better story than pretending it is the default.</p>
+  <p>Before relying on Parisi, <span class="pill v-check">needs check</span> the counter-literature arguing learning-from-scratch baselines are competitive with pre-trained representations. If that holds up, it weakens the paradigm claim and should appear in the limitations.</p>
+</div>
+
+<div class="chal">
+  <div class="chal-head"><span class="chal-id">C</span><span class="chal-q">Is IL waypoints → frozen representation → PPO residual precedented?</span><span class="pill v-novel">Novel as a combination</span></div>
+  <span class="ans">Each link has precedent. The chain does not.</span>
+  <p>IL waypoints from expert demonstrations: <span class="pill v-direct">direct</span> (TransFuser, LBC). Frozen representation feeding a downstream decision module: <span class="pill v-direct">direct</span> in driving (LMDrive freezes its vision encoder for the LLM) and <span class="pill v-partial">partial</span> for policies (Parisi). RL as a bounded residual on a nominal controller: <span class="pill v-check">needs check</span> — the residual-RL citations were not opened this session and Decision 2.1 rests on them.</p>
+  <p>The specific composition — imitation-pretrain a waypoint head, freeze it, and let PPO emit a bounded lateral/speed correction in trajectory space — <strong>NOVEL PROPOSAL — NO DIRECT PRECEDENT FOUND</strong> in driving. Note also that Roach explicitly argues against PID trajectory tracking ("not reliable … requires excessive parameter tuning"), which is a direct objection to the execution half of our design and should be answered rather than ignored.</p>
+</div>
+
+<div class="chal">
+  <div class="chal-head"><span class="chal-id">D</span><span class="chal-q">Is the DrivingIntent seam supported by existing systems?</span><span class="pill v-partial">Partial</span></div>
+  <span class="ans">Yes, better than expected — InterFuser is close to a direct precedent.</span>
+  <p>InterFuser produces an interpretable intermediate — a "safety mind map" carrying surrounding objects and traffic signs — and uses it as a <strong>safety heuristic that constrains actions within a safe set</strong>. That is structurally the typed-intermediate-record idea: a legible, inspectable interface between perception and control, used for more than a latent hand-off. DriveVLM-Dual's fast/slow split is the second precedent. LMDrive's instruction-completion flag is a third element of the proposed record that already exists in the literature.</p>
+  <p>Our version differs in being <em>typed and ablatable by construction</em>, with a scripted-oracle implementation as the first adapter. Since the spec already defers this past the ladder, no change is needed — but when it returns, InterFuser is the design to build on, and the oracle-first approach appears to be ours.</p>
+</div>
+
+<div class="chal">
+  <div class="chal-head"><span class="chal-id">E</span><span class="chal-q">Is Perceiver-style cross-attention right, or is something better established?</span><span class="pill v-partial">Partial — recommend a change</span></div>
+  <span class="ans">Query-based attention is well established in driving. But for RGB+LiDAR specifically, multi-resolution fusion is better validated than our single late stage.</span>
+  <p>Learned queries over multimodal driving tokens: solidly precedented (InterFuser's transformer decoder queries, LMDrive's Q-Former with learnable queries producing BEV / waypoint / traffic-light tokens). That part of Decision 5.1 stands.</p>
+  <p>What does not stand is the implicit claim that a single late fusion stage is sufficient. TransFuser's core contribution is fusing "at multiple resolutions" with positional <em>and velocity</em> embeddings, and that is the paper with the cleanest RGB+LiDAR ablation. Fusing once, late, over pooled tokens risks a null R3 that is ambiguous between "LiDAR doesn't help here" and "we fused too late". <strong>Recommendation: add a multi-resolution fusion variant to the R5 family and decide it offline on waypoint ADE.</strong></p>
+  <p>Also worth softening: the earlier audit's claim that mean-pooling is a major flaw. TransFuser average-pools to a 64-d vector and was state of the art. Queries are better justified for <em>referring expressions</em> — a language argument — than for perception in general.</p>
+</div>
+
+<div class="chal">
+  <div class="chal-head"><span class="chal-id">F</span><span class="chal-q">Is language genuinely useful when a nav command already exists?</span><span class="pill v-partial">Partial — and this should reshape R4</span></div>
+  <span class="ans">For navigation content, probably not. For notice content, yes — and that distinction is visible in how LMDrive built its benchmark.</span>
+  <p>LangAuto deliberately gives the agent <em>only</em> language: "our benchmark only provides the AV with a navigation instruction and optional notice instructions", explicitly contrasted with Town05 and Longest6 which supply discrete commands or target waypoints. The design implies the authors did not consider language-plus-command a measurable setting for navigation.</p>
+  <p>No paper in the verified set demonstrates that language adds navigational value <em>on top of</em> an intact nav command. What LMDrive does show is a separate Notice track, where the instruction carries hazard information no nav channel encodes. <strong>So: move the centre of gravity of R4 from the junction case to the notice case.</strong> The junction case remains as a secondary condition, but if it is the headline, the honest expected result is null.</p>
+</div>
+
+<div class="chal">
+  <div class="chal-head"><span class="chal-id">G</span><span class="chal-q">Does the hazard-instruction experiment have precedent?</span><span class="pill v-direct">Direct — downgrade our novelty claim</span></div>
+  <span class="ans">Yes. LMDrive's LangAuto-Notice track is exactly this, and the spec overclaimed.</span>
+  <p>The Perception Ladder Spec called IC-5 "the cleanest possible language result" and implied it was a new experimental scenario. It is not: notice instructions are a first-class category in the LMDrive dataset ("Please watch out for the pedestrians up ahead"), and LangAuto-Notice is a dedicated evaluation track.</p>
+  <p>This is good news, not bad. It means the experiment is validated rather than speculative, we can adopt their track structure and metrics directly, and we should position ours as <strong>a controlled replication at ~1/300th the model scale</strong> — which is itself an interesting claim, since it asks whether notice-instruction following requires an LLM at all. Rewrite the IC-5 section to cite LangAuto-Notice.</p>
+</div>
+
+<div class="chal">
+  <div class="chal-head"><span class="chal-id">H</span><span class="chal-q">Does the edge-distillation strategy have precedent?</span><span class="pill v-partial">Partial — the half that matters is supported</span></div>
+  <span class="ans">Latent-feature distillation in CARLA is directly precedented. Reusing a frozen RL policy across the distillation is not.</span>
+  <p>Roach states plainly that it supervises the student with "action distributions, value estimations and <strong>latent features</strong>", and cites SAM for matching latent features between a proxy expert and an end-to-end agent. LBC is the broader two-stage precedent. So "train a small encoder to match a bigger encoder's latent, in CARLA" is established practice.</p>
+  <p>What is not precedented is the consequence we drew from the fixed-latent invariant: <strong>distil only the encoder, keep the PPO policy head bit-identical, and skip RL re-training entirely.</strong> <strong>NOVEL PROPOSAL — NO DIRECT PRECEDENT FOUND.</strong> It is a clean idea and follows logically, but it needs its own validation — measure driving score before and after distillation with the policy untouched, and report the gap.</p>
+  <p>Quantisation remains <span class="pill v-check">needs check</span>: no closed-loop driving-score-under-INT8 study was opened this session.</p>
+</div>
+</section>
+
+<section id="deliverable">
+<h2>5 · Verdicts</h2>
+
+<h3>1 · Supported — strong precedent</h3>
+<div class="tw">
+<table>
+<thead><tr><th style="width:36%">Decision</th><th>Precedent</th></tr></thead>
+<tbody>
+<tr><td class="dec">Multi-view per-view tokenisation with a shared fusion stage</td><td>InterFuser (left/front/right/focus), LMDrive (multi-view tokens concatenated)</td></tr>
+<tr><td class="dec">Separate per-modality encoders for RGB and LiDAR</td><td>TransFuser, InterFuser — both explicitly reject a shared tokeniser</td></tr>
+<tr><td class="dec">Learned-query attention as the pooling mechanism</td><td>InterFuser transformer decoder queries; LMDrive Q-Former</td></tr>
+<tr><td class="dec">K = 4 ego-frame waypoints executed by a classical controller</td><td>TransFuser (T = 4 + PID), Learning by Cheating</td></tr>
+<tr><td class="dec">Auxiliary heads during representation pretraining</td><td>TransFuser (depth, semantics, HD map, boxes); LMDrive ablation: DS 36.2 → 16.9 without visual pre-training</td></tr>
+<tr><td class="dec">Freezing the pretrained encoder before the downstream decision module</td><td>LMDrive: "the encoder is frozen for later use by the large language model"</td></tr>
+<tr><td class="dec">Language-conditioned closed-loop CARLA driving, LLM-paraphrased instructions, notice instructions</td><td>LMDrive + LangAuto, including the Notice track</td></tr>
+<tr><td class="dec">Perturbation-and-recovery data for covariate shift</td><td>ChauffeurNet; LBC's DAgger-like on-policy supervision is stronger still</td></tr>
+<tr><td class="dec">Latent-feature matching as a distillation target</td><td>Roach: "action distributions, value estimations and latent features as supervisions"</td></tr>
+<tr><td class="dec">RC / IS / DS as the metric set</td><td>CARLA Leaderboard, used by LMDrive, TransFuser, Roach, CaRL</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>2 · Partially supported — precedent exists, our combination differs</h3>
+<ul>
+  <li><strong>Frozen encoder + PPO.</strong> Established in manipulation/navigation (Parisi); contradicted in driving by Roach and CaRL. Reframe as the research question, not the default.</li>
+  <li><strong>Single late fusion for RGB+LiDAR.</strong> TransFuser's validated design is multi-resolution. Add the variant to R5.</li>
+  <li><strong>Partial nav-command suppression.</strong> LangAuto removes the command entirely. Ours is weaker but more controlled — state it.</li>
+  <li><strong>Time-conditioned waypoints only.</strong> CarLLaVA documents that waypoints handle turns poorly and proposes a semi-disentangled path + waypoint output.</li>
+  <li><strong>Perturbation-based recovery in sensor space.</strong> ChauffeurNet synthesises in a mid-level BEV and explicitly flags raw-sensor perturbation as the hard case.</li>
+</ul>
+
+<h3>3 · Novel — no direct precedent found</h3>
+<ul>
+  <li><strong>Fixed latent width + parameter matching as the explicit control for a perception-richness ladder.</strong> The single cleanest methodological contribution here.</li>
+  <li><strong>IL waypoint head → frozen representation → bounded PPO residual in trajectory space</strong>, as a composed pipeline in driving.</li>
+  <li><strong>Encoder-only distillation with a bit-identical frozen RL policy head</strong>, avoiding RL re-training for the edge model.</li>
+  <li><strong>The counterfactual instruction triad</strong> (correct / shuffled / null on one trained policy) as the primary language statistic.</li>
+  <li><strong>A blind rung with a numeric threshold as a formal leakage gate.</strong></li>
+</ul>
+
+<h3>4 · Should be dropped or corrected</h3>
+<ul>
+  <li><span class="pill v-drop">drop</span> <strong>Citing TransFuser for multi-view fusion or for a shared RGB/BEV tokeniser.</strong> It stitches three cameras into one image and uses separate backbones. The legacy documents got this wrong; do not inherit it.</li>
+  <li><span class="pill v-drop">drop</span> <strong>Claiming IC-5 as a novel experiment.</strong> LangAuto-Notice exists. Cite it and reposition as a small-scale controlled replication.</li>
+  <li><span class="pill v-drop">drop</span> <strong>The 1.5 M-step PPO budget.</strong> Two orders of magnitude below CaRL, seven times below Roach's privileged-BEV policy.</li>
+  <li><span class="pill v-drop">drop</span> <strong>The product-of-three-factors reward.</strong> Replace with CaRL's structure, which was designed precisely because PPO fails to optimise complex rewards at large mini-batch sizes.</li>
+  <li><span class="pill v-drop">drop</span> <strong>Autopilot as the Stage 0 expert.</strong> Roach is trained via RL and outperforms the CARLA autopilot; students trained on it do better. Use a privileged coach instead.</li>
+  <li><span class="pill v-drop">soften</span> <strong>"Mean-pooling is a major architectural flaw."</strong> TransFuser pools to 64-d and was SOTA. Keep queries, but justify them by referring expressions rather than by pooling being broken.</li>
+  <li><span class="pill v-drop">correct</span> <strong>Single max-height LiDAR BEV.</strong> TransFuser's 2-bin above/below-ground histogram is the validated representation.</li>
+</ul>
+
+<h3>5 · Needs experimental validation before it can be claimed</h3>
+<ul>
+  <li>That a frozen sensor encoder + PPO reaches useful driving performance in CARLA at all — <em>this is the project's core bet and it runs against the driving literature.</em></li>
+  <li>That the residual action space gives PPO enough authority to matter (ΔDS per rung).</li>
+  <li>That a fixed 128-d latent is not itself the binding constraint at the richest rung (width sweep 64/128/256).</li>
+  <li>That R1's FOV leaves headroom for R2 to measure anything.</li>
+  <li>That single late fusion does not under-read LiDAR relative to multi-resolution fusion.</li>
+  <li>That encoder-only distillation preserves driving score with the policy head untouched.</li>
+  <li>That instructions generalise across held-out templates, not just paraphrases.</li>
+</ul>
+
+<h3>6 · Revised architecture</h3>
+<p>Nine changes, all justified by a verified source. Nothing else in the spec changes.</p>
+<ol class="steps">
+  <li>
+    <h4>Add a privileged PPO coach as the Stage 0 expert and the performance ceiling</h4>
+    <p>A Roach/CaRL-style PPO policy on a privileged BEV raster. Three things at once: it generates better IL data than the autopilot (Roach's central result), it establishes the ceiling the ladder is climbing toward, and it tells you whether a flat ladder is a perception problem or an RL problem. <strong>It does not violate your constraint</strong> — the ladder's downstream learner is still PPO on the frozen latent; the coach is a data generator and a reference point.</p>
+  </li>
+  <li>
+    <h4>Adopt CaRL's reward structure</h4>
+    <p>Route completion as the single primary term, soft penalties multiplicatively reducing it, hard infractions terminating the episode with a terminal penalty. CaRL's finding — that PPO fails to optimise complex rewards as mini-batch size grows — is directly relevant to a design that wants parallel environments.</p>
+  </li>
+  <li>
+    <h4>Adopt a Beta action distribution and Roach's exploration loss</h4>
+    <p>Roach's ablation shows Gaussian PPO gets "trapped in a local minimum where staying still is the most rewarding strategy" — precisely the degenerate behaviour the earlier audit found the legacy success metric rewarding. Bounded support, no tanh squashing, explicit KL. Cheap to adopt, well validated.</p>
+  </li>
+  <li>
+    <h4>Re-budget PPO, and calibrate with a pilot</h4>
+    <p>Run one rung at several budgets and plot the learning curve before fixing the ladder's number. The residual formulation genuinely should need far fewer samples than from-scratch control — but "should" is a hypothesis, and 1.5 M was chosen from wall-clock, not from evidence.</p>
+  </li>
+  <li>
+    <h4>Pre-register R1's camera FOV at ~60–70°</h4>
+    <p>Otherwise a 125° front camera pre-empts the side cameras and R2 measures nothing. This one decision determines whether question B is answerable.</p>
+  </li>
+  <li>
+    <h4>Switch the LiDAR BEV to a 2-bin height histogram, and keep the goal out of it</h4>
+    <p>TransFuser's representation, minus their rasterised goal channel — which would confound R3 by putting navigation information into the LiDAR branch.</p>
+  </li>
+  <li>
+    <h4>Add multi-resolution fusion to the R5 family</h4>
+    <p>Decided offline on waypoint ADE. Without it, a null R3 is ambiguous between "LiDAR doesn't help" and "we fused too late".</p>
+  </li>
+  <li>
+    <h4>Adopt CarLLaVA's semi-disentangled output</h4>
+    <p>Space-conditioned path waypoints for lateral control plus time-conditioned waypoints for speed. Addresses the documented weakness of pure waypoints in turns, from the entry that won CARLA Challenge 2.0.</p>
+  </li>
+  <li>
+    <h4>Re-centre R4 on notice instructions, and add a misleading-instruction condition</h4>
+    <p>Junction disambiguation becomes secondary. Add LMDrive's misleading-instruction case to the C2 triad — an agent that follows an unsafe instruction has learned the wrong thing, and it is a cheap, strong test.</p>
+  </li>
+</ol>
+</section>
+
+<section id="verdict">
+<h2>6 · Is this a sensible research direction?</h2>
+
+<div class="callout good">
+  <span class="label">Verdict</span>
+  <p><strong>Yes — the components belong together, with one honest caveat and one real risk.</strong> This is not a pile of unrelated parts. Multi-view + LiDAR + query-based fusion + waypoint output + auxiliary pretraining + frozen encoder is, almost exactly, the InterFuser/LMDrive/TransFuser consensus architecture. You are not inventing a stack; you are building the well-validated one at a smaller scale and ablating it more carefully than the original papers did. That is a legitimate and useful contribution — the perception ablations in these papers are thin, and none of them controls for parameter count.</p>
+</div>
+
+<p><strong>The caveat</strong> is where PPO sits. Every strong CARLA RL result puts RL upstream on privileged state and imitation downstream on sensors. Your constraint puts PPO downstream of frozen sensor features, which is validated in manipulation and navigation but not in driving. That is not a reason to abandon it — it is a reason to <em>name it as the contribution</em>: "does the frozen-pre-trained-representation paradigm transfer to closed-loop driving?" Framed that way it is interesting and the ladder is exactly the right instrument. Framed as an obvious engineering choice, the first reviewer who knows Roach will ask why you did not do it the other way, and you need an answer better than "we preferred it".</p>
+
+<p><strong>The real risk</strong> is compute, and it is quantitative rather than conceptual. CaRL needed 300 M samples on 8×A100 for 64 DS. Roach needed 10 M for a privileged policy. You proposed 1.5 M on one Windows machine. The residual formulation is a genuine mitigation — correcting a competent trajectory is a far smaller learning problem than learning control from scratch — but it is untested, and if it fails, the ladder returns flat differences at every rung and you will not be able to tell whether perception did not help or PPO did not learn. The pilot in revision 4 exists to find this out in days rather than months, and the privileged coach in revision 1 exists so that a flat ladder is still diagnosable.</p>
+
+<p><strong>Where the specification was genuinely wrong,</strong> and this audit corrected it: TransFuser does not do multi-view fusion or shared RGB/BEV tokenisation; the hazard-instruction experiment already exists as LangAuto-Notice; mean-pooling is not the flaw the earlier audit claimed; the autopilot is a weaker expert than an RL coach; and the sample budget was off by two orders of magnitude. None of those is fatal. All five were cheap to find now and expensive to find later.</p>
+
+<p><strong>What is genuinely yours</strong> is the experimental method, not the architecture — fixed latent width plus matched parameters as a control, the blind rung as a leakage gate, the counterfactual instruction triad, and encoder-only distillation with a frozen policy. That is a reasonable thing for this project to contribute, and it is more defensible than any architectural novelty claim would have been.</p>
+</section>
+
+<footer class="foot">
+  <p><strong>Method.</strong> Nine papers downloaded and converted to full text; methodology and experiment sections read directly. Claims marked <span class="pill v-check">needs check</span> come from background knowledge and were not verified in this session because the search quota was exhausted — they must be opened before they appear in a write-up. No repository file was created or modified, no code was written, and CARLA was not started.</p>
+  <p>Sources: <a href="https://arxiv.org/abs/2205.15997">TransFuser</a> · <a href="https://arxiv.org/abs/2108.08265">Roach</a> · <a href="https://arxiv.org/abs/2504.17838">CaRL</a> · <a href="https://arxiv.org/abs/2312.07488">LMDrive</a> · <a href="https://arxiv.org/abs/1912.12294">Learning by Cheating</a> · <a href="https://arxiv.org/abs/1812.03079">ChauffeurNet</a> · <a href="https://arxiv.org/abs/2207.14024">InterFuser</a> · <a href="https://arxiv.org/abs/2406.10165">CarLLaVA</a> · <a href="https://arxiv.org/abs/2203.03580">PVR for Control</a> · <a href="https://arxiv.org/abs/2402.12289">DriveVLM</a> · <a href="https://arxiv.org/abs/2410.23262">EMMA</a></p>
+  <p>Companion documents: the <a href="https://claude.ai/code/artifact/b512d245-91d9-4807-929a-0606a117366e">VLM-PPO Stack Audit</a> and the <a href="https://claude.ai/code/artifact/91b60e43-62fa-438c-b49e-46fdf7aeaff4">Perception Ladder Spec</a>.</p>
+</footer>
+
+</div>
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true" style="visibility: visible !important;"><template shadowrootmode="open"><style>
+      div.grammarly-desktop-integration {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select:none;
+        user-select:none;
+      }
+
+      div.grammarly-desktop-integration:before {
+        content: attr(data-content);
+      }
+    </style><div aria-label="grammarly-integration" role="group" tabindex="-1" class="grammarly-desktop-integration" data-content="{&quot;mode&quot;:&quot;full&quot;,&quot;isActive&quot;:true,&quot;isUserDisabled&quot;:false}"></div></template></grammarly-desktop-integration></html>

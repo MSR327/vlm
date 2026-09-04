@@ -1,0 +1,5 @@
+{
+  "summary": "Comprehensive related work analysis comparing 10+ papers to the user's BTP project. Maps each paper's overlap with the user's approach (VLM + FiLM + PPO + CARLA + Edge) and identifies the novelty gap.",
+  "updatedAt": "2026-08-09T05:25:26.096368Z",
+  "userFacing": true
+}

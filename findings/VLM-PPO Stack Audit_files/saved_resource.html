@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<!-- saved from url=(0253)https://b512d245-91d9-4807-929a-0606a117366e.frame.claudeusercontent.com/_f/1788155910-a02d/?__frame_t=QRvszAenM-WKKZQe6Ifkx3j2.660bcc46-e66b-46ff-90f3-18d1c74a44d1.3d890d74-81e2-41f2-b751-7acee65af854.1788159512&__frame_v=manifest.155e997702a4b8fc.json -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><!-- frame-runtime --><!--<base href="/_f/1788155910-a02d/">--><base href="."><script>window.__FRAME_PREAMBLE={"v":1,"capabilities":{"artifact":"artifact.D_F1mx8d.js","assets":"assets.8Gk803W0.js","comments":"comments.GLuHR3zP.js","db":"db.h-3sndFg.js","downloads":"downloads.C3GSvEDP.js","embed":"embed.CxGAyc-v.js","mcp":"mcp.Bvma3qD7.js","network":"network.B5UA9Su4.js","notifications":"notifications.ssU4jy7G.js","permissions":"permissions.BNySkLV5.js","room":"room.BMMoe2BY.js","sample":"sample.BW2Uysoh.js","self":"artifact.D_F1mx8d.js","user":"user.BpKav-Rf.js"},"transforms":"_transforms.DSB5x63f.js","comments":"_comments.BoakUwmM.js","translate":"_translate.5HCW4BJh.js"}</script><script>(function(){"use strict";var te=["light","dark","system"],re=/^[A-Za-z0-9_-]{1,64}$/,$=/^[a-zA-Z_:][a-zA-Z0-9_:.-]{0,127}$/,ne=new Set(["class","hidden","value","checked","style","title","alt","placeholder","lang","dir","role","tabindex","disabled","readonly","contenteditable","open","colspan","rowspan"]);function oe(e){const t=e.toLowerCase();return t.startsWith("data-")||t.startsWith("aria-")||ne.has(t)}var Be="http://www.w3.org/1999/xhtml",se="http://www.w3.org/2000/svg",ae=new Set(["script","style","iframe","noscript","noframes","noembed","xmp","plaintext","template","title","textarea","object","embed"]),ie=new Set(["script","style"]);function ce(e){const t=e.localName.toLowerCase();return e.namespaceURI==="http://www.w3.org/1999/xhtml"?!ae.has(t):e.namespaceURI===se?!ie.has(t):!1}function M(e,t){return e===t||(e===160||e===32)&&(t===160||t===32)}function le(e,t){const r=e.length,n=t.length;let s=0;for(;s<r&&s<n&&M(e.charCodeAt(s),t.charCodeAt(s));)s++;let o=0;for(;o<r-s&&o<n-s&&M(e.charCodeAt(r-1-o),t.charCodeAt(n-1-o));)o++;return{p:s,s:o}}function ue(e,t){const r=e.firstChild;if(e.childNodes.length!==1||r===null||r.nodeType!==Node.TEXT_NODE){e.textContent=t;return}const n=r.data,s=n.length,o=t.length,{p:i,s:c}=le(n,t);i===s&&c===0&&s===o||r.replaceData(i,s-i-c,t.slice(i,o-c));const h=r.data,p=e.ownerDocument.getSelection?.()??null,w=p!==null&&p.rangeCount>0&&(p.anchorNode===r||p.focusNode===r)?{anchor:p.anchorNode,anchorOffset:p.anchorOffset,focus:p.focusNode,focusOffset:p.focusOffset}:null;let m=-1,g=-1;for(let f=0;f<h.length&&f<t.length;f++){const v=h.charCodeAt(f),b=t.charCodeAt(f);v!==b&&M(v,b)&&(m<0&&(m=f),g=f)}const a=m>=0;if(a&&r.replaceData(m,g-m+1,t.slice(m,g+1)),a&&w!==null&&w.anchor!==null&&w.focus!==null)try{p.setBaseAndExtent(w.anchor,w.anchorOffset,w.focus,w.focusOffset)}catch{}}var fe=new Set(["html","head","body","frameset"]);function de(e){return e.namespaceURI==="http://www.w3.org/1999/xhtml"&&fe.has(e.localName)}function pe(e){if(e===null||typeof e!="object")return!1;const t=e;if(typeof t.target!="string"||!re.test(t.target)||t.text!==void 0&&typeof t.text!="string")return!1;if(t.attrsSet!==void 0){if(t.attrsSet===null||typeof t.attrsSet!="object")return!1;for(const[r,n]of Object.entries(t.attrsSet))if(!$.test(r)||typeof n!="string")return!1}if(t.attrsRemoved!==void 0){if(!Array.isArray(t.attrsRemoved))return!1;for(const r of t.attrsRemoved)if(typeof r!="string"||!$.test(r))return!1}return!0}function me(e,t){if(e===null||typeof e!="object")return!1;const{seq:r,elements:n}=e;if(typeof r!="number"||!Number.isSafeInteger(r)||!Array.isArray(n)||n.length===0||n.length>64)return!1;for(let s=0;s<n.length;s++)if(!t(n[s]))return!1;return!0}function he(e){return e===null||typeof e!="object"?!1:me(e.__frame_patch,pe)}function _e(e){if(e===null||typeof e!="object")return!1;const t=e.__frame_init;return t!==null&&typeof t=="object"}function ve(e){return e!==null&&typeof e=="object"&&e.__frame_size_poke===!0}function ye(e){if(e===null||typeof e!="object")return!1;const t=e.__frame_theme;if(t===null||typeof t!="object")return!1;const r=t.theme;return typeof r=="string"&&te.includes(r)}var A=/^[\w.-]+\.js$/;function we(e,t,r){return r?"inert":typeof t=="string"&&A.test(t)?e?[t]:"inert":e?"inert":"framed"}function ge(){return{post(e,t){parent.postMessage(e,t)},on(e){const t=r=>{r.source===parent&&e(r.data,r.origin,r.isTrusted)};return addEventListener("message",t),()=>removeEventListener("message",t)}}}function be(){return{post:()=>{},on:()=>()=>{}}}var j="__frame_scroll",Ee=150,Ae=310,Se=160,Te=3e4;function ke(){let e=0,t=!1,r=!1,n=!1,s=0,o=null;const i=l=>{try{sessionStorage.setItem(j,JSON.stringify({y:l}))}catch{}},c=()=>{if(clearTimeout(e),o===null)return;const l=o;o=null,i(l)},h=()=>{if(t){t=!1;return}r=!0,o=scrollY,clearTimeout(e),e=setTimeout(c,Ee)};try{addEventListener("scroll",h,{passive:!0}),addEventListener("pagehide",c)}catch{}const p=()=>{let l;try{l=sessionStorage.getItem(j)}catch{return null}if(l===null)return null;let _;try{_=JSON.parse(l)}catch{_=null}const d=_?.y;if(!(typeof d=="number"&&Number.isFinite(d)&&d>=0)){try{sessionStorage.removeItem(j)}catch{}return null}return d};let w=!1;const m=l=>{try{const _=scrollY;scrollTo({top:l,left:0,behavior:"instant"}),s=l,n=!0,clearTimeout(e),o=null,i(l);const d=scrollY;d!==_&&(t=!0),d!==l&&!w&&(w=!0,addEventListener("load",()=>{try{if(scrollY===d){const T=p();m(T!==null?T:s)}}catch{}},{once:!0}))}catch{}},g=()=>{try{return!!location.hash}catch{return!0}};let a=!1;const f=()=>{try{if(a||innerWidth>Ae||innerHeight>Se)return;a=!0;const l=Date.now(),_=()=>{try{removeEventListener("resize",_)}catch{}if(Date.now()-l>Te||r||g())return;const d=p();m(d!==null?d:s)};addEventListener("resize",_)}catch{}};let v=!1,b=!1;return{restore(){if(v||(v=!0,g()))return;const l=p();l!==null&&(m(l),f())},promoted(){if(b||(b=!0,g()))return;const l=p();l!==null?(m(l),f()):n&&m(s)}}}function Re(e,t,r,n){let s=null;try{s=window.trustedTypes?.createPolicy("frame-runtime",{createScriptURL:h=>h})??null}catch{}const o=window.Worker,i=o?.prototype,c=Object.freeze({Worker:o,workerOn:i?.addEventListener,workerPost:i?.postMessage,workerTerminate:i?.terminate,fetch:window.fetch.bind(window),preventDefault:Event.prototype.preventDefault,policy:s,origins:t});r(e).then(h=>h?.bootTopLevel?h.bootTopLevel(c,n):n.settle()).catch(()=>n.settle())}var De="modulepreload",Ie=function(e){return"/"+e},Ue={},Le=function(t,r,n){let s=Promise.resolve();function o(i){const c=new Event("vite:preloadError",{cancelable:!0});if(c.payload=i,window.dispatchEvent(c),!c.defaultPrevented)throw i}return s.then(i=>{for(const c of i||[])c.status==="rejected"&&o(c.reason);return t().catch(o)})},Oe=window===top,q=Object.getOwnPropertyDescriptor(window,"claude"),k=we(Oe,window.__FRAME_PREAMBLE?.topLevel,q?.writable===!1),N=typeof k=="object"&&k[0],y=N?be():ge();(function(){const e=Object.defineProperty,t=globalThis,r=["RTCPeerConnection","webkitRTCPeerConnection","RTCDataChannel","RTCIceCandidate","RTCSessionDescription","RTCRtpSender","RTCRtpReceiver"];let n=0;for(let s=0;s<r.length;s++){const o=r[s];try{e(t,o,{value:void 0,writable:!1,configurable:!1})}catch{try{delete t[o]}catch{}try{e(t,o,{value:void 0,writable:!1,configurable:!0})}catch{}}typeof t[o]=="function"&&n++}if(n&&k==="framed")try{y.post({__frame_rtc_lockdown_failed:n},"*")}catch{}})();var Pe=1e4,Y=Object.freeze([...window.__FRAME_PREAMBLE?.origins??["https://claude.ai","https://preview.claude.ai"]]);function X(e){for(const t of Y)if(t.endsWith(":*"))try{const r=new URL(e);if(`${r.protocol}//${r.hostname}:*`===t)return!0}catch{}else if(e===t)return!0;return!1}var R=Object.freeze({...window.__FRAME_PREAMBLE?.capabilities}),B=window.__FRAME_PREAMBLE?.transforms,D=window.__FRAME_PREAMBLE?.comments,I=window.__FRAME_PREAMBLE?.translate;function S(e){return Le(()=>import("/_runtime/"+e),void 0)}function G(e,t){return{contract:e.contract,changes:new Set(e.changes??[]),flags:new Set(e.flags??[]),capabilities:e.capabilities??{},capBudgets:e.capBudgets??{},transforms:new Map,shellOrigin:t,mount:x,hooks:O,pipe:()=>({wrap:(r,n)=>(...s)=>{try{return n(...s)}catch(o){return Promise.reject(o)}}})}}var L=null,E=null;function V(e,t,r){try{Object.defineProperty(e,t,{value:r,writable:!1,configurable:!1,enumerable:!0})}catch{try{Object.defineProperty(e,t,{value:r,writable:!1,configurable:!0,enumerable:!0})}catch{}}}var U=!1,O={editBefore:null,edit:null};function Ce(e,t,r=!1){const n=[];let s;if(r)try{O.editBefore?.(e)}catch{}for(const o of e.elements){const i=document.querySelector(`[data-id="${o.target}"]`);if(!i){s=o.target;break}if([...Object.keys(o.attrsSet??{}),...o.attrsRemoved??[]].some(c=>!oe(c))){s=o.target;break}if(o.text!==void 0&&(!ce(i)||de(i))){s=o.target;break}for(const[c,h]of Object.entries(o.attrsSet??{}))if(!J(i,c)){try{i.setAttribute(c,h)}catch{}Z(i,c,h)}for(const c of o.attrsRemoved??[])J(i,c)||(i.removeAttribute(c),Z(i,c,null));typeof o.text=="string"&&ue(i,o.text),n.push(o.target)}if(r)try{O.edit?.(e.seq,n,s)}catch{}if(s!==void 0){y.post({__frame_patch_miss:{seq:e.seq}},t);return}try{document.dispatchEvent(new CustomEvent("claude:edit",{detail:{seq:e.seq,targets:n}}))}catch{}}function Z(e,t,r){if(!(e instanceof HTMLInputElement))return;const n=t.toLowerCase();n==="checked"?e.checked=r!==null:n==="value"&&e.type!=="file"&&(e.value=r??"")}function J(e,t){const r=t.toLowerCase(),n=e;return r==="data-id"||(r==="value"||r==="checked")&&(n.__artifactSecret===!0||/^(password|hidden|file)$/.test(n.type??"")||/(^|\s)(cc-|one-time-code|current-password|new-password)/i.test(`${e.getAttribute("autocomplete")??""} ${n.autocomplete??""}`))}function Q(e){const t=document.documentElement;e==="light"||e==="dark"?(t.dataset.theme=e,t.style.colorScheme=e,U=!0):U&&(delete t.dataset.theme,t.style.colorScheme="",U=!1)}var P=new Map;function Me(){let e;const t={u:new Promise(r=>{e=r}),r:r=>{t.done=!0,e(r)},done:!1,nulled:!1};return t}function F(){for(const e of P.values())e.done||(e.nulled=!0,e.r(null))}var je=Object.freeze(Object.assign(Object.create(null),{call:Function.prototype.call,apply:Function.prototype.apply,bind:Function.prototype.bind})),x=(e,t)=>{const r=P.get(e);if(!r||r.done){r?.nulled&&E&&y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:e}},E);return}const n=typeof t=="function"?Object.setPrototypeOf(t,je):Object.assign(Object.create(null),t);typeof n.then=="function"&&delete n.then,r.r(Object.freeze(n))};function ee(){const e=q?.value??{};V(window,"claude",e);for(const t of Object.keys(R)){if(e[t]!==void 0){V(e,t,e[t]);continue}P.set(t,Me())}if(e.use===void 0){const t=r=>{if(typeof r!="string"||!Object.hasOwn(R,r))return Promise.resolve(null);const n=P.get(r);return n?n.u:Promise.resolve(e[r]??null)};try{Object.defineProperty(e,"use",{value:t,writable:!0,configurable:!0,enumerable:!1})}catch{}}}if(k==="framed"){const e=B&&A.test(B)?S(B).catch(()=>{}):Promise.resolve(void 0),t=a=>{if(a.type==="auxclick"&&a.button!==1)return;const f=a.target,v=f&&f.closest?f.closest("a[href],area[href]"):null;if(!v)return;const b=v.getAttribute("href");if(!b)return;let l;try{l=new URL(b,document.baseURI)}catch{return}if((l.protocol==="http:"||l.protocol==="https:")&&l.origin!==location.origin){a.preventDefault();const _=(v.getAttribute("target")??"").toLowerCase(),d=a.type==="auxclick"||a.metaKey||a.ctrlKey||a.shiftKey||a.altKey||!["","_self","_top","_parent"].includes(_);y.post({__frame_nav:!0,url:l.href,newTab:d},"*")}};addEventListener("click",t,!0),addEventListener("auxclick",t,!0);const r={},n=a=>{a.isTrusted&&(r.pointer=!0)},s=a=>{a.isTrusted&&(r.click=!0)};addEventListener("pointermove",n,{capture:!0,passive:!0}),addEventListener("click",s,{capture:!0,passive:!0}),e.then(a=>{a?.wireNav&&(a.wireNav(),removeEventListener("click",t,!0),removeEventListener("auxclick",t,!0),removeEventListener("pointermove",n,!0),removeEventListener("click",s,!0),a.wireEngagement?.(r))});let o=null;try{o=ke()}catch{}ee();let i=null,c=null,h=0;const p=y.on((a,f)=>{X(f)&&_e(a)&&(i=a.__frame_init,E=f,p(),clearTimeout(h),c?.())});y.post({__frame_connect:!0},"*");const w=new Promise(a=>{c=a,h=setTimeout(()=>{p(),a()},Pe)}),m=document.readyState==="loading"?new Promise(a=>document.addEventListener("DOMContentLoaded",()=>a(),{once:!0})):Promise.resolve();m.then(()=>{try{o?.restore()}catch{}});const g={cb:null};y.on((a,f)=>{if(X(f)&&ve(a)){try{o?.promoted()}catch{}g.cb?.()}}),w.then(async()=>{if(!i||!E){F();return}Q(i.theme);const a=E;let f=!1,v=!1;y.on((u,z,C)=>{if(z!==a)return;ye(u)&&Q(u.__frame_theme.theme),he(u)&&Ce(u.__frame_patch,a,C);const H=u?.__fc_mode;H&&typeof H=="object"&&!f&&D&&A.test(D)&&(f=!0,S(D).then(K=>K.install?.(a,H.on===!0)).catch(()=>{}));const W=u?.__ft_cmd;W&&typeof W=="object"&&!v&&I&&A.test(I)&&(v=!0,S(I).then(K=>K.install?.(a,W)).catch(()=>{}))});const b=Object.keys(i.capabilities??{}).filter(u=>Object.hasOwn(R,u)).map(u=>[u,R[u]]).filter(u=>typeof u[1]=="string"&&A.test(u[1])),l=await Promise.allSettled(b.map(([,u])=>S(u))),_=await e,d=E;if(_?.buildBoot||y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:"_transforms"}},d),_?.buildBoot)try{L=_.buildBoot(i,_.TRANSFORMS??{},{shellOrigin:d,mount:x,hooks:O},u=>y.post({__frame_cap_telemetry:u},d))}catch{y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:"_transforms"}},d),L=G(i,d)}else L=G(i,d);const T=u=>y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:u}},d),Ne=L;l.forEach((u,z)=>{const C=b[z][0];if(u.status!=="fulfilled"){T(C);return}try{u.value?.install?.(Ne)}catch{T(C)}}),F(),await m,y.post({__frame_ready:!0},E),e.then(u=>u?.installSizeReporter?.(d,g))})}else N&&(ee(),Re(N,Y,S,{settle:F,mount:x}))})();</script><!-- /frame-runtime --><meta name="viewport" content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body data-new-gr-c-s-check-loaded="14.1324.0" data-gr-ext-installed="">
+<title>VLM-PPO Stack Audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link rel="stylesheet" href="./css2">
+
+<style>
+:root {
+  --ground:      #EDEFF2;
+  --surface:     #FDFDFE;
+  --surface-2:   #E4E8ED;
+  --ink:         #14181D;
+  --ink-2:       #4C5560;
+  --ink-3:       #79838F;
+  --rule:        #CDD3DA;
+  --rule-soft:   #DDE2E8;
+  --accent:      #1F4E79;
+  --accent-soft: #DCE7F1;
+  --critical:    #A22C1E;
+  --critical-bg: #F3DEDA;
+  --caution:     #7E5A0E;
+  --caution-bg:  #F2E7CE;
+  --sound:       #2C6149;
+  --sound-bg:    #DCEBE3;
+  --shadow:      0 1px 2px rgba(20,24,29,.06), 0 6px 20px -12px rgba(20,24,29,.22);
+
+  --serif: "Source Serif 4", Charter, Georgia, serif;
+  --sans:  "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --mono:  "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+
+  --measure: 68ch;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground:      #10141A;
+    --surface:     #171C23;
+    --surface-2:   #1F252E;
+    --ink:         #E3E7EC;
+    --ink-2:       #A7B1BD;
+    --ink-3:       #7A8592;
+    --rule:        #2B333D;
+    --rule-soft:   #232A33;
+    --accent:      #86B4E2;
+    --accent-soft: #1B2A3A;
+    --critical:    #E4897C;
+    --critical-bg: #33201D;
+    --caution:     #D9AE55;
+    --caution-bg:  #302719;
+    --sound:       #74C2A0;
+    --sound-bg:    #16291F;
+    --shadow:      0 1px 2px rgba(0,0,0,.4), 0 8px 24px -14px rgba(0,0,0,.7);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground:      #10141A;
+  --surface:     #171C23;
+  --surface-2:   #1F252E;
+  --ink:         #E3E7EC;
+  --ink-2:       #A7B1BD;
+  --ink-3:       #7A8592;
+  --rule:        #2B333D;
+  --rule-soft:   #232A33;
+  --accent:      #86B4E2;
+  --accent-soft: #1B2A3A;
+  --critical:    #E4897C;
+  --critical-bg: #33201D;
+  --caution:     #D9AE55;
+  --caution-bg:  #302719;
+  --sound:       #74C2A0;
+  --sound-bg:    #16291F;
+  --shadow:      0 1px 2px rgba(0,0,0,.4), 0 8px 24px -14px rgba(0,0,0,.7);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page { max-width: 1120px; margin: 0 auto; padding: 0 28px 96px; }
+
+/* ---------- masthead ---------- */
+.masthead {
+  border-bottom: 2px solid var(--ink);
+  padding: 56px 0 22px;
+  margin-bottom: 44px;
+}
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 18px;
+}
+h1 {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(34px, 5.2vw, 54px);
+  line-height: 1.04;
+  letter-spacing: -.022em;
+  margin: 0 0 16px;
+  text-wrap: balance;
+}
+.standfirst {
+  font-size: 19.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 0 0 26px;
+}
+.meta-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 26px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ink-3);
+  letter-spacing: .02em;
+}
+.meta-strip b { color: var(--ink-2); font-weight: 500; }
+
+/* ---------- verdict ---------- */
+.verdict {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--critical);
+  border-radius: 3px;
+  padding: 26px 30px;
+  margin: 0 0 56px;
+  box-shadow: var(--shadow);
+}
+.verdict h2 { margin-top: 0; border: 0; padding: 0; font-size: 15px; }
+.verdict p { max-width: none; }
+.verdict p:last-child { margin-bottom: 0; }
+
+/* ---------- sections ---------- */
+section { margin-bottom: 68px; scroll-margin-top: 20px; }
+
+h2 {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 24px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+h3 {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 23px;
+  line-height: 1.25;
+  letter-spacing: -.012em;
+  margin: 40px 0 14px;
+  text-wrap: balance;
+}
+h4 {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -.005em;
+  margin: 28px 0 10px;
+}
+p, ul, ol { max-width: var(--measure); }
+p { margin: 0 0 16px; }
+ul, ol { margin: 0 0 16px; padding-left: 22px; }
+li { margin-bottom: 8px; }
+li::marker { color: var(--ink-3); }
+strong { font-weight: 600; }
+em { font-style: italic; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+code {
+  font-family: var(--mono);
+  font-size: .855em;
+  background: var(--surface-2);
+  padding: .1em .38em;
+  border-radius: 2px;
+  color: var(--ink);
+  word-break: break-word;
+}
+
+/* ---------- pipeline rail ---------- */
+.rail { display: grid; gap: 0; margin: 28px 0 8px; max-width: none; }
+.stage {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: 0 20px;
+  padding: 0 0 22px;
+  position: relative;
+}
+.stage::before {
+  content: "";
+  position: absolute;
+  left: 17px; top: 30px; bottom: -4px;
+  width: 2px;
+  background: var(--rule);
+}
+.stage:last-child::before { display: none; }
+.stage-num {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-3);
+  width: 36px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  background: var(--surface);
+  position: relative; z-index: 1;
+}
+.stage-body { padding-top: 2px; }
+.stage-head {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px;
+  margin-bottom: 5px;
+}
+.stage-name {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -.005em;
+}
+.stage-src { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); }
+.stage-body p { margin: 0; font-size: 16px; color: var(--ink-2); max-width: 74ch; }
+
+/* ---------- pills ---------- */
+.pill {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 2px;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.p-real  { background: var(--sound-bg);    color: var(--sound); }
+.p-part  { background: var(--caution-bg);  color: var(--caution); }
+.p-stub  { background: var(--critical-bg); color: var(--critical); }
+.p-dead  { background: var(--surface-2);   color: var(--ink-3); }
+
+/* ---------- findings ---------- */
+.finding {
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-radius: 3px;
+  padding: 20px 24px;
+  margin-bottom: 14px;
+  max-width: none;
+}
+.finding.sev-1 { border-left: 4px solid var(--critical); }
+.finding.sev-2 { border-left: 4px solid var(--caution); }
+.finding.sev-3 { border-left: 4px solid var(--rule); }
+.finding-head {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px;
+  margin-bottom: 10px;
+}
+.finding-id {
+  font-family: var(--mono); font-size: 12px; font-weight: 500;
+  color: var(--ink-3); letter-spacing: .04em;
+}
+.finding-title {
+  font-family: var(--sans); font-weight: 600; font-size: 17.5px;
+  letter-spacing: -.008em; flex: 1 1 260px; text-wrap: balance;
+}
+.finding p { max-width: 76ch; margin-bottom: 12px; }
+.finding p:last-child, .finding ul:last-child { margin-bottom: 0; }
+.finding ul { max-width: 76ch; }
+.evidence {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-3);
+  background: var(--surface-2);
+  border-radius: 2px;
+  padding: 8px 11px;
+  margin-top: 12px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ---------- tables ---------- */
+.tw { overflow-x: auto; margin: 22px 0 26px; border: 1px solid var(--rule); border-radius: 3px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 15px; }
+th {
+  font-family: var(--sans); font-weight: 600; font-size: 11px;
+  letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3);
+  text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--rule);
+  background: var(--surface-2); vertical-align: bottom;
+}
+td { padding: 13px 16px; border-bottom: 1px solid var(--rule-soft); vertical-align: top; line-height: 1.5; }
+tr:last-child td { border-bottom: 0; }
+td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 13px; white-space: nowrap; }
+.claim { font-family: var(--sans); font-size: 14.5px; font-weight: 500; }
+
+/* ---------- callout ---------- */
+.callout {
+  background: var(--accent-soft);
+  border-radius: 3px;
+  padding: 18px 22px;
+  margin: 24px 0;
+  max-width: none;
+  border: 1px solid var(--rule-soft);
+}
+.callout p { max-width: 74ch; margin-bottom: 10px; }
+.callout p:last-child { margin-bottom: 0; }
+.callout .label {
+  font-family: var(--sans); font-size: 10.5px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--accent);
+  display: block; margin-bottom: 8px;
+}
+
+/* ---------- direction cards ---------- */
+.dirs { display: grid; gap: 14px; margin: 24px 0 8px; grid-template-columns: 1fr; max-width: none; }
+@media (min-width: 860px) { .dirs { grid-template-columns: repeat(3, 1fr); } }
+.dir {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 20px 22px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.dir.pick { border-color: var(--accent); border-width: 2px; }
+.dir-tag {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+.dir h4 { margin: 0; font-size: 17px; }
+.dir p { font-size: 15px; margin: 0; color: var(--ink-2); max-width: none; }
+.dir dl { margin: 0; font-size: 14px; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; }
+.dir dt {
+  font-family: var(--sans); font-size: 10.5px; font-weight: 600; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--ink-3); padding-top: 3px;
+}
+.dir dd { margin: 0; color: var(--ink-2); }
+
+/* ---------- Q&A ---------- */
+.qa { border-top: 1px solid var(--rule); max-width: none; }
+.qa details { border-bottom: 1px solid var(--rule-soft); }
+.qa summary {
+  cursor: pointer; list-style: none;
+  padding: 15px 34px 15px 44px;
+  font-family: var(--sans); font-weight: 600; font-size: 16.5px;
+  letter-spacing: -.005em; position: relative;
+}
+.qa summary::-webkit-details-marker { display: none; }
+.qa summary::before {
+  content: counter(qc); counter-increment: qc;
+  position: absolute; left: 0; top: 15px;
+  font-family: var(--mono); font-size: 12px; font-weight: 400;
+  color: var(--ink-3); width: 32px; text-align: right;
+}
+.qa summary::after {
+  content: "+"; position: absolute; right: 6px; top: 13px;
+  font-family: var(--mono); font-size: 17px; color: var(--ink-3); line-height: 1.4;
+}
+.qa details[open] summary::after { content: "−"; }
+.qa { counter-reset: qc; }
+.qa-body { padding: 0 34px 20px 44px; }
+.qa-body p, .qa-body ul { max-width: 72ch; }
+.qa-body p:last-child, .qa-body ul:last-child { margin-bottom: 0; }
+.verdict-line {
+  font-family: var(--sans); font-weight: 600; font-size: 15px;
+  color: var(--ink); margin-bottom: 12px; display: block;
+}
+
+/* ---------- ordered steps ---------- */
+.steps { counter-reset: st; list-style: none; padding: 0; max-width: none; }
+.steps > li {
+  counter-increment: st;
+  position: relative;
+  padding: 0 0 20px 46px;
+  margin: 0;
+  max-width: 78ch;
+}
+.steps > li::before {
+  content: counter(st);
+  position: absolute; left: 0; top: 1px;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 12px;
+  background: var(--accent); color: var(--surface);
+  border-radius: 50%;
+}
+:root[data-theme="dark"] .steps > li::before,
+:root:not([data-theme="light"]) .steps > li::before { color: var(--ground); }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .steps > li::before { color: #FDFDFE; }
+}
+.steps h4 { margin: 0 0 5px; }
+.steps p { margin: 0 0 8px; max-width: none; }
+
+/* ---------- footer ---------- */
+.foot {
+  border-top: 1px solid var(--rule);
+  margin-top: 20px; padding-top: 24px;
+  font-size: 14px; color: var(--ink-3);
+}
+.foot p { max-width: 74ch; }
+
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .page { padding: 0 18px 64px; }
+  .stage { grid-template-columns: 42px 1fr; gap: 0 14px; }
+  .stage::before { left: 15px; }
+  .qa summary { padding-left: 34px; }
+  .qa-body { padding-left: 34px; padding-right: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+</style>
+
+<div class="page">
+
+<header class="masthead">
+  <p class="eyebrow">Independent technical audit · MTP_TESTING · 31 Aug 2026</p>
+  <h1>VLM-PPO Stack Audit</h1>
+  <p class="standfirst">What the CARLA driving stack in <code>MTP_TESTING</code> actually is, where the documentation and the code disagree, and whether the proposed multimodal VLM direction is the right next move.</p>
+  <div class="meta-strip">
+    <span><b>Scope</b> 22 Python files, 10,047 lines</span>
+    <span><b>Method</b> Static read + executed probes</span>
+    <span><b>Changes made</b> none</span>
+  </div>
+</header>
+
+<div class="verdict">
+  <h2>Bottom line</h2>
+  <p><strong>There is no vision-language model in this codebase, and there never was one.</strong> What exists is a 167 K-parameter multimodal CNN-transformer that takes four camera views and a LiDAR height-map, applies two affine modulations derived from an 8-way command flag, mean-pools everything into 128 numbers, and hands them to a PPO MLP. That is a competent multimodal encoder. It is not a VLM, a VLLM, or a VLA, and calling it one will not survive a viva.</p>
+  <p>More urgently: <strong>the policy is handed lane-centering and heading error straight from the CARLA map API, and the reward is computed from those same three numbers.</strong> A five-input MLP can maximise this reward with the cameras unplugged. Every result the current design would produce is, structurally, unable to say anything about perception or language. That has to be fixed before any architecture question matters.</p>
+  <p>The new direction is worth pursuing — but the first thing to build is not a VLM.</p>
+</div>
+
+<section id="current">
+<h2>1 · Current system</h2>
+
+<p>The pipeline below is what the code does today, stage by stage, from CARLA back to CARLA. Status marks distinguish what runs from what is scaffolding.</p>
+
+<p style="font-family:var(--mono);font-size:12px;color:var(--ink-3);max-width:none;margin-bottom:20px;">
+  <span class="pill p-real">works</span> runs as described &nbsp;·&nbsp;
+  <span class="pill p-part">partial</span> runs, but not as documented &nbsp;·&nbsp;
+  <span class="pill p-stub">stub</span> present but hollow &nbsp;·&nbsp;
+  <span class="pill p-dead">dead</span> never executed / broken
+</p>
+
+<div class="rail">
+
+  <div class="stage">
+    <div class="stage-num">01</div>
+    <div class="stage-body">
+      <div class="stage-head"><span class="stage-name">CARLA server</span><span class="pill p-real">works</span><span class="stage-src">main_vlm_train.py:270–274</span></div>
+      <p>Synchronous mode, <code>fixed_delta_seconds = 0.05</code> (20 FPS). Town01 for training, Town02 for evaluation. Ego is a <code>tesla.model3</code> spawned at a <em>uniformly random</em> spawn point — no route, no goal, no destination.</p>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-num">02</div>
+    <div class="stage-body">
+      <div class="stage-head"><span class="stage-name">Sensor rig</span><span class="pill p-part">partial</span><span class="stage-src">main_vlm_train.py:_setup_sensors</span></div>
+      <p>Four RGB cameras at 160×80 (front / left −60° / right +60° / rear 180°), a 64-channel ray-cast LiDAR, and a collision sensor. Three defects here: all four cameras silently inherit the <em>front</em> camera's 125° FOV because one blueprint is reused; LiDAR <code>rotation_frequency</code> is never set; and no traffic-manager sync is applied to the NPCs.</p>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-num">03</div>
+    <div class="stage-body">
+      <div class="stage-head"><span class="stage-name">Preprocessing</span><span class="pill p-part">partial</span><span class="stage-src">main_vlm_train.py:project_lidar_to_bev</span></div>
+      <p>Camera buffers are sliced <code>[:, :, :3]</code> from CARLA's BGRA — yielding <strong>BGR</strong>, labelled RGB throughout. LiDAR becomes an 80×160 single-channel grid holding the <em>maximum normalised height</em> per cell over x ∈ [−15, +35] m, y ∈ [−25, +25] m. No density channel, no intensity, no ego-motion accumulation.</p>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-num">04</div>
+    <div class="stage-body">
+      <div class="stage-head"><span class="stage-name">"System 2" slow pathway</span><span class="pill p-stub">stub</span><span class="stage-src">continuous_speech_encoder.py</span></div>
+      <p>Two branches, both hollow. <code>encode_text</code> is a substring match against nine hard-coded anchor vectors, falling back to <code>torch.randn</code> seeded by the sum of the string's character codes. <code>encode_scene</code> runs a frozen ImageNet MobileNetV3-Small over a 4-view mosaic, then through a projection head that <em>is never trained anywhere in the repo</em>. A third branch, <code>SemanticLanguageProjector</code> (the wav2vec 2.0 adapter), is constructed at random and never called by the driving loop.</p>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-num">05</div>
+    <div class="stage-body">
+      <div class="stage-head"><span class="stage-name">"System 1" fast encoder</span><span class="pill p-real">works</span><span class="stage-src">multimodal_encoder.py:MultimodalEdgeEncoder</span></div>
+      <p>167,177 parameters (0.67 MB). Shared depthwise-separable tokeniser over the 4 RGB views (7,579 params) plus a <em>separate</em> LiDAR tokeniser (7,497) → 5 × 200 = 1000 tokens at d=64 → learned view embeddings → Language FiLM (34,304) → Scene FiLM (25,088) → two 4-head transformer blocks (66,944) → <strong>mean-pool to a single 64-d vector</strong> → MLP to 128-d (25,088).</p>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-num">06</div>
+    <div class="stage-body">
+      <div class="stage-head"><span class="stage-name">Observation assembly</span><span class="pill p-stub">stub</span><span class="stage-src">main_vlm_train.py:_get_obs</span></div>
+      <p>133 dims = the 128-d latent, concatenated with 5 telemetry dims passed through <code>telemetry_proj</code> — a 357-parameter MLP that <strong>no training script ever touches</strong> (pretraining always calls the encoder with <code>telemetry=None</code>). Telemetry is <code>[prev_steer, speed_kmh, norm_speed, norm_dist_from_lane_centre, norm_heading_error]</code>. The last two come from <code>map.get_waypoint()</code> — privileged simulator ground truth. See <a href="https://b512d245-91d9-4807-929a-0606a117366e.frame.claudeusercontent.com/_f/1788155910-a02d/#problems">F-01</a>.</p>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-num">07</div>
+    <div class="stage-body">
+      <div class="stage-head"><span class="stage-name">PPO actor–critic</span><span class="pill p-real">works</span><span class="stage-src">main_vlm_train.py:ActorCritic</span></div>
+      <p>495,103 parameters — <em>three times the size of the perception stack it consumes.</em> Two separate 500→300→100 tanh MLPs, diagonal Gaussian policy, GAE(λ=0.95), clip 0.2, 15 epochs per update, updates fired every 2000 wall-clock timesteps (mid-episode). No minibatching; <code>BATCH_SIZE</code> in <code>parameters.py</code> is never read.</p>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-num">08</div>
+    <div class="stage-body">
+      <div class="stage-head"><span class="stage-name">Action &amp; reward</span><span class="pill p-part">partial</span><span class="stage-src">main_vlm_train.py:step</span></div>
+      <p>Two continuous outputs: steering (EMA-smoothed, 0.8 / 0.2) and a signed longitudinal channel that splits into throttle and brake. Reward = <code>speed_factor × centering_factor × angle_factor + 0.3 × speech_reward</code>. No traffic-light term, no infraction term, no route term. Terminals: collision −10, off-centre &gt;3.5 m −5, stalled −3, 1000-step cap.</p>
+    </div>
+  </div>
+
+</div>
+
+<h3>Side pipelines</h3>
+
+<div class="tw">
+<table>
+<thead><tr><th>File</th><th>Purpose</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td class="num">collect_data.py</td><td>Autopilot data collection → <code>.npz</code> frames + <code>labels.csv</code></td><td><span class="pill p-real">works</span> — but never run; <code>data_collected_town01/</code> does not exist</td></tr>
+<tr><td class="num">pretrain_encoder.py</td><td>Supervised steering + speed regression on the encoder latent</td><td><span class="pill p-part">partial</span> — never run; <code>models/</code> does not exist</td></tr>
+<tr><td class="num">benchmark_latency.py</td><td>Forward-pass timing</td><td><span class="pill p-part">partial</span> — random tensors, no preprocessing, no quantisation, no target device</td></tr>
+<tr><td class="num">PIL_edge_vlm.py</td><td>TCP edge client for processor-in-the-loop</td><td><span class="pill p-dead">dead</span> — its 13-channel wire format does not match <code>PIL_simulation.py</code>'s sender</td></tr>
+<tr><td class="num">main_vlm.py</td><td>Earlier "drop-in VLM state encoder"</td><td><span class="pill p-dead">dead</span> — references undefined <code>LATENT_DIM</code> and constructor kwargs the encoder no longer accepts</td></tr>
+<tr><td class="num">test_vlm_carla.py</td><td>Live CARLA smoke test</td><td><span class="pill p-dead">dead</span> — imports from <code>main_vlm.py</code></td></tr>
+<tr><td class="num">convert.py, tf_multimodal_encoder.py, accuracy_check.py</td><td>TF-Lite export / accuracy checks</td><td><span class="pill p-dead">dead</span> — target the old TensorFlow VAE, not the PyTorch stack</td></tr>
+<tr><td class="num">Aanchal_Spring/</td><td>wav2vec 2.0 + Qwen2-0.5B speech→text</td><td><span class="pill p-real">works</span> standalone — <strong>never imported by any driving code</strong></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout">
+  <span class="label">The load-bearing observation</span>
+  <p>There is no <code>data_collected_town01/</code>, no <code>models/</code>, and no <code>Results_VLM/</code> on disk. The design documents describe latency tables, driving scores and route-completion targets for a system that, on the evidence of the filesystem, <strong>has never been run end to end.</strong> Every performance number in <code>context/task_level_design_doc.md</code> §15 is a projection presented in the grammar of a measurement.</p>
+</div>
+</section>
+
+<section id="built">
+<h2>2 · What has already been built</h2>
+
+<p>Separating this cleanly matters, because the three bodies of work have very different value going forward.</p>
+
+<h3>A · What the old MTP/VAE work established</h3>
+<p>A working TensorFlow CARLA-PPO loop (<code>main.py</code>, <code>test.py</code>, <code>PIL_simulation.py</code>, <code>VAE/</code>): a 95-dim VAE latent over a <em>semantic-segmentation</em> camera plus 5 nav dims = 100-dim observation, a Keras actor–critic, and a processor-in-the-loop TCP harness with real Raspberry Pi latency traces in <code>Results_04/</code> and <code>Results_05/</code>.</p>
+<p>Its established facts are narrower than the documents suggest. It trained and tested on <strong>Town02 only</strong>, from a <strong>single fixed spawn point</strong> (<code>main.py:126</code>), with <strong>every red light forced green</strong> (<code>main.py:264–265</code>). The "~98% route completion" is one memorised route with a 500 m episode cap. What it genuinely established is the <em>engineering harness</em>: sync-mode CARLA, a PIL socket protocol, and measured Pi-class latency of 113–325 ms for a 52 MB encoder. That harness is worth keeping. The VAE and its numbers are not a baseline you can compare against.</p>
+
+<h3>B · What the existing VLM code actually implements</h3>
+<p>One genuinely good module and a ring of scaffolding around it. <code>MultimodalEdgeEncoder</code> is clean, correct, self-testing, and does what its docstring says at the tensor level: multi-view tokenisation with shared weights, view embeddings, FiLM conditioning, self-attention, projection. The CARLA environment wrapper and PPO implementation are also sound as code.</p>
+<p>What is <em>not</em> implemented, despite being named as though it were: any language model, any text encoder, any tokenizer, any cross-modal pretraining, any audio path into the driving loop, any trained scene-context head, any route, any evaluation metric beyond episode reward.</p>
+
+<h3>C · What is separate</h3>
+<p><code>Aanchal_Spring/</code> is a real, independently working speech pipeline — wav2vec 2.0 features projected into Qwen2-0.5B, with a correctness audit CSV. It has zero connection to the driving stack. Treat it as a component you may later adopt, not as part of the current system.</p>
+</section>
+
+<section id="problems">
+<h2>3 · Problems and questionable decisions</h2>
+
+<div class="finding sev-1">
+  <div class="finding-head"><span class="finding-id">F-01</span><span class="finding-title">Ground-truth leakage makes the entire perception stack optional</span><span class="pill p-stub">critical</span></div>
+  <p>Two of the five telemetry dimensions — normalised distance from lane centre and normalised heading error — are computed by querying <code>self.map.get_waypoint()</code>, CARLA's ground-truth road graph. They are concatenated into the observation <em>after</em> the transformer, so they reach the policy untouched by any perception.</p>
+  <p>The reward is <code>speed_factor(speed) × centering_factor(dist) × angle_factor(angle)</code>. All three arguments are telemetry dimensions the policy already receives directly. The reward is therefore a closed-form function of three inputs the agent is handed for free.</p>
+  <p><strong>Consequence:</strong> a policy that ignores all four cameras, the LiDAR, and the language channel — reading only 5 scalars — can maximise this reward. Gradient descent will find that solution, because it is by far the easiest one. Any Town01→Town02 transfer number produced by this setup measures how well a 5-input MLP generalises, not how well the multimodal encoder does. <em>This single issue invalidates the experimental design regardless of what encoder sits upstream.</em></p>
+  <div class="evidence">main_vlm_train.py  _get_obs()   dist_from_center = veh_loc.distance(current_wp.transform.location)
+main_vlm_train.py  _get_obs()   norm_angle = acos(dot(veh_fwd, wp_fwd)) / pi
+main_vlm_train.py  step()       reward = speed_factor * centering_factor * angle_factor + 0.3 * speech_reward</div>
+</div>
+
+<div class="finding sev-1">
+  <div class="finding-head"><span class="finding-id">F-02</span><span class="finding-title">The "language" channel is a hash function, not a language encoder</span><span class="pill p-stub">critical</span></div>
+  <p><code>SlowCognitivePathway.encode_text</code> checks <code>if key in text or text in key</code> against nine underscore-joined anchor keys. Natural sentences never contain <code>"keep_lane"</code>, so nearly all real language falls through to <code>torch.randn(128, generator=manual_seed(sum(ord(c) for c in text)))</code> — a deterministic hash with no semantic structure whatsoever.</p>
+  <p>I ran it. Two synonyms that <code>COMMAND_VOCAB</code> maps to the <em>same</em> command id are orthogonal; a natural instruction is orthogonal to its own canonical token; and an unrelated phrase is no further away than a related one:</p>
+  <div class="evidence">cos("turn left at the intersection", "turn_left")   = 0.027
+cos("steer_left", "turn_left")                      = 0.085   # same command id in COMMAND_VOCAB
+cos("please slow down a little", "banana pancakes")  = 0.059</div>
+  <p>So the system has no open vocabulary, no compositionality, no synonym robustness, and no transfer. The 128 dimensions carry at most log₂(9) bits of real signal. Every claim in the documents about "continuous semantic intent embeddings" and "open-vocabulary language" describes this function.</p>
+</div>
+
+<div class="finding sev-1">
+  <div class="finding-head"><span class="finding-id">F-03</span><span class="finding-title">Three train/inference mismatches silently corrupt the pretrained encoder</span><span class="pill p-stub">critical</span></div>
+  <ul>
+    <li><strong>FiLM input type flips.</strong> <code>pretrain_encoder.py</code> passes <code>command</code> as a list of <em>strings</em>, which routes through the discrete <code>nn.Embedding</code> lookup. <code>main_vlm_train.py</code> passes a <em>continuous 128-d</em> vector, which bypasses that table entirely. The shared <code>film_gen</code> MLP is trained on one input distribution and deployed on a different one.</li>
+    <li><strong>Scene FiLM is never trained but always applied.</strong> Pretraining calls the encoder positionally, so <code>scene_context</code> defaults to <code>None</code> and <code>SceneFiLMConditioning</code> is skipped. At RL time it <em>is</em> supplied — so a randomly-initialised affine modulation is applied to every token of a representation that was pretrained without it.</li>
+    <li><strong><code>telemetry_proj</code> is never trained at all.</strong> Pretraining always passes <code>telemetry=None</code>, and PPO runs the encoder under <code>no_grad</code>. The 5 most informative dimensions in the observation are permanently scrambled by a random 2-layer MLP.</li>
+  </ul>
+</div>
+
+<div class="finding sev-1">
+  <div class="finding-head"><span class="finding-id">F-04</span><span class="finding-title">PPO currently trains on a frozen, randomly initialised encoder — silently</span><span class="pill p-stub">critical</span></div>
+  <p><code>train()</code> loads <code>models/pretrained_vlm_encoder.pth</code> only <code>if os.path.exists(...)</code>. That file does not exist. The encoder is then <code>.eval()</code>-ed, run under <code>no_grad</code>, and never added to the optimizer. So today, running <code>--mode train</code> optimises a 495 K-parameter MLP on top of a <em>fixed random projection</em> of the images, and prints no warning. The same silent-skip pattern is in <code>test()</code> and <code>PIL_edge_vlm.py</code>.</p>
+</div>
+
+<div class="finding sev-2">
+  <div class="finding-head"><span class="finding-id">F-05</span><span class="finding-title">The success metric scores a parked car at 100%</span><span class="pill p-part">major</span></div>
+  <p><code>success = not collision and ep_steps &gt;= 200</code>. The stall terminal fires at <code>speed_kmh &lt; 1.0 and step_count &gt; 200</code> — which produces <code>ep_steps == 201</code>, no collision, and therefore a recorded success. A policy that applies zero throttle forever reports a perfect success rate. There is no route completion, no infraction score, no driving score, and no command-adherence metric anywhere in the repo, despite §12 of the design doc specifying all four.</p>
+</div>
+
+<div class="finding sev-2">
+  <div class="finding-head"><span class="finding-id">F-06</span><span class="finding-title">The baseline comparison is not a comparison</span><span class="pill p-part">major</span></div>
+  <p>The design doc tables "Legacy baseline ~98% RC (overfit)" against "Proposed ≥85% RC (zero-shot)". These measure different quantities under different rules:</p>
+  <ul>
+    <li>The legacy agent drove <em>one fixed spawn point</em> in Town02 with <em>all red lights forced green</em> and a <em>semantic-segmentation</em> camera.</li>
+    <li>The new agent spawns uniformly at random, has <em>no route at all</em>, and obeys traffic lights only in the sense that nothing rewards or penalises it for them.</li>
+    <li>Route completion is not computed anywhere in the new code, so the "≥85%" target has no measurement backing it.</li>
+  </ul>
+  <p>A fair comparison requires re-running the legacy agent under the new protocol. Until then there is no baseline.</p>
+</div>
+
+<div class="finding sev-2">
+  <div class="finding-head"><span class="finding-id">F-07</span><span class="finding-title">Sensor-rig defects, including a dataset/environment mismatch</span><span class="pill p-part">major</span></div>
+  <ul>
+    <li><code>_setup_sensors</code> finds one <code>cam_bp</code>, sets it to the front camera's <strong>125° FOV</strong>, and reuses it for all four cameras — so left/right get 125° instead of the specified 90°. <code>collect_data.py</code> creates four separate blueprints with the <em>correct</em> per-camera FOVs. The pretraining dataset and the RL environment therefore have <strong>different camera intrinsics</strong>.</li>
+    <li>CARLA delivers BGRA; <code>[:, :, :3]</code> yields <strong>BGR</strong>, called RGB everywhere. Harmless for a from-scratch CNN; wrong for the ImageNet-normalised MobileNetV3 — and wrong for any pretrained vision backbone you adopt next.</li>
+    <li>LiDAR <code>rotation_frequency</code> is never set. CARLA's default is 10 Hz while the simulation ticks at 20 FPS, so each frame captures roughly half a revolution. The "360° surround BEV" is an alternating half-sweep. <em>Worth confirming against your CARLA version.</em></li>
+    <li><code>_spawn_npcs</code> calls <code>set_autopilot(True)</code> without binding the Traffic Manager to synchronous mode — <code>collect_data.py</code> does this correctly. In sync mode this is a known source of stalls.</li>
+    <li><code>NUMBER_OF_PEDESTRIAN = 10</code> is defined and documented; no pedestrian is ever spawned.</li>
+  </ul>
+</div>
+
+<div class="finding sev-2">
+  <div class="finding-head"><span class="finding-id">F-08</span><span class="finding-title">No route, no goal, no navigation signal</span><span class="pill p-part">major</span></div>
+  <p>The observation contains nothing about where the vehicle is supposed to go. At an intersection the policy has zero information distinguishing left from right. Language was presumably meant to fill that role, but F-02 means it cannot. This is why "route completion" is unmeasurable and why Town01→Town02 transfer reduces to "does lane-following transfer" — a much weaker claim than the documents make.</p>
+</div>
+
+<div class="finding sev-3">
+  <div class="finding-head"><span class="finding-id">F-09</span><span class="finding-title">Command coverage gaps compound F-02</span><span class="pill p-dead">minor</span></div>
+  <p><code>reset()</code> samples uniformly from the 13 keys of <code>COMMAND_VOCAB</code>, but <code>_compute_speech_reward</code> handles only 8 of them. The five aliases (<code>keep_speed</code>, <code>steer_left</code>, <code>steer_right</code>, <code>reduce_speed</code>, <code>accelerate</code>) silently return reward 0 — and they also miss the <code>semantic_anchors</code> table, so they get a random hash embedding. Roughly 5 in 13 episodes therefore run with a meaningless language vector <em>and</em> no language reward.</p>
+</div>
+
+<div class="finding sev-3">
+  <div class="finding-head"><span class="finding-id">F-10</span><span class="finding-title">Nothing is seeded; the torchvision fallback is silent</span><span class="pill p-dead">minor</span></div>
+  <p><code>SEED = 42</code> exists in <code>parameters.py</code> and §16 of the design doc promises deterministic seeding across <code>random</code>, <code>numpy</code> and <code>torch</code>. No script calls any seeding function. Spawn points, NPC selection, weather and command choice are all unseeded.</p>
+  <p>Separately: if <code>torchvision</code> is absent, <code>SceneContextEncoder</code> silently substitutes a random 4-layer CNN with a different feature dimension for the ImageNet MobileNetV3 — same class name, same output shape, entirely different semantics, one printed warning. It is absent in this checkout.</p>
+</div>
+
+<h3>Claim versus code</h3>
+
+<div class="tw">
+<table>
+<thead><tr><th style="width:38%">What the documents claim</th><th>What the code does</th></tr></thead>
+<tbody>
+<tr><td class="claim">"Vision-Language Model / VLM-PPO"</td><td>No language model, no text encoder, no tokenizer, no cross-modal pretraining. A small multimodal CNN-transformer with FiLM conditioning on an 8-way command id.</td></tr>
+<tr><td class="claim">"Open-vocabulary continuous semantic speech embedding"</td><td>Substring match against 9 hard-coded anchors; otherwise a character-sum-seeded <code>randn</code>. Measured synonym cosine: 0.085.</td></tr>
+<tr><td class="claim">"System 2 foundation-model scene perception (DriveVLM-Dual)"</td><td>Frozen MobileNetV3 → an <em>untrained</em> 64-d projection → an <em>untrained</em> FiLM layer that pretraining never sees.</td></tr>
+<tr><td class="claim">"wav2vec 2.0 acoustic backbone in the loop"</td><td><code>SemanticLanguageProjector</code> is instantiated at random and never called. No audio ever reaches the driving loop.</td></tr>
+<tr><td class="claim">TransFuser: "shared-weight tokeniser… full 3D metric awareness with zero extra parameters"</td><td>TransFuser uses <em>separate</em> image and BEV backbones with multi-scale cross-attention. Here the LiDAR tokeniser is a separate module (+7,497 params, so not zero-cost) and weights are shared only across the four RGB views. "Full 3D metric awareness" from a max-height 2D grid is an overclaim.</td></tr>
+<tr><td class="claim">EMMA: "unified multimodal latent state"</td><td>EMMA's thesis is representing all non-sensor inputs and all outputs as <em>natural-language text</em> in a language space. Compressing to a 128-d vector is the opposite move.</td></tr>
+<tr><td class="claim">LMDrive: "pre-training on steering and speed regression, 16.9 → 36.2"</td><td>LMDrive pretrains its vision encoder on object detection, traffic-light state and future waypoints. <code>pretrain_encoder.py</code> uses steer + speed regression — a much weaker and more leakage-prone signal.</td></tr>
+<tr><td class="claim">PINNsformer: "kinematic physics regularization"</td><td>An exponential moving average on the steering command. The code comment itself credits CAPS, not PINNsformer.</td></tr>
+<tr><td class="claim">"≤25 ms on ARM CPU, 48.1 FPS"</td><td><code>benchmark_latency.py</code> times random tensors on whatever device is present, with no preprocessing, no quantisation, and no ARM device. No artifact on disk backs the §15 table.</td></tr>
+<tr><td class="claim">"IMU/GNSS odometry, 5-dim"</td><td>Five scalars derived from <code>vehicle.get_velocity()</code> and <code>map.get_waypoint()</code>. Simulator ground truth, not a sensor.</td></tr>
+<tr><td class="claim">"3× RGB cameras" (design doc §1.3)</td><td><code>NUM_CAMERAS = 4</code>. Docs and code disagree; the code is right.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout">
+  <span class="label">Fairness note on the earlier review</span>
+  <p>Three findings in <code>INDEPENDENT_REVIEW.md</code> are now stale and should not be carried forward. Braking <em>is</em> implemented, via the signed longitudinal channel. GAE <em>is</em> correctly implemented, not Monte-Carlo returns. And the citations are now right: <code>references/</code> holds 2312.07488 (LMDrive), 2205.15997 (TransFuser), 2402.12289 (DriveVLM), 2410.23262 (EMMA), 2006.11477 (wav2vec 2.0), and the roadmap cites those IDs. The remaining problem with the literature section is not wrong IDs — it is that several papers are cited for things they do not say.</p>
+</div>
+</section>
+
+<section id="questions">
+<h2>4 · Your twelve questions, answered directly</h2>
+
+<div class="qa">
+
+<details>
+<summary>What parts of the VLM pipeline are already implemented?</summary>
+<div class="qa-body">
+<span class="verdict-line">None of it, under any standard definition of VLM.</span>
+<p>What is implemented is the <em>multimodal encoder</em> half: multi-view tokenisation, view embeddings, conditioned self-attention, latent projection, and a clean coupling to PPO. There is no text encoder, no tokenizer, no image–text alignment objective, no pretrained multimodal backbone, and no generative or reasoning component. The <code>_parse_command</code> path even accepts a raw integer, which tells you what the conditioning signal really is.</p>
+</div>
+</details>
+
+<details>
+<summary>What parts are experimental / prototype code?</summary>
+<div class="qa-body">
+<p>Everything downstream of <code>multimodal_encoder.py</code> is prototype in the strict sense that it has never produced an artifact. The dataset directory, the pretrained checkpoint directory and the results directory all do not exist.</p>
+<p>Three things are worse than prototype — they are stubs shaped like components: <code>encode_text</code>, the <code>SceneContextEncoder</code> projection head, and <code>telemetry_proj</code>. Each has a plausible name, a plausible signature and a plausible output shape, and each is functionally a random number generator. Five files are dead: <code>main_vlm.py</code>, <code>test_vlm_carla.py</code>, <code>PIL_edge_vlm.py</code>, <code>convert.py</code>, <code>tf_multimodal_encoder.py</code>.</p>
+</div>
+</details>
+
+<details>
+<summary>What assumptions are currently being made?</summary>
+<div class="qa-body">
+<p>The load-bearing ones, most questionable first:</p>
+<ul>
+<li>That privileged lane geometry in the observation is acceptable because "it's just telemetry". It is not — it is the answer to the task.</li>
+<li>That a hand-written anchor table is a reasonable stand-in for a language encoder until a real one arrives. It is not, because it produces the <em>appearance</em> of a working language channel.</li>
+<li>That 160×80 imagery is sufficient. It is well below what any pretrained vision backbone expects, and the mosaic path upsamples 4 views into a single 224×224 frame — roughly 112×56 of real content per view.</li>
+<li>That a max-height BEV grid is "3D metric awareness".</li>
+<li>That perspective RGB and top-down BEV can be fused by concatenating tokens with a learned view id, with no geometric correspondence between them.</li>
+<li>That PPO from scratch in single-environment CARLA at 20 FPS is a tractable training method for a perception-heavy policy.</li>
+<li>That lane-following without a route constitutes "driving", so that Town01→Town02 transfer is a meaningful generalisation claim.</li>
+<li>That an <code>if os.path.exists</code> guard around a required checkpoint is a safe default rather than a silent failure.</li>
+</ul>
+</div>
+</details>
+
+<details>
+<summary>Is the multimodal fusion strategy technically sensible?</summary>
+<div class="qa-body">
+<span class="verdict-line">Half of it is good. The other half throws away everything the good half computed.</span>
+<p><strong>Sound:</strong> sharing one tokeniser across the four RGB views is genuinely parameter-efficient and correct — the views share image statistics. Learned view embeddings are the right way to keep them distinguishable. Joint self-attention across all views lets the model relate what the left camera sees to what the front camera sees, which is exactly what you want.</p>
+<p><strong>Unsound:</strong> after two transformer blocks compute a rich 1000-token spatial representation, <code>trans_out.mean(dim=1)</code> collapses it to <em>one 64-dimensional vector</em>. Every spatial relationship the attention just computed is averaged away. The model cannot represent "an obstacle on the left at 12 m" — only a global scene average. This is the single biggest architectural flaw after the leakage: you are paying transformer cost and discarding transformer benefit.</p>
+<p>Also unsound: sharing the tokeniser idea <em>across</em> RGB and BEV. These are different coordinate frames with different statistics. TransFuser deliberately uses two backbones and attends between them at multiple scales precisely because a single tokeniser cannot serve both. And telemetry bypasses fusion entirely, so the model can never learn "at this speed, that obstacle matters".</p>
+</div>
+</details>
+
+<details>
+<summary>Is the camera / LiDAR representation appropriate?</summary>
+<div class="qa-body">
+<span class="verdict-line">The cameras are too small, and the LiDAR representation is losing most of its information.</span>
+<p><strong>Cameras.</strong> 160×80 is inherited from the 2022 VAE baseline and was chosen for a Conv-VAE, not for a transformer or a pretrained backbone. If you intend to use any pretrained vision encoder, this resolution is disqualifying — you cannot recover detail that was never sampled. Budget for at least 224×224 per view, or a single wider front view plus lower-resolution peripherals.</p>
+<p><strong>LiDAR.</strong> Four separate problems: (1) the grid stores <em>only</em> max height, discarding point density — TransFuser uses a multi-channel occupancy/height grid for good reason; (2) resolution is anisotropic in the wrong direction, 0.625 m/px longitudinally against 0.3125 m/px laterally, when forward range is what you need to resolve; (3) no temporal accumulation, so a single sparse sweep is all the geometry the model ever sees; (4) the half-sweep problem in F-07.</p>
+<p><strong>The bigger question.</strong> Ask whether you need LiDAR at all. CarLLaVA won the 2024 CARLA Challenge camera-only. If your thesis is about lightweight edge deployment, a camera-only stack is both cheaper and easier to defend — and if you keep LiDAR, its job should be depth/occupancy in a shared BEV frame, not a fifth image-shaped input.</p>
+</div>
+</details>
+
+<details>
+<summary>Is language conditioning used meaningfully, or merely appended as another vector?</summary>
+<div class="qa-body">
+<span class="verdict-line">Neither. It is worse than appending a vector — it is appending a hash.</span>
+<p>Even if <code>encode_text</code> were replaced today with a real text encoder, the <em>mechanism</em> would still be weak. FiLM applies one global γ and β to every token identically. It can say "shift the whole feature space towards left-turning". It cannot say "attend to the left lane" or "watch that pedestrian" — those require the language to interact with <em>specific spatial locations</em>, which means cross-attention, not global modulation.</p>
+<p>And a harder question you should sit with: <strong>does your research question need language at all?</strong> If the contribution is efficient multimodal fusion for edge autonomy, language is scope you are paying for in complexity and evaluation burden. If the contribution is instruction-following, then language is the whole point and it needs a real encoder, real instruction data, and a command-adherence metric. Right now the project is claiming the second while building neither.</p>
+</div>
+</details>
+
+<details>
+<summary>Is the model actually a VLM/VLLM, or just a multimodal neural network?</summary>
+<div class="qa-body">
+<span class="verdict-line">It is a multimodal neural network. Call it that.</span>
+<p>A VLM has a language model in it — a pretrained transformer over text tokens, with visual features projected into its embedding space. This has 167 K parameters total, no text tokenizer, and an 8-way categorical conditioning signal.</p>
+<p>The accurate name is <strong>a command-conditioned multimodal driving encoder</strong>. That is not a downgrade — it is a defensible, publishable thing that is honestly described. Calling it a VLM invites the first question at your defence to be "where is the language model?", and you have no answer. Fix the name now; it costs nothing today and a great deal later.</p>
+</div>
+</details>
+
+<details>
+<summary>Where should the language / vision-language reasoning component actually sit?</summary>
+<div class="qa-body">
+<span class="verdict-line">Outside the 20 Hz control loop, behind a typed interface — never in the gradient path of the controller.</span>
+<p>This is the one place the existing design's instinct is right and its execution is wrong. DriveVLM-Dual's structure — a slow reasoning pathway at 1–2 Hz feeding a fast reactive controller — is the correct pattern for constrained compute, and the repo already latches a slow-pathway output. The mistake is <em>what</em> gets passed across that seam: a 64-dimensional opaque blob.</p>
+<p>Make the seam a <strong>typed intent record</strong> instead:</p>
+<div class="evidence">DrivingIntent {
+    target_waypoints : (K, 2)   # ego-frame, metres
+    lane_action      : enum      # follow | left | right | stop
+    speed_cap        : float     # m/s
+    hazard           : bool
+    instruction_done : bool
+    valid_until      : timestamp
+}</div>
+<p>This is the deep-module move. The interface is small; everything the VLM knows sits behind it. And it buys you four concrete things: you can <em>log</em> what the slow pathway decided and inspect failures; you can <em>unit-test</em> the fast pathway against synthetic intents; you can implement the seam first with a <strong>scripted oracle</strong> driven by CARLA's route planner, so the whole fast pathway gets built and validated before any VLM exists; and you can ablate the entire slow pathway by swapping in a constant. Two real adapters — oracle and VLM — mean it is a real seam, not a hypothetical one.</p>
+</div>
+</details>
+
+<details>
+<summary>What should the model output — actions, latents, waypoints, or planning tokens?</summary>
+<div class="qa-body">
+<span class="verdict-line">Waypoints, executed by a classical controller. Not raw steer/throttle from a monolithic network.</span>
+<p>LMDrive, TransFuser and CarLLaVA all predict future waypoints and hand them to PID or pure-pursuit control. There are good reasons, and they apply doubly at your scale:</p>
+<ul>
+<li>Waypoints are <em>directly supervisable</em> from autopilot data — you already have the collector. Raw actions are not, at least not without action-distribution mismatch.</li>
+<li>Waypoints are interpretable. When the car does something stupid you can see whether perception or control was wrong. With end-to-end actions you cannot.</li>
+<li>The controller enforces kinematic feasibility for free, which is what the EMA smoothing is badly approximating today.</li>
+<li>A waypoint head is a much easier learning problem than a control policy, so it converges in a fraction of the samples.</li>
+</ul>
+<p>Keep the latent as an internal representation, not the deliverable. And skip "planning tokens" — they buy you something only when a language model is autoregressively decoding them, which is a later phase if at all.</p>
+</div>
+</details>
+
+<details>
+<summary>How should PPO interact with the multimodal model?</summary>
+<div class="qa-body">
+<span class="verdict-line">Not the way it does now, and possibly not at all.</span>
+<p>Attaching PPO to a frozen randomly-initialised encoder (F-04) is the worst of both worlds — you get neither learned features nor a meaningful policy. But the deeper issue is that PPO is the wrong <em>primary</em> learning signal here. Single-environment CARLA at 20 FPS gives you roughly 72 K samples per hour of wall clock. PPO on a perception-heavy task typically needs millions. Every driving system in your reference folder learns by imitation.</p>
+<p><strong>The honest options:</strong></p>
+<ul>
+<li><strong>Best:</strong> imitation learning on autopilot data for the waypoint head, then PPO as a <em>residual correction</em> on a small action delta, with the perception stack frozen. This is tractable and the RL contribution is well-defined.</li>
+<li><strong>Acceptable:</strong> drop PPO, do pure IL, and make the contribution about architecture and efficiency.</li>
+<li><strong>Avoid:</strong> PPO end-to-end from pixels. It will not converge in the time you have.</li>
+</ul>
+<p>If PPO is non-negotiable because it is the MTP lineage, say so explicitly and scope it as finetuning. That is a defensible framing. Pretending it is the main learner is not.</p>
+</div>
+</details>
+
+<details>
+<summary>What should be frozen versus trained?</summary>
+<div class="qa-body">
+<div class="tw" style="margin-top:0;">
+<table style="min-width:520px;">
+<thead><tr><th>Component</th><th>IL stage</th><th>RL stage</th></tr></thead>
+<tbody>
+<tr><td>Vision backbone (pretrained)</td><td>Frozen; unfreeze last block only if data allows</td><td>Frozen</td></tr>
+<tr><td>Text encoder / LM</td><td>Frozen always</td><td>Frozen always</td></tr>
+<tr><td>Cross-modal adapter (Q-Former / projection)</td><td>Trained</td><td>Frozen, or LR ÷ 10</td></tr>
+<tr><td>BEV / geometric branch</td><td>Trained from scratch</td><td>Frozen</td></tr>
+<tr><td>Waypoint head</td><td>Trained</td><td>Frozen, or LR ÷ 10</td></tr>
+<tr><td>Residual policy + value head</td><td>—</td><td>Trained</td></tr>
+</tbody>
+</table>
+</div>
+<p>The rule underneath the table: never let PPO gradients — high-variance, computed from batches of a couple of thousand correlated samples — reach a pretrained backbone. They will destroy features that took orders of magnitude more data to learn. Whatever else you do, keep the RL-trainable parameter count small and downstream.</p>
+</div>
+</details>
+
+<details>
+<summary>What are the most important experiments to validate the new architecture?</summary>
+<div class="qa-body">
+<p>Fully specified in <a href="https://b512d245-91d9-4807-929a-0606a117366e.frame.claudeusercontent.com/_f/1788155910-a02d/#roadmap">§6</a>. In one line: <strong>the blind baseline comes first</strong>. Train a telemetry-only policy. If it matches the full multimodal model on your metrics, nothing you build upstream will ever show up in a result, and you will have learned that for a day of compute rather than a semester.</p>
+</div>
+</details>
+
+</div>
+</section>
+
+<section id="recommended">
+<h2>5 · Recommended architecture</h2>
+
+<p>Three coherent directions exist. They are not variations on a theme — they imply different theses, different data, and different amounts of compute. Pick one deliberately.</p>
+
+<div class="dirs">
+  <div class="dir">
+    <span class="dir-tag">Direction A</span>
+    <h4>Instruction-conditioned policy</h4>
+    <p>What the current code is trying to be, built properly. A real frozen text encoder, real instruction supervision, cross-attention instead of global FiLM. No LLM anywhere.</p>
+    <dl>
+      <dt>Cost</dt><dd>Low</dd>
+      <dt>Risk</dt><dd>Low</dd>
+      <dt>Claim</dt><dd>Efficient instruction-following at edge scale</dd>
+    </dl>
+  </div>
+  <div class="dir pick">
+    <span class="dir-tag">Direction B · recommended thesis</span>
+    <h4>Dual-system with a real small VLM</h4>
+    <p>A genuinely small VLM (≈0.5–2 B class) at 1–2 Hz emitting a <em>structured</em> DrivingIntent, consumed by a fast 20 Hz waypoint controller. The only version where "VLM" is an honest word.</p>
+    <dl>
+      <dt>Cost</dt><dd>High</dd>
+      <dt>Risk</dt><dd>Medium — compute-bound</dd>
+      <dt>Claim</dt><dd>VLM reasoning at 2 Hz is enough for closed-loop driving</dd>
+    </dl>
+  </div>
+  <div class="dir">
+    <span class="dir-tag">Direction C · build first</span>
+    <h4>Perception-first, language later</h4>
+    <p>Prove multi-view RGB + geometric fusion beats the VAE baseline under a fair protocol. Add language only once the perception claim is measurable.</p>
+    <dl>
+      <dt>Cost</dt><dd>Low</dd>
+      <dt>Risk</dt><dd>Very low</dd>
+      <dt>Claim</dt><dd>Fusion and efficiency, cleanly measured</dd>
+    </dl>
+  </div>
+</div>
+
+<p><strong>My recommendation: aim at B, build in the order C → A → B.</strong> C is a complete, defensible result on its own — which means that if compute or time runs out, you still have a thesis. A adds language honestly. B adds the VLM, and by then the seam it plugs into already exists and is already validated against a scripted oracle.</p>
+
+<h3>The target shape</h3>
+
+<div class="evidence" style="font-size:12.5px;line-height:1.75;">CARLA ─┬─ 4× RGB (224²)     ──┐
+       ├─ LiDAR → BEV grid   ──┤
+       └─ ego state           ─┤
+                               │
+   ┌───────────────────────────┴──────────────────────────┐
+   │                                                      │
+   ▼  SLOW · 1–2 Hz · frozen backbone + trained adapter   ▼  FAST · 20 Hz · fully trained
+ ┌─────────────────────────┐                        ┌──────────────────────────────┐
+ │ small VLM               │                        │ multi-view tokeniser         │
+ │  · scene reasoning      │   ══ DrivingIntent ══▶  │ BEV-aligned cross-attention  │
+ │  · instruction grounding│      (typed record,    │ intent cross-attention       │
+ │  · hazard detection     │       latched, TTL)    │ waypoint head  (K × 2)       │
+ └─────────────────────────┘                        └──────────────┬───────────────┘
+   replaceable by a scripted                                       │
+   route-planner ORACLE                                            ▼
+                                                    ┌──────────────────────────────┐
+                                                    │ pure-pursuit / PID + residual│
+                                                    │ PPO correction (small)       │
+                                                    └──────────────┬───────────────┘
+                                                                   ▼
+                                                          steer / throttle / brake
+                                                                   │
+                                                                   └──────▶ CARLA</div>
+
+<p>Four changes from the current design carry almost all of the value:</p>
+<ul>
+<li><strong>Replace mean-pooling with attention pooling or a waypoint head that reads tokens directly.</strong> Stop discarding the spatial representation you paid to compute.</li>
+<li><strong>Make the slow→fast interface a typed record, not a latent.</strong> Loggable, testable, ablatable, and implementable by an oracle before any model exists.</li>
+<li><strong>Output waypoints, not raw controls.</strong> Supervisable from autopilot, interpretable in failure, kinematically safe by construction.</li>
+<li><strong>Remove privileged geometry from the observation.</strong> Non-negotiable; see F-01.</li>
+</ul>
+
+<div class="callout">
+  <span class="label">Compute reality check</span>
+  <p>Direction B is only feasible if the slow pathway never runs inside the RL loop. During IL you can precompute and cache slow-pathway outputs per frame — they change at 2 Hz over a fixed dataset, so this is cheap. During closed-loop evaluation you run it live at 2 Hz. If your training hardware is a single consumer GPU, a &gt;2 B-parameter slow pathway will not fit this budget, and the honest move is to say so and cap the model size rather than discover it in month four.</p>
+</div>
+</section>
+
+<section id="roadmap">
+<h2>6 · Experimental roadmap</h2>
+
+<p>Ordered by what each experiment can <em>invalidate</em>. The early ones are cheap and can kill the project's premises; do them first for exactly that reason. Every experiment needs ≥3 seeds and mean ± std — the current design runs one unseeded trial.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th style="width:74px">ID</th><th style="width:29%">Experiment</th><th>What it decides</th></tr></thead>
+<tbody>
+<tr><td class="num">E0</td><td><strong>Leakage switch</strong> — an observation spec that declares exactly which fields the policy sees</td><td>Infrastructure for everything below. Without it no ablation is trustworthy.</td></tr>
+<tr><td class="num">E1</td><td><strong>Blind baselines</strong> — telemetry-only vs camera-only vs camera+LiDAR, matched budget</td><td><strong>Whether the project has a subject.</strong> If telemetry-only matches the full model, no encoder you build will ever register on the metrics. Run this before writing any new model code.</td></tr>
+<tr><td class="num">E2</td><td><strong>Fair baseline re-run</strong> — the legacy VAE agent under the new protocol: Town01 train, Town02 eval, random routes, no traffic-light hack</td><td>Whether you have a baseline at all. Currently you do not.</td></tr>
+<tr><td class="num">E3</td><td><strong>Route + metrics</strong> — a global route planner, plus RC / IS / DS and command adherence, and a success criterion that a parked car fails</td><td>Whether any number you report means what its name says.</td></tr>
+<tr><td class="num">E4</td><td><strong>Modality ablation</strong> — RGB-only vs RGB+BEV vs BEV-only, parameter-matched</td><td>Whether LiDAR earns its place, and how the BEV should be represented.</td></tr>
+<tr><td class="num">E5</td><td><strong>Language ablation</strong> — one policy, one route set, three conditions: correct instruction / shuffled instruction / null instruction</td><td><strong>Whether "language" belongs in the title.</strong> If shuffled ≈ correct, the instruction-following claim is dead and you should reframe as Direction C.</td></tr>
+<tr><td class="num">E6</td><td><strong>Representation ablation</strong> — random-frozen vs steer/speed-pretrained vs waypoint/segmentation-pretrained vs frozen pretrained-VLM features</td><td>Whether pretraining helps, and which pretraining task. This is LMDrive's 16.9→36.2 result, reproduced on your own stack.</td></tr>
+<tr><td class="num">E7</td><td><strong>IL vs RL vs IL+RL</strong>, matched wall-clock</td><td>Whether PPO earns its place as more than a lineage requirement.</td></tr>
+<tr><td class="num">E8</td><td><strong>Real latency</strong> — on the actual target device, quantised, sensor bytes to control output, end to end</td><td>Whether the edge-deployment claim survives contact with hardware.</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Note the dependency structure: E1 and E2 can invalidate the premise of everything downstream, and both are a day or two of work each. E5 decides the framing of the thesis. E6 is the one that would actually justify a VLM. Nothing after E3 is worth running until E3 exists, because before then you have no metric that distinguishes driving from parking.</p>
+</section>
+
+<section id="first">
+<h2>7 · What to implement first</h2>
+
+<p>Nothing on this list is a VLM. That is deliberate.</p>
+
+<ol class="steps">
+  <li>
+    <h4>An environment with a route and an observation spec</h4>
+    <p>One CARLA env whose <code>step()</code> returns a <em>typed observation record</em>, with a spec declaring which fields the policy may read. Privileged fields exist in <code>info</code> for reward and logging, and are structurally unable to reach the policy. Add a global route planner so a destination exists. This is one module with a small interface, and it is the foundation for every experiment above.</p>
+  </li>
+  <li>
+    <h4>Correct metrics and seeding</h4>
+    <p>Route completion, infraction score, driving score, command adherence. A success criterion a stationary car fails. <code>random</code>, <code>numpy</code> and <code>torch</code> seeded from <code>SEED</code>, and the seed recorded in every results file. Small, boring, and it makes every subsequent number mean something.</p>
+  </li>
+  <li>
+    <h4>E1 — the blind baselines</h4>
+    <p>Train telemetry-only, camera-only, and camera+LiDAR under the fixed protocol. Put them on one chart. <strong>Do not write any new model code until this chart exists.</strong> It is the cheapest possible test of whether the project's premise holds, and if it fails you want to know now.</p>
+  </li>
+  <li>
+    <h4>The DrivingIntent seam, with a scripted oracle behind it</h4>
+    <p>Define the typed record. Implement it first from the route planner and simulator state — a perfect oracle. Now the entire fast pathway can be built, trained and validated against a known-good intent stream, and the oracle's score becomes the ceiling any VLM must approach. This inverts the usual failure mode where you cannot tell whether a bad result came from the VLM or from everything downstream of it.</p>
+  </li>
+  <li>
+    <h4>Only then: swap the oracle for a model</h4>
+    <p>First a real frozen text encoder (Direction A). Then, if E6 justifies it and the compute budget allows, a small VLM (Direction B). By this point every piece it plugs into is already measured.</p>
+  </li>
+</ol>
+
+<h4>Explicitly do <em>not</em> do first</h4>
+<p>Repair <code>main_vlm.py</code>. Port anything to ONNX or TF-Lite. Tune the reward. Add pedestrians. Buy a Raspberry Pi. Add a bigger backbone. Every one of these is work that becomes obsolete or unmeasurable if E1 comes back flat.</p>
+</section>
+
+<section id="unknown">
+<h2>8 · What is still unknown</h2>
+
+<p>Things I could not determine from the repository, and which change the recommendation above:</p>
+<ul>
+  <li><strong>Has any of this ever run?</strong> No dataset, no checkpoint, no results directory. If it has run somewhere else, those artifacts would change the assessment materially.</li>
+  <li><strong>What hardware do you have</strong> — for training, and as the edge target? Direction B is gated on this and nothing else.</li>
+  <li><strong>Is PPO a fixed requirement</strong> from the MTP lineage, or is imitation learning acceptable as the primary learner?</li>
+  <li><strong>Is speech a required contribution?</strong> <code>Aanchal_Spring</code> works but is unconnected. Whether it must be integrated changes the scope substantially.</li>
+  <li><strong>Which CARLA version?</strong> This determines LiDAR semantics, whether leaderboard routes are available, and the traffic-manager API.</li>
+  <li><strong>Is the deliverable a thesis with a novelty claim, or a working system?</strong> These pull in different directions on Direction A vs B.</li>
+  <li><strong>What does <code>Results_05</code> actually measure?</strong> The protocol behind those CSVs is undocumented beyond what the code implies.</li>
+  <li>The git object store in <code>MTP_TESTING/.git</code> is corrupt — <code>packfile does not match index</code> — so no history is readable and a diff-based code review could not be run. Worth repairing or re-cloning before more work lands.</li>
+</ul>
+</section>
+
+<footer class="foot">
+  <p><strong>Method.</strong> Static reading of all 22 Python files in <code>MTP_TESTING</code>, plus <code>Aanchal_Spring</code> and the seven design documents in <code>context/</code>. Parameter counts and the language-encoder cosine similarities were measured by executing the modules, not estimated. Literature claims were checked against the primary sources. <strong>No file was modified.</strong></p>
+  <p>Primary sources: <a href="https://arxiv.org/abs/2312.07488">LMDrive (2312.07488)</a> · <a href="https://arxiv.org/abs/2205.15997">TransFuser (2205.15997)</a> · <a href="https://arxiv.org/abs/2402.12289">DriveVLM (2402.12289)</a> · <a href="https://arxiv.org/abs/2410.23262">EMMA (2410.23262)</a> · <a href="https://arxiv.org/abs/2406.10165">CarLLaVA (2406.10165)</a> · <a href="https://arxiv.org/abs/2506.13757">AutoVLA (2506.13757)</a></p>
+</footer>
+
+</div>
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true" style="visibility: visible !important;"><template shadowrootmode="open"><style>
+      div.grammarly-desktop-integration {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select:none;
+        user-select:none;
+      }
+
+      div.grammarly-desktop-integration:before {
+        content: attr(data-content);
+      }
+    </style><div aria-label="grammarly-integration" role="group" tabindex="-1" class="grammarly-desktop-integration" data-content="{&quot;mode&quot;:&quot;full&quot;,&quot;isActive&quot;:true,&quot;isUserDisabled&quot;:false}"></div></template></grammarly-desktop-integration></html>

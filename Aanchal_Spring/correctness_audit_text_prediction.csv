@@ -1,0 +1,506 @@
+filename,ground_truth,prediction,wer,cer,correct
+row1967_v3_UK_Female.mp3,vehicle hmm speed up to 115 if possible,vehicle hmm speed up to 39 when you can,0.5,0.358974358974359,False
+row311_v5_US_Deep.mp3,alright car quickly slow down to 20,alright car quickly slow down to 20,0.0,0.0,True
+row3697_v2_US_Male.mp3,vehicle okay bring speed to 35 right now,vehicle okay bring speed to 38 right now,0.125,0.025,False
+row2696_v1_US_Female.mp3,assistant just raise speed to 97 now,assistant just raise speed to 99 now,0.14285714285714285,0.027777777777777776,False
+row6492_v4_US_Fast.mp3,okay car can you go ahead and start right now,okay car can you start right now,0.3,0.28888888888888886,False
+row2417_v5_US_Deep.mp3,vehicle please reduce speed to 82 please,vehicle please decrease speed to 68 please,0.2857142857142857,0.2,False
+row1943_v4_US_Fast.mp3,assistant uh shift into the left lane please,assistant shift to the left lane on the left,0.625,0.3181818181818182,False
+row5681_v4_US_Fast.mp3,okay car decrease speed to 32 please,okay car decrease speed to 33,0.2857142857142857,0.2222222222222222,False
+row1038_v3_UK_Female.mp3,assistant hmm boost speed to 69 when you can,assistant hmm increase speed to 83 when you can,0.2222222222222222,0.20454545454545456,False
+row6823_v4_US_Fast.mp3,alright car hmm push speed to 27 now,okay car hmm push speed to 34 now,0.25,0.25,False
+row3214_v1_US_Female.mp3,okay car quickly reduce speed to 63,okay car quickly decrease speed to 50,0.2857142857142857,0.22857142857142856,False
+row2103_v4_US_Fast.mp3,okay car keep current speed please,okay car please keep speed up please,0.5,0.38235294117647056,False
+row3484_v5_US_Deep.mp3,hey car please lower speed to 85 right now,hey car please lower speed to 30 now,0.2222222222222222,0.19047619047619047,False
+row2794_v1_US_Female.mp3,alright car quickly reduce speed to 24,alright car quickly decrease speed to 30,0.2857142857142857,0.21052631578947367,False
+row1877_v3_UK_Female.mp3,hey car alright steer left if possible,hey car alright drive up to the right lane if possible,0.8571428571428571,0.5526315789473685,False
+row2148_v2_US_Male.mp3,hey car hmm accelerate to 53 if possible,hey car hey speed to 30 if you can,0.625,0.475,False
+row4943_v2_US_Male.mp3,car quickly speed up to 85 if possible,car quickly speed up to 90 if possible,0.125,0.05263157894736842,False
+row334_v3_UK_Female.mp3,alright car head right please,alright car alright head,0.6,0.27586206896551724,False
+row3680_v4_US_Fast.mp3,assistant would you let's start,assistant would you turn right now,0.6,0.41935483870967744,False
+row6086_v1_US_Female.mp3,okay raise speed to 29 please,okay car okay please,0.6666666666666666,0.4827586206896552,False
+row7920_v4_US_Fast.mp3,car would you lower speed to 74,car would you lower speed to 37,0.14285714285714285,0.06451612903225806,False
+row8037_v4_US_Fast.mp3,alright get into the right lane when you can,alright pick up the right speed,0.6666666666666666,0.5227272727272727,False
+row787_v1_US_Female.mp3,alright car slow down to 25 now,alright car slow down to 26 now,0.14285714285714285,0.03225806451612903,False
+row5882_v4_US_Fast.mp3,quickly slow down to 48 right now,quickly slow down to 34 right now,0.14285714285714285,0.06060606060606061,False
+row1455_v2_US_Male.mp3,raise speed to 35 please,raise speed to 32,0.4,0.3333333333333333,False
+row3319_v2_US_Male.mp3,okay lower speed to 49 please,okay lower speed to 39 please,0.16666666666666666,0.034482758620689655,False
+row3354_v2_US_Male.mp3,car hey bring speed down to 98 when you can,car hey car okay bring speed down to 300 when you can,0.3,0.27906976744186046,False
+row3812_v4_US_Fast.mp3,okay car just bring speed to 70,okay car just bring speed to 87,0.14285714285714285,0.06451612903225806,False
+row1004_v4_US_Fast.mp3,assistant please decrease speed to 65 now,assistant please increase speed to 83 when needed,0.5714285714285714,0.34146341463414637,False
+row2839_v4_US_Fast.mp3,vehicle would you ease down to 26 if possible,vehicle would decrease speed to 23 if possible,0.4444444444444444,0.2222222222222222,False
+row3508_v4_US_Fast.mp3,okay car would you speed up to 39,okay car would you speed up to 34,0.125,0.030303030303030304,False
+row1813_v2_US_Male.mp3,alright car okay lower speed to 21 if possible,alright car okay lower speed to 30 mph if possible,0.2222222222222222,0.13043478260869565,False
+row3411_v3_UK_Female.mp3,assistant would you take a left right now,assistant would you turn left now,0.375,0.2682926829268293,False
+row7768_v4_US_Fast.mp3,hey car hey slow down to 31 if possible,hey car hey speed down 30!,0.5555555555555556,0.5128205128205128,False
+row5668_v2_US_Male.mp3,car please boost speed to 55 right now,car please increase speed to 38 right now,0.25,0.23684210526315788,False
+row3162_v2_US_Male.mp3,vehicle just raise speed to 41,vehicle just raise speed to 30,0.16666666666666666,0.06666666666666667,False
+row4025_v2_US_Male.mp3,car would you accelerate to 69 when you can,car would you accelerate to 77 when you can,0.1111111111111111,0.046511627906976744,False
+row3234_v3_UK_Female.mp3,assistant uh lower speed to 25 now,assistant uh lower speed to 29 when,0.2857142857142857,0.14705882352941177,False
+row1085_v5_US_Deep.mp3,car would you boost speed to 63 now,car would you increase speed to 34 now,0.25,0.2571428571428571,False
+row8389_v5_US_Deep.mp3,okay car okay go faster to 93 now,okay car okay go faster to 55 now,0.125,0.06060606060606061,False
+row1269_v2_US_Male.mp3,assistant quickly make a left turn please,assistant quickly turn the right lane please,0.5714285714285714,0.36585365853658536,False
+row5843_v5_US_Deep.mp3,assistant push speed to 90 right now,assistant push speed to 99,0.42857142857142855,0.3055555555555556,False
+row1_v3_UK_Female.mp3,assistant boost speed to 20 right now,assistant accelerate speed 22,0.7142857142857143,0.6216216216216216,False
+row5188_v4_US_Fast.mp3,just ease down to 102 when you can,just ease down to 57 when you can,0.125,0.08823529411764706,False
+row6610_v3_UK_Female.mp3,car could you speed up to 28 right now,car could you speed up to 23 right now,0.1111111111111111,0.02631578947368421,False
+row3662_v5_US_Deep.mp3,vehicle can you start driving now,vehicle can you start now,0.16666666666666666,0.24242424242424243,False
+row8017_v3_UK_Female.mp3,okay car quickly ease down to 40 please,okay car quickly lower speed to 30 please,0.375,0.2564102564102564,False
+row653_v3_UK_Female.mp3,hmm boost speed to 83 please,hmm increase speed please,0.5,0.4642857142857143,False
+row1348_v3_UK_Female.mp3,car just raise speed to 99,car just raise speed to 99,0.0,0.0,True
+row6461_v2_US_Male.mp3,vehicle okay decrease speed to 83 please,vehicle okay reduce speed to 80 please,0.2857142857142857,0.175,False
+row6710_v2_US_Male.mp3,bring speed down to 77 please,bring speed down to 100 please,0.16666666666666666,0.10344827586206896,False
+row3142_v3_UK_Female.mp3,car accelerate to 40 right now,car accelerate to 294 right now,0.16666666666666666,0.1,False
+row3119_v5_US_Deep.mp3,vehicle okay go faster to 66 please,vehicle okay go faster please,0.2857142857142857,0.17142857142857143,False
+row791_v1_US_Female.mp3,alright car alright reduce speed to 88 when you can,alright car alright increase speed to 66 when you can,0.2,0.1568627450980392,False
+row1647_v2_US_Male.mp3,okay car just increase speed to 71 if possible,okay car just increase speed to 63 if possible,0.1111111111111111,0.043478260869565216,False
+row1700_v4_US_Fast.mp3,car push speed to 43 please,car push speed to 33,0.3333333333333333,0.2962962962962963,False
+row3928_v2_US_Male.mp3,alright car hmm boost speed to 85 when you can,alright car hmm boost 100000000000000,0.6,0.5217391304347826,False
+row4666_v3_UK_Female.mp3,vehicle uh slow down to 43,vehicle uh okay speed down to 30,0.5,0.4230769230769231,False
+row2553_v3_UK_Female.mp3,assistant alright bring speed down to 42 right now,assistant alright bring speed down to 30 right now,0.1111111111111111,0.04,False
+row1464_v2_US_Male.mp3,vehicle can you bring the vehicle to rest when you can,vehicle can you start the car now,0.6363636363636364,0.5185185185185185,False
+row7211_v1_US_Female.mp3,quickly decrease speed to 47 now,quickly decrease speed to 32 now,0.16666666666666666,0.0625,False
+row4752_v2_US_Male.mp3,car would you speed up to 81 right now,car would you speed up to 100 right now,0.1111111111111111,0.07894736842105263,False
+row1375_v3_UK_Female.mp3,okay car hey ease down to 41 if possible,hey car okay reduce speed to 24 if possible,0.5555555555555556,0.425,False
+row1401_v5_US_Deep.mp3,hmm ease down to 50 if possible,okay ease down to 30 if possible,0.2857142857142857,0.16129032258064516,False
+row2328_v1_US_Female.mp3,vehicle quickly ease down to 20 if possible,vehicle quickly ease down to 3000 speed if possible,0.25,0.20930232558139536,False
+row373_v4_US_Fast.mp3,car hey go faster to 32 right now,car hey go faster to 39 right now,0.125,0.030303030303030304,False
+row5686_v4_US_Fast.mp3,okay car hmm accelerate to 40,okay car hmm accelerate to 34,0.16666666666666666,0.06896551724137931,False
+row8221_v2_US_Male.mp3,hey car can you take a left now,hey car can you left now,0.25,0.22580645161290322,False
+row3140_v1_US_Female.mp3,hey car boost speed to 68 now,hey car boost speed to 56 now,0.14285714285714285,0.06896551724137931,False
+row8398_v4_US_Fast.mp3,okay car could you push speed to 23 right now,okay car could push speed to 31 right now,0.2,0.13333333333333333,False
+row6648_v4_US_Fast.mp3,vehicle would you steer left if possible,car would you command to take a left if possible,0.7142857142857143,0.525,False
+row2006_v3_UK_Female.mp3,car just start the vehicle,vehicle start the vehicle in the right direction,1.2,1.1923076923076923,False
+row1182_v1_US_Female.mp3,alright car would you slow down to 70,alright car would slow down to 46,0.25,0.16216216216216217,False
+row6552_v2_US_Male.mp3,okay car okay switch to the left lane,okay car okay change to the left lane,0.125,0.16216216216216217,False
+row2955_v5_US_Deep.mp3,vehicle hmm go faster to 99 when you can,vehicle hmm go faster to 38 when you can,0.1111111111111111,0.05,False
+row2076_v5_US_Deep.mp3,alright car uh go faster to 106 if possible,alright car uh go 55 if you can go 55 if you can go 5,1.1111111111111112,0.627906976744186,False
+row5042_v3_UK_Female.mp3,okay car could you change to the right lane now,okay car can you turn the right lane now,0.3,0.2553191489361702,False
+row7901_v5_US_Deep.mp3,hey car alright speed up to 73 if possible,hey car alright speed up to 300 if possible,0.1111111111111111,0.07142857142857142,False
+row1567_v1_US_Female.mp3,vehicle hey change to the left lane when you can,vehicle hey change to 39 when you can,0.3,0.2708333333333333,False
+row648_v5_US_Deep.mp3,car could you lower speed to 101 now,car could you lower speed to 30 now,0.125,0.05555555555555555,False
+row3301_v3_UK_Female.mp3,hey car would you bring speed to 110 right now,hey car would you bring speed to 173 now?,0.3,0.1956521739130435,False
+row5644_v3_UK_Female.mp3,assistant would you bring speed down to 104,assistant would drive speed 100,0.625,0.37209302325581395,False
+row3971_v2_US_Male.mp3,hey car alright go right if possible,hey car alright go to the next room if possible,0.5714285714285714,0.3888888888888889,False
+row1871_v5_US_Deep.mp3,car hmm go faster to 56,car okay go faster to 37,0.3333333333333333,0.2608695652173913,False
+row7990_v1_US_Female.mp3,assistant hmm ease down to 70 please,assistant,0.8571428571428571,0.75,False
+row3406_v2_US_Male.mp3,okay car please accelerate to 49 right now,okay car please accelerate to 34 right now,0.125,0.047619047619047616,False
+row43_v2_US_Male.mp3,just go faster to 48 when you can,马上加快到40号,1.0,0.9696969696969697,False
+row4725_v5_US_Deep.mp3,alright car hmm boost speed to 30 right now,alright car right get to 30 now speed up to 35 okay,1.0,0.6744186046511628,False
+row1700_v1_US_Female.mp3,car push speed to 43 please,car push speed to 33,0.3333333333333333,0.2962962962962963,False
+row7890_v4_US_Fast.mp3,alright car decrease speed to 54 now,alright car decrease speed to 45 now,0.14285714285714285,0.05555555555555555,False
+row735_v1_US_Female.mp3,assistant hmm increase speed to 21 please,assistant increase 21111111111111111,0.7142857142857143,0.5121951219512195,False
+row6313_v1_US_Female.mp3,vehicle hey go faster to 93 right now,vehicle hey go faster to 74 when you can,0.5,0.35135135135135137,False
+row68_v4_US_Fast.mp3,vehicle hey bring speed down to 97 when you can,vehicle hey bring speed down to 89 when you can,0.1,0.0425531914893617,False
+row2587_v5_US_Deep.mp3,alright car would you swing right please,alright car would just push left,0.5714285714285714,0.375,False
+row912_v2_US_Male.mp3,uh go faster to 41 now,uh go faster to 37 now,0.16666666666666666,0.09090909090909091,False
+row603_v4_US_Fast.mp3,vehicle hmm decrease speed to 116,vehicle hmm decrease speed to 39,0.16666666666666666,0.09090909090909091,False
+row6976_v1_US_Female.mp3,alright car alright increase speed to 115 when you can,alright car alright increase speed to 21 when you can,0.1,0.037037037037037035,False
+row6426_v4_US_Fast.mp3,alright boost speed to 60 now,alright boost speed to 50 now,0.16666666666666666,0.034482758620689655,False
+row4577_v5_US_Deep.mp3,car please switch to the right lane please,car please switch to the right lane please,0.0,0.0,True
+row3424_v4_US_Fast.mp3,hey car hey switch to the left lane right now,hey car hey move to the left when driving,0.4,0.37777777777777777,False
+row923_v3_UK_Female.mp3,vehicle hmm change to the right lane,vehicle turn the car to the left 100,0.7142857142857143,0.5,False
+row1267_v2_US_Male.mp3,please accelerate to 48 right now,accelerate please指挥马上,0.8333333333333334,0.6666666666666666,False
+row7025_v2_US_Male.mp3,okay car just reduce speed to 67 please,okay car just decrease speed to 68 please,0.25,0.1794871794871795,False
+row8267_v5_US_Deep.mp3,car just bring speed to 75 when you can,car just bring speed to 73 when you can,0.1111111111111111,0.02564102564102564,False
+row8400_v3_UK_Female.mp3,alright car just move to the right lane right now,alright car just move to the right lane now,0.1,0.12244897959183673,False
+row201_v3_UK_Female.mp3,car can you increase speed to 34 if possible,car can you increase speed to 34 if possible,0.0,0.0,True
+row4108_v4_US_Fast.mp3,okay car can you bring speed down to 22 now,okay car can you bring speed down to 26 now,0.1,0.023255813953488372,False
+row2898_v3_UK_Female.mp3,alright car can you merge into the left lane now,alright car can you turn left now on lane here,0.5,0.3958333333333333,False
+row2177_v2_US_Male.mp3,hey car uh bring speed to 42 right now,hey car uh bring speed to 33 now,0.2222222222222222,0.21052631578947367,False
+row7239_v1_US_Female.mp3,vehicle ease down to 91 when you can,vehicle ease down to 90 when you can,0.125,0.027777777777777776,False
+row3317_v2_US_Male.mp3,okay car quickly shift into the right lane please,okay car quickly move to the right lane,0.3333333333333333,0.2857142857142857,False
+row2631_v3_UK_Female.mp3,car hmm slow down to 38 if possible,car hmm slow down to 39 when okay,0.375,0.34285714285714286,False
+row6535_v3_UK_Female.mp3,alright car please lower speed to 30 right now,alright car please lower speed to 30 right now,0.0,0.0,True
+row8372_v4_US_Fast.mp3,okay car would you merge into the right lane,okay car would you turn in the left lane,0.3333333333333333,0.22727272727272727,False
+row3993_v2_US_Male.mp3,okay car just push speed to 80 right now,"okay car right now keep speed to 73 when you can
+
+that's interesting i just hope",1.3333333333333333,1.3,False
+row5156_v2_US_Male.mp3,assistant uh decrease speed to 26 right now,99车道 347阵况下左转速度减五,1.0,0.9767441860465116,False
+row6212_v3_UK_Female.mp3,alright car could you bring speed down to 45 right now,alright car could you bring speed down to 34 right now,0.09090909090909091,0.037037037037037035,False
+row4092_v5_US_Deep.mp3,alright car quickly stay at this speed,alright car quickly carry to the next level,0.7142857142857143,0.42105263157894735,False
+row5643_v5_US_Deep.mp3,alright car could you push speed to 87 please,alright car can push 50 mph please,0.5555555555555556,0.4,False
+row7138_v5_US_Deep.mp3,assistant hmm go right,assistant okay go to next,0.75,0.45454545454545453,False
+row1163_v4_US_Fast.mp3,car push speed to 41 now,car push 10 when push,0.6666666666666666,0.5833333333333334,False
+row62_v5_US_Deep.mp3,assistant hmm accelerate to 39 if possible,assistant okay accelerate to 33 if possible,0.2857142857142857,0.11904761904761904,False
+row70_v5_US_Deep.mp3,okay car swing left please,okay car swing left please,0.0,0.0,True
+row7957_v2_US_Male.mp3,hey car hmm bring speed down to 23 please,hey car hey bring speed to 33 please,0.3333333333333333,0.1951219512195122,False
+row7846_v5_US_Deep.mp3,car could you speed up to 29 when you can,car could you speed up to 23 when you can,0.1,0.024390243902439025,False
+row4272_v2_US_Male.mp3,okay car uh bring speed down to 63 right now,okay car uh bring speed down to 39 right now,0.1,0.045454545454545456,False
+row1096_v2_US_Male.mp3,okay car just raise speed to 55 when you can,okay car just raise speed to 33 when you can,0.1,0.045454545454545456,False
+row5639_v4_US_Fast.mp3,assistant could you change to the right lane please,assistant would you turn to the right lane please,0.2222222222222222,0.11764705882352941,False
+row1496_v2_US_Male.mp3,assistant would you lower speed to 73 if possible,assistant would you lower speed to 38 if possible,0.1111111111111111,0.04081632653061224,False
+row4024_v4_US_Fast.mp3,car can you lower speed to 31 now,car can you accelerate to 83 when you can,0.75,0.6363636363636364,False
+row6780_v4_US_Fast.mp3,alright reduce speed to 63 please,alright reduce speed to 61 please,0.16666666666666666,0.030303030303030304,False
+row4489_v4_US_Fast.mp3,okay car hmm go right when you can,okay car hmm go to town now,0.5,0.38235294117647056,False
+row4910_v3_UK_Female.mp3,alright car hmm accelerate to 104 when you can,alright car hmm speed up 30,0.6666666666666666,0.5434782608695652,False
+row8484_v5_US_Deep.mp3,vehicle go left please,vehicle go go go 39,0.75,0.45454545454545453,False
+row1547_v1_US_Female.mp3,alright car quickly raise speed to 56 when you can,alright car quickly raise speed to 66 when you can,0.1,0.02,False
+row8768_v2_US_Male.mp3,bring speed to 35 if possible,bring speed to 30 if possible,0.16666666666666666,0.034482758620689655,False
+row1636_v5_US_Deep.mp3,assistant uh boost speed to 45 right now,assistant uh speed down 73,0.625,0.475,False
+row6004_v3_UK_Female.mp3,vehicle please bring speed to 69 when you can,vehicle please bring speed to 89 when you can,0.1111111111111111,0.022222222222222223,False
+row3146_v1_US_Female.mp3,vehicle could you ease down to 45 please,vehicle could you ease down to 44,0.25,0.2,False
+row7136_v1_US_Female.mp3,vehicle would you decrease speed to 35 now,vehicle would you increase speed to 33 now,0.25,0.07142857142857142,False
+row1842_v2_US_Male.mp3,okay car quickly go faster to 76 right now,"okay car slow to 70 right now
+max减速到 70
+
+now i see",0.8888888888888888,0.8333333333333334,False
+row2977_v3_UK_Female.mp3,would you bring speed to 37 if possible,would car would you bring would you bring,0.875,0.717948717948718,False
+row6715_v5_US_Deep.mp3,car could you lower speed to 75 now,car could you lower speed to 48 now,0.125,0.05714285714285714,False
+row3938_v5_US_Deep.mp3,car uh lower speed to 58,car uh lower speed to 39,0.16666666666666666,0.08333333333333333,False
+row781_v3_UK_Female.mp3,just slow down to 84 when you can,just slow down to 68 when you can,0.125,0.06060606060606061,False
+row2966_v5_US_Deep.mp3,alright car hey push speed to 37,alright car hey push speed to 36,0.14285714285714285,0.03125,False
+row3366_v2_US_Male.mp3,alright car can you push speed to 25,alright car can you push speed to 26,0.125,0.027777777777777776,False
+row6412_v3_UK_Female.mp3,okay car uh ease down to 55 if possible,okay car okay reduce speed to 20 if possible,0.4444444444444444,0.38461538461538464,False
+row1158_v1_US_Female.mp3,okay car could you start driving,okay car can you start driving now,0.3333333333333333,0.25,False
+row2374_v5_US_Deep.mp3,assistant okay raise speed to 118 if possible,assistant okay raise speed to 30 if possible,0.125,0.06666666666666667,False
+row6174_v2_US_Male.mp3,vehicle okay decrease speed to 83 right now,vehicle decrease speed to 97 right now,0.25,0.16279069767441862,False
+row8661_v1_US_Female.mp3,car can you accelerate to 31 right now,car can you accelerate to 39 right now,0.125,0.02631578947368421,False
+row1514_v2_US_Male.mp3,vehicle hey go faster to 59 now,vehicle hey go faster to 74 now,0.14285714285714285,0.06451612903225806,False
+row1185_v2_US_Male.mp3,alright car can you speed up to 83 please,alright car can speed up to 60 mph now,0.4444444444444444,0.2926829268292683,False
+row6513_v2_US_Male.mp3,okay car okay lower speed to 35 if possible,okay car okay lower speed to 30 if possible,0.1111111111111111,0.023255813953488372,False
+row6766_v3_UK_Female.mp3,car please boost speed to 62 please,car please boost speed to 68 please,0.14285714285714285,0.02857142857142857,False
+row510_v2_US_Male.mp3,hey car uh merge into the right lane now,hey car uh turn to the right when you can,0.5555555555555556,0.4,False
+row3401_v2_US_Male.mp3,just boost speed to 66 now,just boost speed to 56 now,0.16666666666666666,0.038461538461538464,False
+row8567_v1_US_Female.mp3,car go faster to 39 now,already go faster to 30 now,0.3333333333333333,0.30434782608695654,False
+row8238_v4_US_Fast.mp3,assistant lower speed to 99 now,lower speed to 90 now if possible,0.6666666666666666,0.7419354838709677,False
+row6230_v1_US_Female.mp3,car quickly raise speed to 56 please,car quickly raise speed to 50% if possible,0.42857142857142855,0.3055555555555556,False
+row5537_v2_US_Male.mp3,car bring speed to 24 now,car bring speed down to 25 now,0.3333333333333333,0.24,False
+row4982_v3_UK_Female.mp3,alright car just bring speed down to 37,alright car just bring speed down to 46,0.125,0.05128205128205128,False
+row7129_v3_UK_Female.mp3,car just accelerate to 22 right now,car just accelerate to 32 right now,0.14285714285714285,0.02857142857142857,False
+row472_v5_US_Deep.mp3,hey car can you decrease speed to 63 right now,hey car can you decrease speed to 50 when possible,0.3,0.30434782608695654,False
+row7134_v3_UK_Female.mp3,okay car slow down to 42 right now,okay car slow down to 33 right now,0.125,0.058823529411764705,False
+row4001_v2_US_Male.mp3,hey car uh merge into the left lane now,hey car uh turn left to merge into the lane now,0.4444444444444444,0.46153846153846156,False
+row4292_v3_UK_Female.mp3,vehicle hey boost speed to 29 when you can,vehicle hey increase speed to 38 when,0.4444444444444444,0.40476190476190477,False
+row6078_v4_US_Fast.mp3,push speed to 35 when you can,push speed to 12 when you,0.2857142857142857,0.20689655172413793,False
+row8562_v4_US_Fast.mp3,would you reduce speed to 60 when you can,would you reduce speed to 67 when you can,0.1111111111111111,0.024390243902439025,False
+row5259_v3_UK_Female.mp3,car uh turn right right now,car uh turn right now,0.16666666666666666,0.2222222222222222,False
+row6482_v1_US_Female.mp3,can you increase speed to 25 when you can,can you increase speed to 23 when you can,0.1111111111111111,0.024390243902439025,False
+row3171_v1_US_Female.mp3,would you slow down to 39,would speed up to 37,0.6666666666666666,0.48,False
+row7988_v1_US_Female.mp3,hey car could you boost speed to 30 now,hey car could you boost speed to 50 now,0.1111111111111111,0.02564102564102564,False
+row4169_v2_US_Male.mp3,hey car okay steer right right now,hey car okay turn right right now,0.14285714285714285,0.11764705882352941,False
+row7196_v4_US_Fast.mp3,okay car hey raise speed to 50,okay car hey increase speed to 48,0.2857142857142857,0.23333333333333334,False
+row7874_v3_UK_Female.mp3,car okay bring speed to 65 when you can,car okay bring speed to 73 when you can,0.1111111111111111,0.05128205128205128,False
+row3232_v2_US_Male.mp3,car quickly reduce speed to 52 right now,car quickly decrease speed to 39 right now,0.25,0.2,False
+row5347_v2_US_Male.mp3,okay car could you go faster to 49 right now,okay car would like to go faster to 34 now,0.5,0.36363636363636365,False
+row2674_v2_US_Male.mp3,okay car okay bring speed to 95 please,okay car okay bring speed to 88,0.25,0.23684210526315788,False
+row811_v4_US_Fast.mp3,okay car okay speed up to 21 right now,okay car okay speed up to 26 right now,0.1111111111111111,0.02631578947368421,False
+row6019_v3_UK_Female.mp3,vehicle stop driving if possible,vehicle can only speed up if possible,0.8,0.46875,False
+row1299_v3_UK_Female.mp3,car just push speed to 56 now,car just push speed to 47 now,0.14285714285714285,0.06896551724137931,False
+row517_v3_UK_Female.mp3,alright car would you ease down to 58 now,alright car would like speed 24,0.6666666666666666,0.4634146341463415,False
+row8698_v4_US_Fast.mp3,vehicle quickly ease down to 54 now,vehicle quickly ease down to 30000000000000,0.2857142857142857,0.4,False
+row4468_v1_US_Female.mp3,vehicle hmm slow down to 50 when you can,vehicle accelerate speed to 39 when you can,0.4444444444444444,0.425,False
+row8018_v5_US_Deep.mp3,hmm go right if possible,hmm go faster please,0.6,0.5416666666666666,False
+row3951_v5_US_Deep.mp3,car alright push speed to 25 right now,car alright push speed to 23 right,0.25,0.13157894736842105,False
+row5519_v3_UK_Female.mp3,vehicle uh hold this speed now,vehicle uh keep up the speed now,0.5,0.3,False
+row6553_v1_US_Female.mp3,just head left right now,car right moment,0.8,0.75,False
+row5325_v3_UK_Female.mp3,hey car just turn left,hey car just wait a minute,0.6,0.5,False
+row6378_v5_US_Deep.mp3,hey car would you raise speed to 80 when you can,hey car would you increase speed to 48 when you can,0.18181818181818182,0.14583333333333334,False
+row6677_v3_UK_Female.mp3,vehicle alright raise speed to 69 right now,vehicle alright raise speed to 89 right now,0.125,0.023255813953488372,False
+row6704_v1_US_Female.mp3,okay car can you change to the right lane right now,okay car can you turn to the right lane right now,0.09090909090909091,0.09803921568627451,False
+row4328_v1_US_Female.mp3,okay car would you accelerate to 63,okay car would you accelerate to 48,0.14285714285714285,0.05714285714285714,False
+row1871_v1_US_Female.mp3,car hmm go faster to 56,car okay go faster to 37,0.3333333333333333,0.2608695652173913,False
+row8438_v4_US_Fast.mp3,alright car just decrease speed to 20 if possible,alright car just decrease speed to 20 if possible,0.0,0.0,True
+row5510_v5_US_Deep.mp3,vehicle okay raise speed to 63 now,vehicle okay raise speed to 30 now,0.14285714285714285,0.058823529411764705,False
+row8290_v4_US_Fast.mp3,vehicle hmm push speed to 50 when you can,vehicle hmm push speed to 30 when you can,0.1111111111111111,0.024390243902439025,False
+row3062_v4_US_Fast.mp3,can you push speed to 65,can you accelerate to 39,0.5,0.5,False
+row8852_v2_US_Male.mp3,alright car just boost speed to 38 when you can,alright car just boost speed to 46 when you can,0.1,0.0425531914893617,False
+row1077_v1_US_Female.mp3,okay car could you push speed to 95 please,okay car can push 60 kilometers please,0.5555555555555556,0.5,False
+row2670_v2_US_Male.mp3,hey car just begin moving now,hey car just enter now,0.3333333333333333,0.3448275862068966,False
+row1053_v1_US_Female.mp3,push speed to 61,speed up to 32,0.75,0.625,False
+row1933_v3_UK_Female.mp3,alright car can you lower speed to 44 now,alright car can speed down 43 when you can see,0.7777777777777778,0.5365853658536586,False
+row4069_v2_US_Male.mp3,just accelerate to 36 please,just accelerate to 34 when,0.4,0.21428571428571427,False
+row7197_v4_US_Fast.mp3,alright car please go ahead and start if possible,alright car please go ahead if you can,0.4444444444444444,0.3469387755102041,False
+row2728_v4_US_Fast.mp3,alright car hmm boost speed to 25 if possible,alright car hmm increase speed to 34,0.4444444444444444,0.4666666666666667,False
+row1819_v5_US_Deep.mp3,okay car quickly decrease speed to 46 if possible,okay car quickly decrease speed to 20 if possible,0.1111111111111111,0.04081632653061224,False
+row8524_v1_US_Female.mp3,assistant alright turn left now,assistant alright turn left now,0.0,0.0,True
+row64_v3_UK_Female.mp3,would you reduce speed to 52 please,would you reduce speed to 67,0.2857142857142857,0.2571428571428571,False
+row427_v3_UK_Female.mp3,assistant uh bring speed down to 111,assistant \oi \oi \oi \oi \oi \oi \oi \oi \oi \,1.4285714285714286,0.8055555555555556,False
+row7730_v4_US_Fast.mp3,car okay raise speed to 38 now,car okay raise speed to 30 now,0.14285714285714285,0.03333333333333333,False
+row634_v2_US_Male.mp3,vehicle can you increase speed to 97 please,vehicle can you increase speed to 37 now,0.25,0.16279069767441862,False
+row796_v2_US_Male.mp3,alright car just boost speed to 39 when you can,alright car just boost speed to 46 when you can,0.1,0.0425531914893617,False
+row5456_v1_US_Female.mp3,okay car okay shift into the left lane now,okay car okay shift to the left lane now,0.1111111111111111,0.047619047619047616,False
+row6560_v3_UK_Female.mp3,okay car just ease down to 45 please,okay car just ease down to 34,0.25,0.25,False
+row4810_v1_US_Female.mp3,alright car please boost speed to 37,alright car please boost speed to 48,0.14285714285714285,0.05555555555555555,False
+row8430_v3_UK_Female.mp3,okay car quickly swing left if possible,okay car quickly execute command here,0.5714285714285714,0.5128205128205128,False
+row8275_v5_US_Deep.mp3,please steer right when you can,please wait,0.8333333333333334,0.7096774193548387,False
+row2870_v5_US_Deep.mp3,hey ease down to 43 if possible,hey ease down to 33 if possible,0.14285714285714285,0.03225806451612903,False
+row6409_v4_US_Fast.mp3,okay car accelerate to 94,okay accelerate to 99 now,0.6,0.36,False
+row4864_v3_UK_Female.mp3,alright car hmm ease down to 29 now,alright car ease车道小急一下马上到医院把好,0.75,0.5428571428571428,False
+row4218_v5_US_Deep.mp3,okay car can you continue at this speed right now,okay car can you turn right now,0.4,0.40816326530612246,False
+row6383_v5_US_Deep.mp3,okay car uh bring speed to 74 when you can,okay car uh bring speed to 77 when you can,0.1,0.023809523809523808,False
+row1916_v4_US_Fast.mp3,vehicle alright decrease speed to 108 when you can,vehicle alright decrease speed to 100 when you can,0.1111111111111111,0.02,False
+row2217_v4_US_Fast.mp3,car okay lower speed to 52 when you can,car okay lower speed to 30 when you can,0.1111111111111111,0.05128205128205128,False
+row1635_v3_UK_Female.mp3,assistant would you merge into the right lane if possible,would you push harder in the left lane when the left lane was blocked,1.1,0.8596491228070176,False
+row5170_v1_US_Female.mp3,vehicle hmm speed up to 30,vehicle hmm speed up to 30,0.0,0.0,True
+row2903_v3_UK_Female.mp3,vehicle uh accelerate to 66 now,vehicle accelerate to 93 when speed up to 60,1.1666666666666667,0.7096774193548387,False
+row6457_v4_US_Fast.mp3,okay car hmm accelerate to 54 when you can,okay car hmm accelerate to 34 when you can,0.1111111111111111,0.023809523809523808,False
+row6908_v5_US_Deep.mp3,assistant can you speed up to 37 right now,assistant can you speed up to 34 right now,0.1111111111111111,0.023809523809523808,False
+row6437_v1_US_Female.mp3,please steer left now,please turn left now,0.25,0.19047619047619047,False
+row3215_v1_US_Female.mp3,okay car quickly go left please,okay car quickly go to the right lane please,0.6666666666666666,0.4838709677419355,False
+row4241_v4_US_Fast.mp3,assistant hmm change to the right lane now,assistant hey turn the speed to the left 120!,0.875,0.5952380952380952,False
+row329_v5_US_Deep.mp3,alright car hmm decrease speed to 95 right now,alright car hmm decrease speed to 89 right now,0.1111111111111111,0.043478260869565216,False
+row3059_v1_US_Female.mp3,quickly go faster to 28 now,quickly go faster to 34 now,0.16666666666666666,0.07407407407407407,False
+row3083_v3_UK_Female.mp3,car just raise speed to 24 right now,car just raise speed to 33 now,0.25,0.2222222222222222,False
+row4323_v5_US_Deep.mp3,please decrease speed to 20,please decrease speed to 20,0.0,0.0,True
+row2680_v5_US_Deep.mp3,assistant could you go faster to 50 right now,assistant could you turn right to 70 now,0.4444444444444444,0.37777777777777777,False
+row7786_v5_US_Deep.mp3,okay car raise speed to 33 when you can,okay car increase speed to 30 when you can,0.2222222222222222,0.15384615384615385,False
+row7980_v5_US_Deep.mp3,okay car would you speed up to 46 if possible,okay car would speed up to 34 if possible,0.2,0.13333333333333333,False
+row2336_v4_US_Fast.mp3,vehicle quickly get into the right lane please,vehicle quickly pick up speed and go,0.75,0.5,False
+row3311_v1_US_Female.mp3,hey car uh slow down to 69 if possible,uh car okay speed 60 if possible,0.6666666666666666,0.47368421052631576,False
+row5085_v5_US_Deep.mp3,car please ease down to 51 now,car please ease down to 39 now,0.14285714285714285,0.06666666666666667,False
+row8645_v2_US_Male.mp3,assistant hey push speed to 35 please,assistant hey push speed to 30 please,0.14285714285714285,0.02702702702702703,False
+row819_v1_US_Female.mp3,vehicle lower speed to 27 when you can,vehicle lower speed to 30 when you can,0.125,0.05263157894736842,False
+row4811_v3_UK_Female.mp3,vehicle hmm speed up to 80 now,vehicle hmm speed up to 39 now,0.14285714285714285,0.06666666666666667,False
+row4473_v5_US_Deep.mp3,hey car just go faster to 66 now,hey car just go faster to 7895,0.25,0.1875,False
+row4720_v1_US_Female.mp3,assistant uh go faster to 98 if possible,assistant uh go speed up to 90 if possible,0.375,0.225,False
+row579_v1_US_Female.mp3,hey car okay raise speed to 91 if possible,hey car okay reduce speed to 49 if possible,0.2222222222222222,0.14285714285714285,False
+row4691_v1_US_Female.mp3,hey car okay raise speed to 24 now,hey car okay increase speed to 20 now,0.25,0.17647058823529413,False
+row1040_v5_US_Deep.mp3,vehicle can you go left please,vehicle can you go now,0.3333333333333333,0.36666666666666664,False
+row8111_v1_US_Female.mp3,vehicle quickly ease down to 38 if possible,vehicle quickly ease down to 30000 when possible,0.25,0.18604651162790697,False
+row8616_v4_US_Fast.mp3,car okay lower speed to 36 please,car okay lower speed to 30 please,0.14285714285714285,0.030303030303030304,False
+row2717_v3_UK_Female.mp3,hey car please slow down to 93 when you can,hey car please speed to 73 when you can,0.3,0.18604651162790697,False
+row7182_v1_US_Female.mp3,assistant please start driving if possible,assistant please maintain speed please,0.6666666666666666,0.47619047619047616,False
+row909_v1_US_Female.mp3,alright car quickly bring speed down to 56 right now,alright car quickly bring speed down to 26 right now,0.1,0.019230769230769232,False
+row6175_v3_UK_Female.mp3,car could you slow down to 56 please,car could you slow down to 66 now,0.25,0.19444444444444445,False
+row4482_v1_US_Female.mp3,okay car hmm speed up to 96 if possible,okay car hmm speed up to 90 if possible,0.1111111111111111,0.02564102564102564,False
+row6891_v1_US_Female.mp3,alright ease down to 88 if possible,alright ease down to 58 if possible,0.14285714285714285,0.02857142857142857,False
+row4726_v4_US_Fast.mp3,vehicle could you raise speed to 33,vehicle could you raise speed to 30,0.14285714285714285,0.02857142857142857,False
+row2605_v1_US_Female.mp3,alright car slow down to 68 now,alright car slow down to 76 now,0.14285714285714285,0.06451612903225806,False
+row106_v3_UK_Female.mp3,hey car quickly go left,hey car quickly turn left and go to the right,1.2,1.0434782608695652,False
+row4907_v5_US_Deep.mp3,okay car uh speed up to 25,okay car uh speed up to 30,0.14285714285714285,0.07692307692307693,False
+row4780_v1_US_Female.mp3,assistant okay turn left right now,assistant okay turn left right now,0.0,0.0,True
+row1529_v2_US_Male.mp3,okay car could you bring speed down to 40 when you can,okay car could you bring speed down to 100 when you can,0.08333333333333333,0.037037037037037035,False
+row1058_v2_US_Male.mp3,vehicle would you increase speed to 30 please,vehicle would you increase speed to 33,0.25,0.17777777777777778,False
+row8305_v1_US_Female.mp3,assistant speed up to 118 if possible,assistant speed up to 33 if possible,0.14285714285714285,0.08108108108108109,False
+row7726_v5_US_Deep.mp3,can you decrease speed to 88 please,can you decrease speed to 67 please,0.14285714285714285,0.05714285714285714,False
+row6825_v1_US_Female.mp3,assistant could you decrease speed to 61,assistant could you decrease speed to 50,0.14285714285714285,0.05,False
+row6536_v1_US_Female.mp3,vehicle alright slow down to 35 now,vehicle okay slow down to 39 now,0.2857142857142857,0.22857142857142856,False
+row392_v5_US_Deep.mp3,assistant ease down to 34,assistant ease down to 33,0.2,0.04,False
+row1806_v1_US_Female.mp3,okay raise speed to 36 please,okay car please increase speed to 33,0.8333333333333334,0.7586206896551724,False
+row1401_v3_UK_Female.mp3,hmm ease down to 50 if possible,okay ease down to 30 if possible,0.2857142857142857,0.16129032258064516,False
+row8534_v2_US_Male.mp3,okay car okay slow down to 36,okay car okay slow down to 30,0.14285714285714285,0.034482758620689655,False
+row7235_v4_US_Fast.mp3,vehicle uh ease down to 25,vehicle ease 3345 down,0.6666666666666666,0.4230769230769231,False
+row8021_v4_US_Fast.mp3,just bring speed to 27 when you can,just bring speed to 30 when,0.375,0.2857142857142857,False
+row347_v4_US_Fast.mp3,assistant push speed to 63 please,assistant accelerate speed to 53,0.5,0.5454545454545454,False
+row2108_v3_UK_Female.mp3,hey lower speed to 71 when you can,hey lower speed to 89 when you can,0.125,0.058823529411764705,False
+row1192_v3_UK_Female.mp3,assistant could you go faster to 25 right now,assistant could you turn right to 36 now,0.4444444444444444,0.4,False
+row512_v4_US_Fast.mp3,assistant alright bring the car to a stop now,assistant alright continue,0.7777777777777778,0.5111111111111111,False
+row772_v4_US_Fast.mp3,alright car can you switch to the right lane when you can,alright car can you change the car to 12 when you can,0.4166666666666667,0.2982456140350877,False
+row4493_v3_UK_Female.mp3,okay car hmm bring speed down to 23 right now,okay car right speed 273 bring speed to 299,0.7,0.6,False
+row6527_v5_US_Deep.mp3,okay car uh ease down to 21 right now,okay car okay reduce speed to 20 now,0.5555555555555556,0.5405405405405406,False
+row2941_v1_US_Female.mp3,okay car hmm bring speed down to 35 if possible,okay car hmm bring speed to 33 if possible,0.2,0.1276595744680851,False
+row1433_v4_US_Fast.mp3,alright car just go faster to 68 right now,alright car just go faster to 77 now,0.2222222222222222,0.19047619047619047,False
+row5709_v1_US_Female.mp3,alright car quickly switch to the right lane,alright car quickly change to the right lane,0.125,0.13636363636363635,False
+row5929_v3_UK_Female.mp3,car could you slow down to 99,car could you slow down to 97,0.14285714285714285,0.034482758620689655,False
+row2209_v4_US_Fast.mp3,could you switch to the right lane,could you turn your command to the right direction,0.5714285714285714,0.7058823529411765,False
+row4738_v4_US_Fast.mp3,assistant uh boost speed to 39 when you can,assistant uh increase speed to 53 when you can,0.2222222222222222,0.20930232558139536,False
+row529_v3_UK_Female.mp3,assistant would you slow down to 36 if possible,assistant would you slow down to 33 if possible,0.1111111111111111,0.02127659574468085,False
+row4260_v5_US_Deep.mp3,assistant hmm speed up to 109 right now,assistant hmm speed up to 33 now,0.25,0.23076923076923078,False
+row7770_v2_US_Male.mp3,hey car just boost speed to 51 when you can,hey car just boost speed to 56 when you can,0.1,0.023255813953488372,False
+row4867_v4_US_Fast.mp3,okay car can you lower speed to 60 if possible,okay car can you lower speed to 50 when possible,0.2,0.10869565217391304,False
+row399_v1_US_Female.mp3,vehicle alright increase speed to 97 now,vehicle alright increase speed to 80 now,0.14285714285714285,0.05,False
+row5139_v3_UK_Female.mp3,alright car would you increase speed to 90 right now,alright car would accelerate to 88 right now,0.4,0.3076923076923077,False
+row941_v5_US_Deep.mp3,assistant ease down to 39 right now,assistant ease 10000 down to 100 in the left,0.7142857142857143,0.5142857142857142,False
+row5953_v2_US_Male.mp3,car can you lower speed to 86 when you can,car can you lower speed to 30 when you can,0.1,0.047619047619047616,False
+row5740_v4_US_Fast.mp3,vehicle quickly lower speed to 26,vehicle quickly lower speed to 30,0.16666666666666666,0.06060606060606061,False
+row4605_v2_US_Male.mp3,okay car hmm decrease speed to 78 if possible,okay car hmm decrease speed to 50 if possible,0.1111111111111111,0.044444444444444446,False
+row1140_v1_US_Female.mp3,assistant alright raise speed to 26,assistant,0.8333333333333334,0.7428571428571429,False
+row4912_v1_US_Female.mp3,alright car okay bring the car to a stop if possible,okay car alright keep it up please,0.8181818181818182,0.6730769230769231,False
+row1504_v2_US_Male.mp3,vehicle accelerate to 90 right now,vehicle accelerate to 73 currently,0.5,0.3235294117647059,False
+row7071_v4_US_Fast.mp3,vehicle bring speed down to 64 if possible,vehicle bring speed down to 380 if possible,0.125,0.07142857142857142,False
+row2577_v2_US_Male.mp3,hey car push speed to 117,hey car speed 112,0.5,0.36,False
+row7756_v2_US_Male.mp3,car quickly turn left if possible,car quickly turn left if possible,0.0,0.0,True
+row3505_v3_UK_Female.mp3,vehicle please bring speed to 45 if possible,vehicle please bring speed to 30 if possible,0.125,0.045454545454545456,False
+row3739_v4_US_Fast.mp3,vehicle quickly bring speed down to 37 if possible,vehicle quickly bring speed down to 26 if possible,0.1111111111111111,0.04,False
+row2307_v4_US_Fast.mp3,alright car go faster to 72 when you can,alright car go faster to 100 when you can,0.1111111111111111,0.075,False
+row970_v4_US_Fast.mp3,car alright raise speed to 25 please,car alright raise speed to 30 please,0.14285714285714285,0.05555555555555555,False
+row8322_v5_US_Deep.mp3,can you shift into the left lane when you can,can you turn your car now,0.8,0.6444444444444445,False
+row2466_v1_US_Female.mp3,vehicle alright decrease speed to 106 when you can,vehicle alright decrease speed to 100 when you can,0.1111111111111111,0.02,False
+row8615_v3_UK_Female.mp3,okay car quickly bring speed down to 35 right now,okay car quickly bring speed down to 34 right now,0.1,0.02040816326530612,False
+row1506_v1_US_Female.mp3,alright lower speed to 40,alright lower speed to 30,0.2,0.04,False
+row3071_v2_US_Male.mp3,okay car hmm switch to the right lane right now,okay car hmm move to the right lane now,0.2,0.2553191489361702,False
+row6644_v3_UK_Female.mp3,quickly ease down to 27 when you can,quick smooth drive now,1.0,0.6388888888888888,False
+row7100_v4_US_Fast.mp3,okay boost speed to 101 please,okay increase speed to 93 when,0.5,0.5,False
+row3380_v1_US_Female.mp3,car can you get into the left lane right now,car can you turn into left now,0.4,0.4318181818181818,False
+row2418_v2_US_Male.mp3,hey let's start when you can,hey car start right now,0.6666666666666666,0.5714285714285714,False
+row131_v3_UK_Female.mp3,hey car could you increase speed to 105 right now,hey car could you increase speed to 30 now,0.2,0.16326530612244897,False
+row646_v3_UK_Female.mp3,alright car alright slow down to 51 if possible,alright car alright speed down 001,0.5555555555555556,0.425531914893617,False
+row2144_v5_US_Deep.mp3,assistant would you bring speed to 26 please,assistant would you bring speed to 27,0.25,0.18181818181818182,False
+row3321_v1_US_Female.mp3,assistant alright lower speed to 98 when you can,assistant okay lower speed to 92 when you can,0.2222222222222222,0.16666666666666666,False
+row3256_v1_US_Female.mp3,could you lower speed to 91,could you lower speed to 78,0.16666666666666666,0.07407407407407407,False
+row6760_v3_UK_Female.mp3,alright car alright increase speed to 99 if possible,alright car alright increase speed to 60 if possible,0.1111111111111111,0.038461538461538464,False
+row7086_v1_US_Female.mp3,assistant just swing left when you can,assistant swing right when you need,0.42857142857142855,0.34210526315789475,False
+row6932_v2_US_Male.mp3,okay car would you raise speed to 30 when you can,okay car would you raise speed to 34 when you can,0.09090909090909091,0.02040816326530612,False
+row1439_v3_UK_Female.mp3,hey raise speed to 38 now,hey turn speed up to 34 now,0.5,0.36,False
+row5263_v3_UK_Female.mp3,could you shift into the left lane,would you keep the direction,0.7142857142857143,0.5588235294117647,False
+row436_v4_US_Fast.mp3,vehicle take a left,"car, left please",1.0,0.7368421052631579,False
+row5761_v4_US_Fast.mp3,car can you go faster to 60,car can you go faster to 38,0.14285714285714285,0.07407407407407407,False
+row1100_v5_US_Deep.mp3,car quickly speed up to 62 if possible,car quickly speed up to 60 if possible,0.125,0.02631578947368421,False
+row4094_v5_US_Deep.mp3,alright car quickly halt the vehicle,alright car quickly turn the left车道,0.3333333333333333,0.2777777777777778,False
+row5668_v5_US_Deep.mp3,car please boost speed to 55 right now,car please boost speed to 38 right now,0.125,0.05263157894736842,False
+row6741_v2_US_Male.mp3,assistant hmm make a left turn,assistant hmm turn left please,0.5,0.4,False
+row1598_v3_UK_Female.mp3,car could you bring speed to 84 please,car could you bring speed down to 34 please,0.25,0.15789473684210525,False
+row4006_v4_US_Fast.mp3,vehicle quickly shift into the left lane right now,vehicle quickly turn left 12 when it is in the right lane,1.0,0.54,False
+row6528_v5_US_Deep.mp3,vehicle would you boost speed to 78 if possible,vehicle would you increase speed to 34777 if possible,0.2222222222222222,0.23404255319148937,False
+row4603_v4_US_Fast.mp3,okay car would you raise speed to 51 when you can,okay car would you raise speed 1334777777777,0.45454545454545453,0.3469387755102041,False
+row6607_v4_US_Fast.mp3,vehicle hmm switch to the right lane now,vehicle hmm turn left to 30 when you can,0.75,0.6,False
+row6649_v2_US_Male.mp3,car boost speed to 64 if possible,car boost speed to 500 if possible,0.14285714285714285,0.09090909090909091,False
+row2239_v4_US_Fast.mp3,car hey stay at this speed when you can,car hey keep the speed up now,0.6666666666666666,0.48717948717948717,False
+row5653_v2_US_Male.mp3,assistant okay boost speed to 21,assistant okay reduce speed to 21,0.16666666666666666,0.1875,False
+row464_v5_US_Deep.mp3,assistant just push speed to 40 now,assistant just push speed to 56 now,0.14285714285714285,0.05714285714285714,False
+row5901_v5_US_Deep.mp3,car bring speed to 104,car bring speed to 100,0.2,0.045454545454545456,False
+row6359_v5_US_Deep.mp3,assistant please get into the left lane when you can,assistant please go to the left lane when you are in the left lane,0.7,0.4230769230769231,False
+row5395_v1_US_Female.mp3,hey car quickly go left please,hey car quickly go to the right lane please,0.6666666666666666,0.5,False
+row4966_v4_US_Fast.mp3,okay car can you boost speed to 70 right now,okay car can you increase speed to 33 now,0.3,0.3409090909090909,False
+row1745_v5_US_Deep.mp3,alright car hmm push speed to 27 please,okay car hmm push speed to 34 please,0.25,0.23076923076923078,False
+row4942_v5_US_Deep.mp3,hey car ease down to 70 please,hey car ease down to 93 if you can 94 if you can 95,1.2857142857142858,0.9333333333333333,False
+row3017_v5_US_Deep.mp3,okay car okay go faster to 36 if possible,okay car okay go faster to 30 if possible,0.1111111111111111,0.024390243902439025,False
+row6264_v1_US_Female.mp3,hey car hmm push speed to 49 now,hey car hmm speed up to 34 when,0.5,0.4375,False
+row150_v1_US_Female.mp3,assistant okay lower speed to 65 please,assistant okay lower speed to 32 please,0.14285714285714285,0.05128205128205128,False
+row2723_v1_US_Female.mp3,hey car alright swing left if possible,hey car okay swing right if needed,0.42857142857142855,0.5,False
+row4965_v4_US_Fast.mp3,uh bring speed down to 53 when you can,uh bring speed down to 39 when you can,0.1111111111111111,0.05263157894736842,False
+row5053_v4_US_Fast.mp3,okay car quickly raise speed to 26 if possible,okay car could increase speed if possible,0.4444444444444444,0.34782608695652173,False
+row6600_v2_US_Male.mp3,hey car quickly slow down to 50,hey car quickly slow down to 30 when,0.2857142857142857,0.1935483870967742,False
+row3974_v3_UK_Female.mp3,car uh take a left right now,car uh turn left now,0.42857142857142855,0.39285714285714285,False
+row6611_v1_US_Female.mp3,alright car alright steer left when you can,alright car alright keep an eye on the road,0.75,0.3953488372093023,False
+row1780_v4_US_Fast.mp3,car hey turn right now,car hey turn right now,0.0,0.0,True
+row4390_v2_US_Male.mp3,alright car please raise speed to 79 if possible,alright car please raise speed to 88 if possible,0.1111111111111111,0.041666666666666664,False
+row93_v1_US_Female.mp3,car alright boost speed to 95 now,car okay boost speed to 80 now,0.2857142857142857,0.2727272727272727,False
+row2421_v3_UK_Female.mp3,okay car uh move to the right lane,okay car alright move to the right lane,0.125,0.17647058823529413,False
+row146_v2_US_Male.mp3,okay car uh move to the left lane right now,okay car okay move to the left lane now,0.2,0.23255813953488372,False
+row2721_v4_US_Fast.mp3,car uh decrease speed to 91 please,car uh decrease speed to 99 please,0.14285714285714285,0.029411764705882353,False
+row910_v1_US_Female.mp3,bring speed down to 112 if possible,bring speed down to 150 if possible,0.14285714285714285,0.05714285714285714,False
+row8262_v1_US_Female.mp3,can you go faster to 24 right now,can you go faster to 24 right now,0.0,0.0,True
+row3775_v1_US_Female.mp3,okay car could you go faster to 43 if possible,okay car could go to 43 now if possible,0.3,0.2826086956521739,False
+row4523_v1_US_Female.mp3,vehicle hmm slow down to 120 when you can,vehicle hmm slow down to 39 when you can,0.1111111111111111,0.07317073170731707,False
+row4053_v1_US_Female.mp3,just slow down to 64 right now,just slow down to 67 right now,0.14285714285714285,0.03333333333333333,False
+row5506_v1_US_Female.mp3,assistant can you boost speed to 61 please,assistant can accelerate to 73,0.625,0.5238095238095238,False
+row525_v2_US_Male.mp3,just bring speed down to 25 now,just bring speed down to 26 now,0.14285714285714285,0.03225806451612903,False
+row904_v3_UK_Female.mp3,car okay boost speed to 42 when you can,car okay boost speed to 33 when you can,0.1111111111111111,0.05128205128205128,False
+row6225_v4_US_Fast.mp3,assistant would you boost speed to 66 please,assistant would you increase speed to 67 please,0.25,0.18181818181818182,False
+row8194_v3_UK_Female.mp3,assistant alright ease down to 64 if possible,assistant alright,0.75,0.6222222222222222,False
+row6173_v4_US_Fast.mp3,vehicle could you slow down to 40 now,vehicle could slow down to 34 now,0.25,0.16216216216216217,False
+row7128_v4_US_Fast.mp3,car hey bring speed down to 27 if possible,car hey bring speed down to 24 if possible,0.1111111111111111,0.023809523809523808,False
+row6057_v2_US_Male.mp3,okay car just reduce speed to 27,okay car just reduce speed to 29,0.14285714285714285,0.03125,False
+row6942_v2_US_Male.mp3,would you bring the vehicle to rest now,vehicle would you please turn left now,0.75,0.6923076923076923,False
+row6961_v5_US_Deep.mp3,car quickly go faster to 91 if possible,car quickly go to the next level if possible,0.5,0.358974358974359,False
+row1733_v1_US_Female.mp3,hey car hey accelerate to 20 if possible,hey car hey increase speed to 30 if possible,0.375,0.275,False
+row6439_v1_US_Female.mp3,alright car quickly bring speed to 26 when you can,alright car quickly bring speed to 32 when you can,0.1,0.04,False
+row3077_v4_US_Fast.mp3,okay car uh raise speed to 35 when you can,okay car uh raise speed to 33 when you can,0.1,0.023809523809523808,False
+row8402_v4_US_Fast.mp3,would you go faster to 89 if possible,would you go faster to 97 if possible,0.125,0.05405405405405406,False
+row3861_v3_UK_Female.mp3,hey car uh ease down to 85 please,hey car ease down to 93 if you can 94 if you can 95,1.25,0.9393939393939394,False
+row6175_v4_US_Fast.mp3,car could you slow down to 56 please,car could you slow down to 66 now,0.25,0.19444444444444445,False
+row2443_v4_US_Fast.mp3,car hey slow down to 33,car hey slow down to 30 when,0.3333333333333333,0.2608695652173913,False
+row5699_v4_US_Fast.mp3,assistant okay reduce speed to 29,assistant okay reduce speed to 21,0.16666666666666666,0.030303030303030304,False
+row4061_v4_US_Fast.mp3,assistant please ease down to 55 if possible,assistant ease down to 3345,0.5,0.4772727272727273,False
+row1286_v1_US_Female.mp3,just keep current speed when you can,just move to the next lane when you can,0.7142857142857143,0.4444444444444444,False
+row2004_v3_UK_Female.mp3,okay car can you speed up to 68 when you can,okay car can speed up to 34 when you can,0.18181818181818182,0.13636363636363635,False
+row2826_v2_US_Male.mp3,vehicle quickly start driving now,vehicle quickly start right now,0.2,0.15151515151515152,False
+row5261_v2_US_Male.mp3,would you speed up to 42 please,would speed up to 37,0.42857142857142855,0.41935483870967744,False
+row5075_v1_US_Female.mp3,car please push speed to 70 right now,car please push speed to 79 right now,0.125,0.02702702702702703,False
+row689_v3_UK_Female.mp3,vehicle could you accelerate to 116 when you can,vehicle could you accelerate to 100 when you can,0.1111111111111111,0.041666666666666664,False
+row6879_v1_US_Female.mp3,car hmm ease down to 74 if possible,car ease明明马上停车,0.875,0.7714285714285715,False
+row4070_v2_US_Male.mp3,okay steer right now,okay right now,0.25,0.3,False
+row4921_v3_UK_Female.mp3,alright car can you decrease speed to 86 now,alright car can accelerate 63,0.6666666666666666,0.5,False
+row5016_v3_UK_Female.mp3,hey car just lower speed to 30 now,hey car just keep speed up to 38 when,0.5,0.35294117647058826,False
+row3213_v4_US_Fast.mp3,alright car okay come to a stop please,alright car alright keep moving please,0.625,0.47368421052631576,False
+row4927_v5_US_Deep.mp3,vehicle can you boost speed to 55 when you can,vehicle can you drive a bit quicker when you can,0.4,0.3695652173913043,False
+row1162_v3_UK_Female.mp3,alright accelerate to 26 when you can,alright accelerate to 33 when you can,0.14285714285714285,0.05405405405405406,False
+row6700_v4_US_Fast.mp3,car would you lower speed to 44 when you can,car would you lower speed to 34 when you can,0.1,0.022727272727272728,False
+row3567_v3_UK_Female.mp3,car just speed up to 61 please,car just pick up speed to 67,0.5714285714285714,0.5,False
+row8523_v5_US_Deep.mp3,vehicle hmm decrease speed to 25 please,vehicle decrease 0 speed 12000000000000,0.7142857142857143,0.5128205128205128,False
+row4390_v1_US_Female.mp3,alright car please raise speed to 79 if possible,alright car please raise speed to 78 when possible,0.2222222222222222,0.10416666666666667,False
+row4750_v5_US_Deep.mp3,vehicle alright decrease speed to 22 right now,vehicle alright decrease speed to 33 right now,0.125,0.043478260869565216,False
+row5898_v4_US_Fast.mp3,just ease down to 33 if possible,just ease down to 33 if possible,0.0,0.0,True
+row4383_v2_US_Male.mp3,hey car could you slow down to 90 please,hey car could you slow down to 30 please,0.1111111111111111,0.025,False
+row6160_v3_UK_Female.mp3,car quickly merge into the right lane,car quickly carry when it is available,0.7142857142857143,0.5405405405405406,False
+row530_v2_US_Male.mp3,okay car please push speed to 91 when you can,okay car please push speed to 110 when you can,0.1,0.044444444444444446,False
+row5145_v1_US_Female.mp3,would you head right please,right please head left please,0.6,0.5555555555555556,False
+row4290_v1_US_Female.mp3,assistant just reduce speed to 86 when you can,assistant just decrease speed to 89 when you can,0.2222222222222222,0.15217391304347827,False
+row1187_v5_US_Deep.mp3,vehicle uh speed up to 73 when you can,vehicle uh speed up to 34 when,0.3333333333333333,0.2631578947368421,False
+row4543_v5_US_Deep.mp3,car alright take a right right now,car alright take a right now,0.14285714285714285,0.17647058823529413,False
+row1322_v2_US_Male.mp3,hey car would you move to the left lane if possible,hey car would you turn to the left lane when it was in the right lane?,0.7272727272727273,0.5490196078431373,False
+row2899_v4_US_Fast.mp3,alright car please go faster to 57 when you can,alright car please go faster to 100 when you can,0.1,0.06382978723404255,False
+row4005_v5_US_Deep.mp3,alright car hmm move to the right lane,alright car hey go to the right lane,0.25,0.13157894736842105,False
+row7821_v1_US_Female.mp3,hey car get into the right lane now,hey car okay get into the right lane now,0.125,0.14285714285714285,False
+row4990_v4_US_Fast.mp3,assistant quickly accelerate to 58 now,assistant quickly accelerate to 30 now,0.16666666666666666,0.05263157894736842,False
+row145_v3_UK_Female.mp3,hey car would you reduce speed to 66 now,hey car would you decrease speed to 57 now,0.2222222222222222,0.2,False
+row4722_v2_US_Male.mp3,hey car okay bring speed to 84 when you can,hey car okay bring speed to 53 when you can,0.1,0.046511627906976744,False
+row4650_v2_US_Male.mp3,car would you lower speed to 76 please,car would you lower speed to 37 please,0.125,0.05263157894736842,False
+row4179_v4_US_Fast.mp3,just slow down to 56 if possible,just slow down to 30 mph if possible,0.2857142857142857,0.1875,False
+row4760_v1_US_Female.mp3,car go left,car left go,0.6666666666666666,0.5454545454545454,False
+row6656_v4_US_Fast.mp3,okay bring speed down to 56 please,okay bring speed down to 30 please,0.14285714285714285,0.058823529411764705,False
+row788_v5_US_Deep.mp3,okay car hmm reduce speed to 20 if possible,okay car hmm decrease speed to 30 if possible,0.2222222222222222,0.16279069767441862,False
+row4044_v5_US_Deep.mp3,hey car uh make a left turn right now,hey car uh go ahead again,0.6666666666666666,0.5405405405405406,False
+row3219_v1_US_Female.mp3,okay car hmm reduce speed to 54 if possible,okay car hmm decrease speed to 50 if possible,0.2222222222222222,0.16279069767441862,False
+row4718_v5_US_Deep.mp3,hey reduce speed to 89 when you can,hey reduce speed to 67 when you can,0.125,0.05714285714285714,False
+row3241_v2_US_Male.mp3,assistant hey bring speed down to 37 now,assistant hey bring speed down to 30 now,0.125,0.025,False
+row5632_v1_US_Female.mp3,alright car can you accelerate to 22 right now,alright car can you accelerate to 33 now,0.2222222222222222,0.17391304347826086,False
+row2911_v4_US_Fast.mp3,okay car hmm go faster to 50,okay car hmm go faster to 34,0.14285714285714285,0.07142857142857142,False
+row1883_v2_US_Male.mp3,alright car alright raise speed to 62 please,alright car alright raise speed to 68 please,0.125,0.022727272727272728,False
+row7974_v4_US_Fast.mp3,car please reduce speed to 70,car please reduce speed to 63,0.16666666666666666,0.06896551724137931,False
+row5901_v2_US_Male.mp3,car bring speed to 104,car bring speed to 120,0.2,0.09090909090909091,False
+row4043_v2_US_Male.mp3,assistant could you bring speed down to 31 if possible,assistant could you bring speed down to 26 if possible,0.1,0.037037037037037035,False
+row2783_v3_UK_Female.mp3,assistant okay lower speed to 53 if possible,assistant okay lower speed to 32 if possible,0.125,0.045454545454545456,False
+row6413_v4_US_Fast.mp3,hey car just speed up to 76 right now,hey car just speed down to 49 right now,0.2222222222222222,0.16216216216216217,False
+row1439_v5_US_Deep.mp3,hey raise speed to 38 now,hey increase speed to 38 when,0.3333333333333333,0.36,False
+row2835_v1_US_Female.mp3,vehicle just go faster to 65 now,vehicle just go faster to 78 now,0.14285714285714285,0.0625,False
+row5659_v5_US_Deep.mp3,assistant could you push speed to 40,assistant could you push speed to 46,0.14285714285714285,0.027777777777777776,False
+row5655_v1_US_Female.mp3,okay car quickly change to the right lane,okay car quickly move to the right lane,0.125,0.12195121951219512,False
+row7045_v5_US_Deep.mp3,okay car okay let's start if possible,okay car okay to go ahead if possible,0.42857142857142855,0.2702702702702703,False
+row8810_v4_US_Fast.mp3,assistant alright reduce speed to 52 if possible,assistant alright reduce speed to 50 if possible,0.125,0.020833333333333332,False
+row6583_v2_US_Male.mp3,assistant okay lower speed to 34 now,assistant okay lower speed to 33 now,0.14285714285714285,0.027777777777777776,False
+row380_v3_UK_Female.mp3,okay car would you accelerate to 117 if possible,okay car would you accelerate to 78 if possible,0.1111111111111111,0.0625,False
+row628_v4_US_Fast.mp3,hey car hey accelerate to 57,hey car okay accelerate to 89,0.3333333333333333,0.17857142857142858,False
+row5944_v3_UK_Female.mp3,vehicle push speed to 76 right now,vehicle push speed to 38 right now,0.14285714285714285,0.058823529411764705,False
+row4957_v1_US_Female.mp3,hey car would you slow down to 108 right now,hey car would speed up 108 right now,0.4,0.29545454545454547,False
+row1342_v5_US_Deep.mp3,assistant just slow down to 84 now,assistant just slow down to 34 now,0.14285714285714285,0.029411764705882353,False
+row2102_v1_US_Female.mp3,just go faster to 59,just go faster to 100,0.2,0.15,False
+row5354_v2_US_Male.mp3,hey car could you ease down to 33 when you can,hey car could you ease down to 37 when you can,0.09090909090909091,0.021739130434782608,False
+row7799_v1_US_Female.mp3,alright car alright increase speed to 93 when you can,alright car alright increase speed to 50 when you can,0.1,0.03773584905660377,False
+row2358_v5_US_Deep.mp3,can you slow down to 20 right now,can you slow down to 26 right now,0.125,0.030303030303030304,False
+row3378_v4_US_Fast.mp3,decrease speed to 77 if possible,decrease speed to 67 if possible,0.16666666666666666,0.03125,False
+row1076_v1_US_Female.mp3,alright car ease down to 35,alright ease 17775555555566666,0.6666666666666666,0.7407407407407407,False
+row5589_v3_UK_Female.mp3,car please bring speed to 37 now,car please bring speed to 30 now,0.14285714285714285,0.03125,False
+row3221_v2_US_Male.mp3,vehicle would you reduce speed to 44 now,vehicle would decrease speed to 37 now,0.375,0.225,False
+row1927_v4_US_Fast.mp3,uh make a right turn please,okay take a turn if you can,1.0,0.7407407407407407,False
+row8445_v3_UK_Female.mp3,okay car take a right now,okay car okay to go now,0.5,0.4,False
+row6592_v3_UK_Female.mp3,assistant quickly speed up to 35,assistant quickly speed up to 30,0.16666666666666666,0.03125,False
+row5571_v2_US_Male.mp3,vehicle alright speed up to 87 if possible,vehicle alright speed up to 88 if possible,0.125,0.023809523809523808,False
+row3610_v2_US_Male.mp3,alright car merge into the right lane right now,alright car alright move to the right lane,0.5555555555555556,0.425531914893617,False
+row8661_v3_UK_Female.mp3,car can you accelerate to 31 right now,car can you accelerate to 36 right now,0.125,0.02631578947368421,False
+row6649_v4_US_Fast.mp3,car boost speed to 64 if possible,car boost speed to 48 if possible,0.14285714285714285,0.06060606060606061,False
+row5598_v5_US_Deep.mp3,car quickly speed up to 51 when you can,car quickly speed up to 60 when you can,0.1111111111111111,0.05128205128205128,False
+row7258_v4_US_Fast.mp3,vehicle would you bring speed to 49,vehicle would you bring speed to 30,0.14285714285714285,0.05714285714285714,False
+row3724_v5_US_Deep.mp3,okay car uh bring speed down to 52 right now,okay car uh bring speed down to 39 right now,0.1,0.045454545454545456,False
+row5373_v4_US_Fast.mp3,car speed up to 28 right now,car speed up to 23 right now,0.14285714285714285,0.03571428571428571,False
+row2592_v1_US_Female.mp3,okay car just push speed to 76 if possible,okay car just push speed to 53 if possible,0.1111111111111111,0.047619047619047616,False
+row1730_v4_US_Fast.mp3,quickly accelerate to 64 right now,quickly accelerate to 34 right now,0.16666666666666666,0.029411764705882353,False
+row6686_v3_UK_Female.mp3,car alright speed up to 22 please,car alright speed up to 33 now,0.2857142857142857,0.24242424242424243,False
+row2227_v1_US_Female.mp3,assistant please speed up to 30 when you can,assistant please speed up to 33 when you can,0.1111111111111111,0.022727272727272728,False
+row4346_v1_US_Female.mp3,assistant alright ease down to 71 please,assistant already slow down 977777777777777,0.7142857142857143,0.55,False
+row2870_v1_US_Female.mp3,hey ease down to 43 if possible,hey ease down to 34 if possible,0.14285714285714285,0.06451612903225806,False
+row125_v2_US_Male.mp3,okay car hey lower speed to 25,okay car hey lower speed to 34,0.14285714285714285,0.06666666666666667,False
+row6540_v4_US_Fast.mp3,car hey raise speed to 59 please,car hey speed up to 39 please,0.42857142857142855,0.3125,False
+row7188_v5_US_Deep.mp3,alright car increase speed to 36 please,alright increase speed to 37,0.42857142857142855,0.3076923076923077,False
+row6192_v2_US_Male.mp3,okay car please reduce speed to 34 when you can,okay car please decrease speed to 23 when you can,0.2,0.1702127659574468,False
+row3492_v3_UK_Female.mp3,alright car would you accelerate to 35 when you can,alright car would you accelerate to 43 when you can,0.1,0.0392156862745098,False
+row654_v3_UK_Female.mp3,alright car okay turn right right now,alright car okay turn right right now,0.0,0.0,True
+row2171_v2_US_Male.mp3,please start the car please,okay please start the car please,0.2,0.18518518518518517,False
+row7950_v3_UK_Female.mp3,vehicle hmm increase speed to 116 right now,vehicle hmm increase speed to 89 right now,0.125,0.06976744186046512,False
+row5752_v2_US_Male.mp3,okay car just accelerate to 79 please,okay car just accelerate to 89 please,0.14285714285714285,0.02702702702702703,False
+row160_v3_UK_Female.mp3,alright car okay go right if possible,alright car okay go right if possible,0.0,0.0,True
+row958_v2_US_Male.mp3,alright decrease speed to 98 when you can,alright decrease speed to 99 when you can,0.125,0.024390243902439025,False
+row2771_v4_US_Fast.mp3,assistant could you lower speed to 21 now,assistant could you turn up to 36 now,0.375,0.2682926829268293,False
+row3037_v3_UK_Female.mp3,car would you keep current speed right now,car would you turn right now,0.375,0.35714285714285715,False
+row1605_v3_UK_Female.mp3,uh accelerate to 28 if possible,uh accelerate to 34 when,0.5,0.41935483870967744,False
+row6225_v2_US_Male.mp3,assistant would you boost speed to 66 please,assistant would you increase speed to 53 please,0.25,0.20454545454545456,False
+row5320_v2_US_Male.mp3,car hey slow down to 40 when you can,car hey slow down to 67 when you can,0.1111111111111111,0.05555555555555555,False
+row6535_v1_US_Female.mp3,alright car please lower speed to 30 right now,alright car please lower speed to 30 now,0.1111111111111111,0.13043478260869565,False
+row147_v2_US_Male.mp3,vehicle would you ease down to 34 right now,vehicle would ease speed to 34 right now,0.2222222222222222,0.20930232558139536,False
+row4758_v1_US_Female.mp3,could you push speed to 99 now,could you accelerate speed to 68 now,0.2857142857142857,0.4,False
+row3315_v2_US_Male.mp3,assistant uh slow down to 47 right now,assistant uh slow down to 76 right now,0.125,0.05263157894736842,False
+row1893_v1_US_Female.mp3,okay car can you merge into the right lane when you can,okay car can you turn the right lane when you can,0.16666666666666666,0.14545454545454545,False
+row3581_v4_US_Fast.mp3,alright car lower speed to 67 right now,alright car lower speed to 86 right now,0.125,0.05128205128205128,False
+row4321_v2_US_Male.mp3,alright car reduce speed to 111 when you can,alright car decrease speed to 117,0.5555555555555556,0.45454545454545453,False

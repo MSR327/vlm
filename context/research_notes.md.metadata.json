@@ -1,0 +1,5 @@
+{
+  "summary": "Comprehensive, prioritized reading list and resource guide for a BTP project combining Multimodal LLM perception, chatbot dialogue fusion, and PPO/DDPG reinforcement learning in CARLA. Organized into 8 sections with a suggested reading order: (1) Survey papers for big picture, (2) Core architecture papers (SimLingo, DriveMLM, CaRL), (3) RL foundations (PPO paper, SpinningUp, DRQN for partial observability), (4) LLM/VLM backbone (InternVL2, LLaVA), (5) Chatbot & NL grounding (Talk2Car, sentence-transformers), (6) Fusion techniques, (7) GitHub repos with working code, (8) CARLA setup & documentation. Each entry has a direct link, why-read-it explanation, and difficulty rating.",
+  "updatedAt": "2026-07-27T16:53:33.485444Z",
+  "userFacing": true
+}

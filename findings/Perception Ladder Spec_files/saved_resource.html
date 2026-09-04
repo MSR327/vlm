@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<!-- saved from url=(0253)https://91b60e43-62fa-438c-b49e-46fdf7aeaff4.frame.claudeusercontent.com/_f/1788157195-b312/?__frame_t=CvqhaZlUO8jnJlHYBAOKbkyt.660bcc46-e66b-46ff-90f3-18d1c74a44d1.3d890d74-81e2-41f2-b751-7acee65af854.1788160796&__frame_v=manifest.155e997702a4b8fc.json -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><!-- frame-runtime --><!--<base href="/_f/1788157195-b312/">--><base href="."><script>window.__FRAME_PREAMBLE={"v":1,"capabilities":{"artifact":"artifact.D_F1mx8d.js","assets":"assets.8Gk803W0.js","comments":"comments.GLuHR3zP.js","db":"db.h-3sndFg.js","downloads":"downloads.C3GSvEDP.js","embed":"embed.CxGAyc-v.js","mcp":"mcp.Bvma3qD7.js","network":"network.B5UA9Su4.js","notifications":"notifications.ssU4jy7G.js","permissions":"permissions.BNySkLV5.js","room":"room.BMMoe2BY.js","sample":"sample.BW2Uysoh.js","self":"artifact.D_F1mx8d.js","user":"user.BpKav-Rf.js"},"transforms":"_transforms.DSB5x63f.js","comments":"_comments.BoakUwmM.js","translate":"_translate.5HCW4BJh.js"}</script><script>(function(){"use strict";var te=["light","dark","system"],re=/^[A-Za-z0-9_-]{1,64}$/,$=/^[a-zA-Z_:][a-zA-Z0-9_:.-]{0,127}$/,ne=new Set(["class","hidden","value","checked","style","title","alt","placeholder","lang","dir","role","tabindex","disabled","readonly","contenteditable","open","colspan","rowspan"]);function oe(e){const t=e.toLowerCase();return t.startsWith("data-")||t.startsWith("aria-")||ne.has(t)}var Be="http://www.w3.org/1999/xhtml",se="http://www.w3.org/2000/svg",ae=new Set(["script","style","iframe","noscript","noframes","noembed","xmp","plaintext","template","title","textarea","object","embed"]),ie=new Set(["script","style"]);function ce(e){const t=e.localName.toLowerCase();return e.namespaceURI==="http://www.w3.org/1999/xhtml"?!ae.has(t):e.namespaceURI===se?!ie.has(t):!1}function M(e,t){return e===t||(e===160||e===32)&&(t===160||t===32)}function le(e,t){const r=e.length,n=t.length;let s=0;for(;s<r&&s<n&&M(e.charCodeAt(s),t.charCodeAt(s));)s++;let o=0;for(;o<r-s&&o<n-s&&M(e.charCodeAt(r-1-o),t.charCodeAt(n-1-o));)o++;return{p:s,s:o}}function ue(e,t){const r=e.firstChild;if(e.childNodes.length!==1||r===null||r.nodeType!==Node.TEXT_NODE){e.textContent=t;return}const n=r.data,s=n.length,o=t.length,{p:i,s:c}=le(n,t);i===s&&c===0&&s===o||r.replaceData(i,s-i-c,t.slice(i,o-c));const h=r.data,p=e.ownerDocument.getSelection?.()??null,w=p!==null&&p.rangeCount>0&&(p.anchorNode===r||p.focusNode===r)?{anchor:p.anchorNode,anchorOffset:p.anchorOffset,focus:p.focusNode,focusOffset:p.focusOffset}:null;let m=-1,g=-1;for(let f=0;f<h.length&&f<t.length;f++){const v=h.charCodeAt(f),b=t.charCodeAt(f);v!==b&&M(v,b)&&(m<0&&(m=f),g=f)}const a=m>=0;if(a&&r.replaceData(m,g-m+1,t.slice(m,g+1)),a&&w!==null&&w.anchor!==null&&w.focus!==null)try{p.setBaseAndExtent(w.anchor,w.anchorOffset,w.focus,w.focusOffset)}catch{}}var fe=new Set(["html","head","body","frameset"]);function de(e){return e.namespaceURI==="http://www.w3.org/1999/xhtml"&&fe.has(e.localName)}function pe(e){if(e===null||typeof e!="object")return!1;const t=e;if(typeof t.target!="string"||!re.test(t.target)||t.text!==void 0&&typeof t.text!="string")return!1;if(t.attrsSet!==void 0){if(t.attrsSet===null||typeof t.attrsSet!="object")return!1;for(const[r,n]of Object.entries(t.attrsSet))if(!$.test(r)||typeof n!="string")return!1}if(t.attrsRemoved!==void 0){if(!Array.isArray(t.attrsRemoved))return!1;for(const r of t.attrsRemoved)if(typeof r!="string"||!$.test(r))return!1}return!0}function me(e,t){if(e===null||typeof e!="object")return!1;const{seq:r,elements:n}=e;if(typeof r!="number"||!Number.isSafeInteger(r)||!Array.isArray(n)||n.length===0||n.length>64)return!1;for(let s=0;s<n.length;s++)if(!t(n[s]))return!1;return!0}function he(e){return e===null||typeof e!="object"?!1:me(e.__frame_patch,pe)}function _e(e){if(e===null||typeof e!="object")return!1;const t=e.__frame_init;return t!==null&&typeof t=="object"}function ve(e){return e!==null&&typeof e=="object"&&e.__frame_size_poke===!0}function ye(e){if(e===null||typeof e!="object")return!1;const t=e.__frame_theme;if(t===null||typeof t!="object")return!1;const r=t.theme;return typeof r=="string"&&te.includes(r)}var A=/^[\w.-]+\.js$/;function we(e,t,r){return r?"inert":typeof t=="string"&&A.test(t)?e?[t]:"inert":e?"inert":"framed"}function ge(){return{post(e,t){parent.postMessage(e,t)},on(e){const t=r=>{r.source===parent&&e(r.data,r.origin,r.isTrusted)};return addEventListener("message",t),()=>removeEventListener("message",t)}}}function be(){return{post:()=>{},on:()=>()=>{}}}var j="__frame_scroll",Ee=150,Ae=310,Se=160,Te=3e4;function ke(){let e=0,t=!1,r=!1,n=!1,s=0,o=null;const i=l=>{try{sessionStorage.setItem(j,JSON.stringify({y:l}))}catch{}},c=()=>{if(clearTimeout(e),o===null)return;const l=o;o=null,i(l)},h=()=>{if(t){t=!1;return}r=!0,o=scrollY,clearTimeout(e),e=setTimeout(c,Ee)};try{addEventListener("scroll",h,{passive:!0}),addEventListener("pagehide",c)}catch{}const p=()=>{let l;try{l=sessionStorage.getItem(j)}catch{return null}if(l===null)return null;let _;try{_=JSON.parse(l)}catch{_=null}const d=_?.y;if(!(typeof d=="number"&&Number.isFinite(d)&&d>=0)){try{sessionStorage.removeItem(j)}catch{}return null}return d};let w=!1;const m=l=>{try{const _=scrollY;scrollTo({top:l,left:0,behavior:"instant"}),s=l,n=!0,clearTimeout(e),o=null,i(l);const d=scrollY;d!==_&&(t=!0),d!==l&&!w&&(w=!0,addEventListener("load",()=>{try{if(scrollY===d){const T=p();m(T!==null?T:s)}}catch{}},{once:!0}))}catch{}},g=()=>{try{return!!location.hash}catch{return!0}};let a=!1;const f=()=>{try{if(a||innerWidth>Ae||innerHeight>Se)return;a=!0;const l=Date.now(),_=()=>{try{removeEventListener("resize",_)}catch{}if(Date.now()-l>Te||r||g())return;const d=p();m(d!==null?d:s)};addEventListener("resize",_)}catch{}};let v=!1,b=!1;return{restore(){if(v||(v=!0,g()))return;const l=p();l!==null&&(m(l),f())},promoted(){if(b||(b=!0,g()))return;const l=p();l!==null?(m(l),f()):n&&m(s)}}}function Re(e,t,r,n){let s=null;try{s=window.trustedTypes?.createPolicy("frame-runtime",{createScriptURL:h=>h})??null}catch{}const o=window.Worker,i=o?.prototype,c=Object.freeze({Worker:o,workerOn:i?.addEventListener,workerPost:i?.postMessage,workerTerminate:i?.terminate,fetch:window.fetch.bind(window),preventDefault:Event.prototype.preventDefault,policy:s,origins:t});r(e).then(h=>h?.bootTopLevel?h.bootTopLevel(c,n):n.settle()).catch(()=>n.settle())}var De="modulepreload",Ie=function(e){return"/"+e},Ue={},Le=function(t,r,n){let s=Promise.resolve();function o(i){const c=new Event("vite:preloadError",{cancelable:!0});if(c.payload=i,window.dispatchEvent(c),!c.defaultPrevented)throw i}return s.then(i=>{for(const c of i||[])c.status==="rejected"&&o(c.reason);return t().catch(o)})},Oe=window===top,q=Object.getOwnPropertyDescriptor(window,"claude"),k=we(Oe,window.__FRAME_PREAMBLE?.topLevel,q?.writable===!1),N=typeof k=="object"&&k[0],y=N?be():ge();(function(){const e=Object.defineProperty,t=globalThis,r=["RTCPeerConnection","webkitRTCPeerConnection","RTCDataChannel","RTCIceCandidate","RTCSessionDescription","RTCRtpSender","RTCRtpReceiver"];let n=0;for(let s=0;s<r.length;s++){const o=r[s];try{e(t,o,{value:void 0,writable:!1,configurable:!1})}catch{try{delete t[o]}catch{}try{e(t,o,{value:void 0,writable:!1,configurable:!0})}catch{}}typeof t[o]=="function"&&n++}if(n&&k==="framed")try{y.post({__frame_rtc_lockdown_failed:n},"*")}catch{}})();var Pe=1e4,Y=Object.freeze([...window.__FRAME_PREAMBLE?.origins??["https://claude.ai","https://preview.claude.ai"]]);function X(e){for(const t of Y)if(t.endsWith(":*"))try{const r=new URL(e);if(`${r.protocol}//${r.hostname}:*`===t)return!0}catch{}else if(e===t)return!0;return!1}var R=Object.freeze({...window.__FRAME_PREAMBLE?.capabilities}),B=window.__FRAME_PREAMBLE?.transforms,D=window.__FRAME_PREAMBLE?.comments,I=window.__FRAME_PREAMBLE?.translate;function S(e){return Le(()=>import("/_runtime/"+e),void 0)}function G(e,t){return{contract:e.contract,changes:new Set(e.changes??[]),flags:new Set(e.flags??[]),capabilities:e.capabilities??{},capBudgets:e.capBudgets??{},transforms:new Map,shellOrigin:t,mount:x,hooks:O,pipe:()=>({wrap:(r,n)=>(...s)=>{try{return n(...s)}catch(o){return Promise.reject(o)}}})}}var L=null,E=null;function V(e,t,r){try{Object.defineProperty(e,t,{value:r,writable:!1,configurable:!1,enumerable:!0})}catch{try{Object.defineProperty(e,t,{value:r,writable:!1,configurable:!0,enumerable:!0})}catch{}}}var U=!1,O={editBefore:null,edit:null};function Ce(e,t,r=!1){const n=[];let s;if(r)try{O.editBefore?.(e)}catch{}for(const o of e.elements){const i=document.querySelector(`[data-id="${o.target}"]`);if(!i){s=o.target;break}if([...Object.keys(o.attrsSet??{}),...o.attrsRemoved??[]].some(c=>!oe(c))){s=o.target;break}if(o.text!==void 0&&(!ce(i)||de(i))){s=o.target;break}for(const[c,h]of Object.entries(o.attrsSet??{}))if(!J(i,c)){try{i.setAttribute(c,h)}catch{}Z(i,c,h)}for(const c of o.attrsRemoved??[])J(i,c)||(i.removeAttribute(c),Z(i,c,null));typeof o.text=="string"&&ue(i,o.text),n.push(o.target)}if(r)try{O.edit?.(e.seq,n,s)}catch{}if(s!==void 0){y.post({__frame_patch_miss:{seq:e.seq}},t);return}try{document.dispatchEvent(new CustomEvent("claude:edit",{detail:{seq:e.seq,targets:n}}))}catch{}}function Z(e,t,r){if(!(e instanceof HTMLInputElement))return;const n=t.toLowerCase();n==="checked"?e.checked=r!==null:n==="value"&&e.type!=="file"&&(e.value=r??"")}function J(e,t){const r=t.toLowerCase(),n=e;return r==="data-id"||(r==="value"||r==="checked")&&(n.__artifactSecret===!0||/^(password|hidden|file)$/.test(n.type??"")||/(^|\s)(cc-|one-time-code|current-password|new-password)/i.test(`${e.getAttribute("autocomplete")??""} ${n.autocomplete??""}`))}function Q(e){const t=document.documentElement;e==="light"||e==="dark"?(t.dataset.theme=e,t.style.colorScheme=e,U=!0):U&&(delete t.dataset.theme,t.style.colorScheme="",U=!1)}var P=new Map;function Me(){let e;const t={u:new Promise(r=>{e=r}),r:r=>{t.done=!0,e(r)},done:!1,nulled:!1};return t}function F(){for(const e of P.values())e.done||(e.nulled=!0,e.r(null))}var je=Object.freeze(Object.assign(Object.create(null),{call:Function.prototype.call,apply:Function.prototype.apply,bind:Function.prototype.bind})),x=(e,t)=>{const r=P.get(e);if(!r||r.done){r?.nulled&&E&&y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:e}},E);return}const n=typeof t=="function"?Object.setPrototypeOf(t,je):Object.assign(Object.create(null),t);typeof n.then=="function"&&delete n.then,r.r(Object.freeze(n))};function ee(){const e=q?.value??{};V(window,"claude",e);for(const t of Object.keys(R)){if(e[t]!==void 0){V(e,t,e[t]);continue}P.set(t,Me())}if(e.use===void 0){const t=r=>{if(typeof r!="string"||!Object.hasOwn(R,r))return Promise.resolve(null);const n=P.get(r);return n?n.u:Promise.resolve(e[r]??null)};try{Object.defineProperty(e,"use",{value:t,writable:!0,configurable:!0,enumerable:!1})}catch{}}}if(k==="framed"){const e=B&&A.test(B)?S(B).catch(()=>{}):Promise.resolve(void 0),t=a=>{if(a.type==="auxclick"&&a.button!==1)return;const f=a.target,v=f&&f.closest?f.closest("a[href],area[href]"):null;if(!v)return;const b=v.getAttribute("href");if(!b)return;let l;try{l=new URL(b,document.baseURI)}catch{return}if((l.protocol==="http:"||l.protocol==="https:")&&l.origin!==location.origin){a.preventDefault();const _=(v.getAttribute("target")??"").toLowerCase(),d=a.type==="auxclick"||a.metaKey||a.ctrlKey||a.shiftKey||a.altKey||!["","_self","_top","_parent"].includes(_);y.post({__frame_nav:!0,url:l.href,newTab:d},"*")}};addEventListener("click",t,!0),addEventListener("auxclick",t,!0);const r={},n=a=>{a.isTrusted&&(r.pointer=!0)},s=a=>{a.isTrusted&&(r.click=!0)};addEventListener("pointermove",n,{capture:!0,passive:!0}),addEventListener("click",s,{capture:!0,passive:!0}),e.then(a=>{a?.wireNav&&(a.wireNav(),removeEventListener("click",t,!0),removeEventListener("auxclick",t,!0),removeEventListener("pointermove",n,!0),removeEventListener("click",s,!0),a.wireEngagement?.(r))});let o=null;try{o=ke()}catch{}ee();let i=null,c=null,h=0;const p=y.on((a,f)=>{X(f)&&_e(a)&&(i=a.__frame_init,E=f,p(),clearTimeout(h),c?.())});y.post({__frame_connect:!0},"*");const w=new Promise(a=>{c=a,h=setTimeout(()=>{p(),a()},Pe)}),m=document.readyState==="loading"?new Promise(a=>document.addEventListener("DOMContentLoaded",()=>a(),{once:!0})):Promise.resolve();m.then(()=>{try{o?.restore()}catch{}});const g={cb:null};y.on((a,f)=>{if(X(f)&&ve(a)){try{o?.promoted()}catch{}g.cb?.()}}),w.then(async()=>{if(!i||!E){F();return}Q(i.theme);const a=E;let f=!1,v=!1;y.on((u,z,C)=>{if(z!==a)return;ye(u)&&Q(u.__frame_theme.theme),he(u)&&Ce(u.__frame_patch,a,C);const H=u?.__fc_mode;H&&typeof H=="object"&&!f&&D&&A.test(D)&&(f=!0,S(D).then(K=>K.install?.(a,H.on===!0)).catch(()=>{}));const W=u?.__ft_cmd;W&&typeof W=="object"&&!v&&I&&A.test(I)&&(v=!0,S(I).then(K=>K.install?.(a,W)).catch(()=>{}))});const b=Object.keys(i.capabilities??{}).filter(u=>Object.hasOwn(R,u)).map(u=>[u,R[u]]).filter(u=>typeof u[1]=="string"&&A.test(u[1])),l=await Promise.allSettled(b.map(([,u])=>S(u))),_=await e,d=E;if(_?.buildBoot||y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:"_transforms"}},d),_?.buildBoot)try{L=_.buildBoot(i,_.TRANSFORMS??{},{shellOrigin:d,mount:x,hooks:O},u=>y.post({__frame_cap_telemetry:u},d))}catch{y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:"_transforms"}},d),L=G(i,d)}else L=G(i,d);const T=u=>y.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:u}},d),Ne=L;l.forEach((u,z)=>{const C=b[z][0];if(u.status!=="fulfilled"){T(C);return}try{u.value?.install?.(Ne)}catch{T(C)}}),F(),await m,y.post({__frame_ready:!0},E),e.then(u=>u?.installSizeReporter?.(d,g))})}else N&&(ee(),Re(N,Y,S,{settle:F,mount:x}))})();</script><!-- /frame-runtime --><meta name="viewport" content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body data-new-gr-c-s-check-loaded="14.1324.0" data-gr-ext-installed="">
+<title>Perception Ladder Spec</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link rel="stylesheet" href="./css2">
+
+<style>
+:root {
+  --ground:      #EDEFF2;
+  --surface:     #FDFDFE;
+  --surface-2:   #E4E8ED;
+  --ink:         #14181D;
+  --ink-2:       #4C5560;
+  --ink-3:       #79838F;
+  --rule:        #CDD3DA;
+  --rule-soft:   #DDE2E8;
+  --accent:      #1F4E79;
+  --accent-soft: #DCE7F1;
+  --critical:    #A22C1E;
+  --critical-bg: #F3DEDA;
+  --caution:     #7E5A0E;
+  --caution-bg:  #F2E7CE;
+  --sound:       #2C6149;
+  --sound-bg:    #DCEBE3;
+  --shadow:      0 1px 2px rgba(20,24,29,.06), 0 6px 20px -12px rgba(20,24,29,.22);
+  --serif: "Source Serif 4", Charter, Georgia, serif;
+  --sans:  "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --mono:  "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  --measure: 68ch;
+  --on-accent: #FDFDFE;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #10141A; --surface: #171C23; --surface-2: #1F252E;
+    --ink: #E3E7EC; --ink-2: #A7B1BD; --ink-3: #7A8592;
+    --rule: #2B333D; --rule-soft: #232A33;
+    --accent: #86B4E2; --accent-soft: #1B2A3A;
+    --critical: #E4897C; --critical-bg: #33201D;
+    --caution: #D9AE55; --caution-bg: #302719;
+    --sound: #74C2A0; --sound-bg: #16291F;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -14px rgba(0,0,0,.7);
+    --on-accent: #10141A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #10141A; --surface: #171C23; --surface-2: #1F252E;
+  --ink: #E3E7EC; --ink-2: #A7B1BD; --ink-3: #7A8592;
+  --rule: #2B333D; --rule-soft: #232A33;
+  --accent: #86B4E2; --accent-soft: #1B2A3A;
+  --critical: #E4897C; --critical-bg: #33201D;
+  --caution: #D9AE55; --caution-bg: #302719;
+  --sound: #74C2A0; --sound-bg: #16291F;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -14px rgba(0,0,0,.7);
+  --on-accent: #10141A;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--ground); color: var(--ink); font-family: var(--serif); font-size: 17px; line-height: 1.62; -webkit-font-smoothing: antialiased; }
+.page { max-width: 1140px; margin: 0 auto; padding: 0 28px 96px; }
+
+.masthead { border-bottom: 2px solid var(--ink); padding: 56px 0 22px; margin-bottom: 40px; }
+.eyebrow { font-family: var(--mono); font-size: 11.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 18px; }
+h1 { font-family: var(--sans); font-weight: 700; font-size: clamp(34px, 5.2vw, 54px); line-height: 1.04; letter-spacing: -.022em; margin: 0 0 16px; text-wrap: balance; }
+.standfirst { font-size: 19.5px; line-height: 1.55; color: var(--ink-2); max-width: 62ch; margin: 0 0 26px; }
+.rq { font-family: var(--sans); font-size: 17px; font-weight: 500; line-height: 1.45; color: var(--ink); background: var(--accent-soft); border-left: 3px solid var(--accent); padding: 14px 20px; border-radius: 0 3px 3px 0; max-width: 66ch; margin: 0 0 26px; }
+.meta-strip { display: flex; flex-wrap: wrap; gap: 8px 26px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); letter-spacing: .02em; }
+.meta-strip b { color: var(--ink-2); font-weight: 500; }
+
+section { margin-bottom: 66px; scroll-margin-top: 20px; }
+h2 { font-family: var(--sans); font-weight: 600; font-size: 13px; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); margin: 0 0 22px; padding-bottom: 10px; border-bottom: 1px solid var(--rule); }
+h3 { font-family: var(--sans); font-weight: 600; font-size: 23px; line-height: 1.25; letter-spacing: -.012em; margin: 40px 0 14px; text-wrap: balance; }
+h4 { font-family: var(--sans); font-weight: 600; font-size: 16px; letter-spacing: -.005em; margin: 28px 0 10px; }
+p, ul, ol { max-width: var(--measure); }
+p { margin: 0 0 16px; }
+ul, ol { margin: 0 0 16px; padding-left: 22px; }
+li { margin-bottom: 8px; }
+li::marker { color: var(--ink-3); }
+strong { font-weight: 600; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+code { font-family: var(--mono); font-size: .855em; background: var(--surface-2); padding: .1em .38em; border-radius: 2px; word-break: break-word; }
+
+/* deliverable map */
+.dmap { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 3px; overflow: hidden; margin: 0 0 52px; max-width: none; }
+.dmap a { background: var(--surface); padding: 13px 15px; display: block; text-decoration: none; color: var(--ink); }
+.dmap a:hover { background: var(--accent-soft); }
+.dmap .k { font-family: var(--mono); font-size: 11px; color: var(--ink-3); display: block; margin-bottom: 3px; }
+.dmap .v { font-family: var(--sans); font-size: 14px; font-weight: 600; letter-spacing: -.005em; }
+
+/* pills */
+.pill { display: inline-block; font-family: var(--sans); font-size: 10.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 2px; white-space: nowrap; vertical-align: middle; }
+.t-s { background: var(--sound-bg); color: var(--sound); }
+.t-p { background: var(--caution-bg); color: var(--caution); }
+.t-f { background: var(--critical-bg); color: var(--critical); }
+.t-n { background: var(--surface-2); color: var(--ink-3); }
+.t-a { background: var(--accent-soft); color: var(--accent); }
+
+/* decision card */
+.dc { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 20px 24px; margin: 22px 0; max-width: none; box-shadow: var(--shadow); }
+.dc-head { font-family: var(--sans); font-weight: 600; font-size: 17.5px; letter-spacing: -.008em; margin-bottom: 6px; text-wrap: balance; }
+.dc-tag { font-family: var(--mono); font-size: 11px; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); display: block; margin-bottom: 8px; }
+.dc-slots { display: grid; gap: 10px 22px; margin-top: 14px; grid-template-columns: 1fr; }
+@media (min-width: 800px) { .dc-slots { grid-template-columns: repeat(3, 1fr); } }
+.dc-slot .lbl { font-family: var(--sans); font-size: 10px; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; display: block; margin-bottom: 4px; }
+.dc-slot.why .lbl { color: var(--sound); }
+.dc-slot.rej .lbl { color: var(--critical); }
+.dc-slot.val .lbl { color: var(--accent); }
+.dc-slot p { font-size: 14.5px; line-height: 1.5; margin: 0; color: var(--ink-2); max-width: none; }
+.dc > p { max-width: 76ch; }
+
+/* tables */
+.tw { overflow-x: auto; margin: 22px 0 26px; border: 1px solid var(--rule); border-radius: 3px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 14.5px; }
+th { font-family: var(--sans); font-weight: 600; font-size: 10.5px; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--rule); background: var(--surface-2); vertical-align: bottom; }
+td { padding: 12px 14px; border-bottom: 1px solid var(--rule-soft); vertical-align: top; line-height: 1.48; }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 12.5px; white-space: nowrap; }
+td.rid { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--accent); white-space: nowrap; }
+.nm { font-family: var(--sans); font-size: 14px; font-weight: 500; }
+
+/* callouts */
+.callout { background: var(--accent-soft); border: 1px solid var(--rule-soft); border-radius: 3px; padding: 18px 22px; margin: 24px 0; max-width: none; }
+.callout.warn { background: var(--caution-bg); }
+.callout.stop { background: var(--critical-bg); }
+.callout p { max-width: 76ch; margin-bottom: 10px; }
+.callout p:last-child, .callout ul:last-child { margin-bottom: 0; }
+.callout ul { max-width: 76ch; }
+.callout .label { font-family: var(--sans); font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; display: block; margin-bottom: 8px; color: var(--accent); }
+.callout.warn .label { color: var(--caution); }
+.callout.stop .label { color: var(--critical); }
+
+.spec { font-family: var(--mono); font-size: 12.5px; line-height: 1.7; color: var(--ink-2); background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 16px 18px; margin: 18px 0 24px; overflow-x: auto; white-space: pre; max-width: none; }
+
+/* stages */
+.steps { counter-reset: st; list-style: none; padding: 0; max-width: none; }
+.steps > li { counter-increment: st; position: relative; padding: 0 0 22px 48px; margin: 0; max-width: 80ch; }
+.steps > li::before { content: counter(st); position: absolute; left: 0; top: 1px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 12px; background: var(--accent); color: var(--on-accent); border-radius: 50%; }
+.steps h4 { margin: 0 0 5px; }
+.steps p { margin: 0 0 8px; max-width: none; }
+.steps ul { max-width: none; }
+
+.foot { border-top: 1px solid var(--rule); margin-top: 20px; padding-top: 24px; font-size: 14px; color: var(--ink-3); }
+.foot p { max-width: 76ch; }
+
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .page { padding: 0 18px 64px; }
+}
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="page">
+
+<header class="masthead">
+  <p class="eyebrow">Research specification · Phase 2 · Draft for review · 31 Aug 2026</p>
+  <h1>Perception Ladder Spec</h1>
+  <p class="standfirst">A controlled experimental design in which perception is the independent variable and PPO is held fixed — so that each rung's gain is attributable to exactly one thing.</p>
+  <p class="rq">Does progressively richer multimodal perception and language-conditioned reasoning improve autonomous driving when the downstream PPO policy is kept consistent?</p>
+  <div class="meta-strip">
+    <span><b>Status</b> specification only — no code, no CARLA</span>
+    <span><b>Constraint</b> PPO non-negotiable</span>
+    <span><b>Target</b> eventual edge deployment</span>
+  </div>
+</header>
+
+<nav class="dmap">
+  <a href="https://91b60e43-62fa-438c-b49e-46fdf7aeaff4.frame.claudeusercontent.com/_f/1788157195-b312/#ladder"><span class="k">A</span><span class="v">Experimental ladder</span></a>
+  <a href="https://91b60e43-62fa-438c-b49e-46fdf7aeaff4.frame.claudeusercontent.com/_f/1788157195-b312/#contract"><span class="k">B</span><span class="v">Observation spec</span></a>
+  <a href="https://91b60e43-62fa-438c-b49e-46fdf7aeaff4.frame.claudeusercontent.com/_f/1788157195-b312/#arch"><span class="k">C</span><span class="v">Architecture</span></a>
+  <a href="https://91b60e43-62fa-438c-b49e-46fdf7aeaff4.frame.claudeusercontent.com/_f/1788157195-b312/#training"><span class="k">D</span><span class="v">Training pipeline</span></a>
+  <a href="https://91b60e43-62fa-438c-b49e-46fdf7aeaff4.frame.claudeusercontent.com/_f/1788157195-b312/#eval"><span class="k">E</span><span class="v">Evaluation matrix</span></a>
+  <a href="https://91b60e43-62fa-438c-b49e-46fdf7aeaff4.frame.claudeusercontent.com/_f/1788157195-b312/#edge"><span class="k">F</span><span class="v">Edge deployment</span></a>
+  <a href="https://91b60e43-62fa-438c-b49e-46fdf7aeaff4.frame.claudeusercontent.com/_f/1788157195-b312/#first"><span class="k">G</span><span class="v">First experiment</span></a>
+</nav>
+
+<section id="invariants">
+<h2>0 · The invariants</h2>
+
+<p>Everything in this document follows from one idea. The research question asks whether richer perception helps <em>with PPO held constant</em>. That phrasing turns PPO from a component into a <strong>measuring instrument</strong>. An instrument is only useful if it does not change between measurements — so the first job of the specification is to nail down every variable that is <em>not</em> perception.</p>
+
+<p>These twelve quantities are identical in every experiment on the ladder. Any rung that violates one is not comparable and does not count.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th style="width:26%">Invariant</th><th>Fixed value</th><th style="width:34%">Why it must be fixed</th></tr></thead>
+<tbody>
+<tr><td class="nm">Latent width</td><td class="num">D_z = 128</td><td>Every encoder, however rich, projects to the same width. Otherwise "more sensors" confounds with "wider policy input".</td></tr>
+<tr><td class="nm">PPO observation</td><td class="num">152-d: z(128) + ego(8) + nav(8) + τ_nom(8)</td><td>The policy's input <em>shape</em> and <em>semantics</em> never change across rungs.</td></tr>
+<tr><td class="nm">PPO network</td><td class="num">2×[256,256] tanh MLP, separate actor/critic</td><td>Policy capacity is a constant, not a treatment.</td></tr>
+<tr><td class="nm">Action space</td><td class="num">2-d: [δ_lat, δ_v] ∈ [−1,1]²</td><td>Action semantics identical everywhere; see §2.</td></tr>
+<tr><td class="nm">Encoder parameters</td><td class="num">matched to ±10% across rungs</td><td>Prevents "richer sensors" from meaning "bigger model". Thin rungs are widened, not left small.</td></tr>
+<tr><td class="nm">Reward</td><td class="num">identical function, identical weights</td><td>Including for the language rung — see the decision card in §4.</td></tr>
+<tr><td class="nm">Route set</td><td class="num">same 40 train / 30 eval routes</td><td>CARLA driving score has high route-to-route variance.</td></tr>
+<tr><td class="nm">Weather schedule</td><td class="num">same 6 train presets, same sampling</td><td>Weather is an evaluation axis, never a rung.</td></tr>
+<tr><td class="nm">Seeds</td><td class="num">3 seeds: 0, 1, 2 — same three everywhere</td><td>Paired comparison per seed is far tighter than unpaired.</td></tr>
+<tr><td class="nm">PPO budget</td><td class="num">1.5 M environment steps</td><td>Not "train until convergence" — that silently gives harder rungs more compute.</td></tr>
+<tr><td class="nm">Observation normalisation</td><td class="num">frozen stats from the IL dataset</td><td>A running normaliser drifts differently per rung and per seed.</td></tr>
+<tr><td class="nm">Visual history</td><td class="num">2 frames: t and t−0.2 s, every modality</td><td>Uniform, so no rung has a temporal advantage. Costs FLOPs, not parameters — the tokeniser is shared across frames.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="dc">
+  <span class="dc-tag">Decision 0.1</span>
+  <div class="dc-head">The encoder is frozen during PPO in every rung</div>
+  <p>After representation pretraining, encoder and waypoint head are frozen. PPO trains only the actor-critic — roughly 140 K parameters, none of them perceptual.</p>
+  <div class="dc-slots">
+    <div class="dc-slot why"><span class="lbl">Why</span><p>It is what makes the question answerable. If the encoder adapts during RL, "richer perception helped" becomes inseparable from "richer perception adapted more easily under RL". Freezing makes perception the independent variable and PPO the constant — literally the phrasing of the research question.</p></div>
+    <div class="dc-slot rej"><span class="lbl">Rejected</span><p>End-to-end PPO through the encoder. High-variance policy gradients over ~4 K-sample batches will degrade features learned from 500 K supervised frames, and the degradation will differ per rung — destroying comparability along with the features.</p></div>
+    <div class="dc-slot val"><span class="lbl">Validated by</span><p>X2 (§3), run once on the winning rung only, after the ladder concludes: unfreeze the adapter at LR/10 and measure whether driving score moves.</p></div>
+  </div>
+</div>
+
+<div class="callout warn">
+  <span class="label">A consequence you should accept explicitly</span>
+  <p>With a frozen encoder, a frozen waypoint head and a 2-d residual action, <strong>PPO's authority over the outcome is deliberately narrow</strong>. That is the price of using it as an instrument. To keep PPO's own contribution visible, every rung is evaluated twice: once with the residual forced to zero (<code>R_k^IL</code>, no RL at all) and once with the trained policy (<code>R_k^PPO</code>). The quantity <code>ΔDS = DS(R_k^PPO) − DS(R_k^IL)</code> is free to compute and directly answers a question your framing implies but does not state: <em>does PPO's contribution grow or shrink as perception gets richer?</em></p>
+</div>
+</section>
+
+<section id="contract">
+<h2>1 · Observation contract <span class="pill t-a" style="vertical-align:middle;margin-left:6px;">Deliverable B</span></h2>
+
+<p>Three tiers, enforced by types rather than by discipline. The environment returns two disjoint records; the policy function's signature accepts only the first.</p>
+
+<div class="spec">step() -&gt; (SensorObs, PrivilegedState, reward, done, info)
+
+policy: SensorObs -&gt; Action          # cannot see PrivilegedState — not a convention, a signature
+reward_fn: (SensorObs, PrivilegedState, Action) -&gt; float
+metrics_fn: PrivilegedState -&gt; dict</div>
+
+<h3>Tier S — policy-visible <span class="pill t-s">allowed</span></h3>
+<p>The test for membership: <em>could a production vehicle obtain this from its own hardware, with no map oracle?</em></p>
+
+<div class="tw">
+<table>
+<thead><tr><th style="width:24%">Field</th><th class="num" style="width:16%">Shape</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td class="nm">rgb_front / left / right / rear</td><td class="num">2 × 3 × 224 × 224</td><td>RGB, converted from CARLA's BGRA — not the current <code>[:,:,:3]</code> slice. Per-camera FOV set from a per-camera blueprint.</td></tr>
+<tr><td class="nm">lidar_sweep</td><td class="num">raw points (N × 4)</td><td>Stored raw; the BEV rasterisation is a <em>model-side</em> choice so it can be changed without recollecting data.</td></tr>
+<tr><td class="nm">ego.speed</td><td class="num">1</td><td>Wheel-speed / IMU. Onboard, legitimate.</td></tr>
+<tr><td class="nm">ego.yaw_rate, accel_long, accel_lat</td><td class="num">3</td><td>IMU. Onboard, legitimate.</td></tr>
+<tr><td class="nm">ego.prev_action</td><td class="num">2</td><td>Proprioception; the vehicle knows what it commanded.</td></tr>
+<tr><td class="nm">ego.speed_hist</td><td class="num">2</td><td>Speed at t−0.2 s, t−0.4 s. Cheap dynamics.</td></tr>
+<tr><td class="nm">nav.target_point</td><td class="num">2</td><td>Next route node in the ego frame, <strong>sampled 25–40 m ahead</strong> with σ = 1.0 m Gaussian noise. This is a GPS/nav-system output. See the decision card below.</td></tr>
+<tr><td class="nm">nav.command</td><td class="num">6 (one-hot)</td><td>follow / left / right / straight / lane-left / lane-right. Suppressed at designated junctions in the language rung.</td></tr>
+<tr><td class="nm">instruction_embedding</td><td class="num">128</td><td>Rung R4 only. Precomputed offline by a frozen text encoder; see §4.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="dc">
+  <span class="dc-tag">Decision 1.1</span>
+  <div class="dc-head">A sparse, noisy navigation target is allowed; dense lane geometry is not</div>
+  <p>The line between "navigation" and "leakage" is not about whether the map was consulted — it is about <em>whether the quantity is the answer the perception is supposed to compute</em>.</p>
+  <div class="dc-slots">
+    <div class="dc-slot why"><span class="lbl">Why</span><p>A real car has a nav system, and every CARLA Leaderboard agent receives a sparse GPS route plus a high-level command. Withholding it means the agent has no destination, which is why the previous design could not measure route completion at all. The 25–40 m sampling distance and the 1 m noise are what keep it a <em>hint</em> rather than a target to servo onto.</p></div>
+    <div class="dc-slot rej"><span class="lbl">Rejected</span><p>Dense lane-centre distance and heading error (the previous leak), and a target point closer than 20 m. Both let a controller drive by pursuing the nav signal alone, with perception unused — exactly the failure the audit found.</p></div>
+    <div class="dc-slot val"><span class="lbl">Validated by</span><p>Rung R0. If a blind policy with only ego + nav reaches a competitive driving score, the target point is still too informative and its distance must increase until R0 collapses.</p></div>
+  </div>
+</div>
+
+<h3>Tier P — reward and evaluation only <span class="pill t-p">privileged</span></h3>
+<p>Available to the reward function, the metric logger and the <em>offline label generator</em>. Never to the policy, and never to any module in the policy's forward path.</p>
+<ul>
+  <li>Lane-centre distance, heading error, current lane id and type, next-junction geometry</li>
+  <li>Collision events, lane-invasion events, red-light-violation events, off-road state</li>
+  <li>Route completion fraction, distance-along-route, blocked-timer</li>
+  <li>Ground-truth actor list: positions, velocities, bounding boxes, types, colours, traffic-light states</li>
+  <li>Expert (autopilot / privileged planner) future trajectory</li>
+  <li>Semantic segmentation and depth ground truth</li>
+</ul>
+
+<div class="callout">
+  <span class="label">The rule that makes Tier P usable</span>
+  <p><strong>Privileged information may be a training label. It may never be a deployed input.</strong> This is the Learning-by-Cheating pattern and it is entirely standard: an auxiliary head that predicts traffic-light state from pixels is <em>supervised</em> by ground truth, but at inference the prediction comes from the camera. The distinction is mechanical — trace whether the quantity appears in the forward pass at evaluation time. If it does, it is leakage; if it only appears in a loss term during Stage 1, it is supervision.</p>
+</div>
+
+<h3>Tier F — forbidden outright <span class="pill t-f">never</span></h3>
+<p>Not merely "not in the policy" — not anywhere in the pipeline, including as a label.</p>
+<ul>
+  <li>Any Tier-P quantity entering the policy forward pass at evaluation time</li>
+  <li>The full future route beyond the single sampled target point</li>
+  <li>Other agents' future trajectories or intentions (the expert's <em>own</em> future is a Tier-P label; other actors' futures are not available at any stage)</li>
+  <li>The episode seed, route id, town id, or weather id as a model input — these enable trivial memorisation and would silently invalidate every generalisation test</li>
+  <li>Evaluation-set statistics of any kind in the normalisation constants</li>
+  <li>Any reward-derived signal fed back as an observation</li>
+</ul>
+
+<div class="callout stop">
+  <span class="label">Automated leak test — a gate, not a suggestion</span>
+  <p>Before any rung above R1 is trained, run the blind control R0 to completion. <strong>If DS(R0) ≥ 0.6 × DS(R1), the contract is leaking and the ladder is halted</strong> until the source is found. This test costs one training run and is the only thing standing between you and a semester of uninterpretable results. Re-run it whenever the observation contract changes.</p>
+</div>
+</section>
+
+<section id="ppo">
+<h2>2 · PPO interface</h2>
+
+<h3>What enters</h3>
+<div class="spec">ppo_obs  =  [ z_t        (128) ]   # encoder latent — the ONLY thing that varies by rung
+            [ ego_t       (8) ]   # speed, yaw_rate, a_lon, a_lat, prev_action(2), speed_hist(2)
+            [ nav_t       (8) ]   # target_point(2), command one-hot(6)
+            [ tau_nom     (8) ]   # nominal trajectory from the frozen IL head, 4 waypoints × (x,y)
+            =            152-d,  identical in every rung</div>
+
+<p>Rung R0 has no sensors, but it still has an "encoder": a 2-layer MLP over <code>[ego, nav]</code> that outputs 128 dimensions. This keeps the PPO input literally identical in shape and in normalisation, so R0 is a true control rather than a differently-shaped model.</p>
+
+<h3>What PPO outputs</h3>
+<div class="spec">action   =  [ delta_lat   in [-1, 1] ]   # lateral shift of the nominal trajectory, x 1.5 m
+            [ delta_v     in [-1, 1] ]   # target-speed scale, v_target * (1 + 0.4 * delta_v)
+
+execution:  tau_exec = shift_lateral(tau_nom, 1.5 * delta_lat)
+            v_exec   = v_nom * (1 + 0.4 * delta_v)
+            steer    = pure_pursuit(tau_exec, ego.speed)
+            throttle,
+            brake    = pi_longitudinal(v_exec, ego.speed)</div>
+
+<div class="dc">
+  <span class="dc-tag">Decision 2.1</span>
+  <div class="dc-head">PPO receives a compact latent and outputs a bounded residual in trajectory space</div>
+  <p>Not raw multimodal features, not waypoints-as-observation, not direct controls.</p>
+  <div class="dc-slots">
+    <div class="dc-slot why"><span class="lbl">Why</span><p>A fixed-width latent is the only PPO input that can stay identical while the encoder behind it grows from an MLP to a multimodal transformer. A bounded residual around a competent nominal trajectory means exploration starts from sane driving rather than random flailing, keeps the action space 2-d and identically-scaled in every rung, and inherits kinematic feasibility from the controller instead of approximating it with an EMA.</p></div>
+    <div class="dc-slot rej"><span class="lbl">Rejected</span><p><em>Raw features</em> — dimension varies per rung, which is the confound the whole design exists to avoid. <em>Waypoints as PPO's action</em> — a 2K-dim action space makes exploration intractable at this sample budget. <em>Direct controls</em> — discards the IL prior, so PPO restarts from scratch in every rung and the sample budget dominates the perception effect.</p></div>
+    <div class="dc-slot val"><span class="lbl">Validated by</span><p>X1 (§3): the same rung with PPO emitting <code>[steer, longitudinal]</code> directly and no trajectory intermediate. If X1 matches or beats the residual formulation at equal budget, this decision is wrong and the ladder should be re-run in the direct-control interface.</p></div>
+  </div>
+</div>
+
+<h3>Fixed PPO configuration</h3>
+<div class="spec">parallel envs      8 CARLA instances (drop to 4 if VRAM-bound; keep constant across rungs)
+rollout            512 steps per env  -&gt;  4096-sample batch
+epochs             6            minibatches       8
+optimiser          Adam, lr 3e-4, linear decay to 0
+gamma 0.99   gae_lambda 0.95   clip 0.2   vf_coef 0.5   ent_coef 0.005
+grad_norm 0.5      log_std      state-independent, learnable, init log(0.3)
+total              1.5 M env steps  ~=  5-6 h wall-clock at 4 envs
+advantage          normalised per batch; value loss clipped</div>
+
+<p>Every departure from the current implementation is deliberate: parallel environments (single-env PPO cannot reach 1.5 M steps in reasonable time), proper minibatching (<code>BATCH_SIZE</code> is currently never read), 6 epochs rather than 15 (15 over-fits a 4 K batch), and updates on rollout boundaries rather than a wall-clock timestep counter.</p>
+</section>
+
+<section id="ladder">
+<h2>3 · The experimental ladder <span class="pill t-a" style="vertical-align:middle;margin-left:6px;">Deliverable A</span></h2>
+
+<p>Six rungs, three controls, one fusion family. Each row changes exactly one thing from the row above it. Nothing here exists to be thorough; every line answers a question you asked.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th class="num" style="width:56px">ID</th><th style="width:15%">Sensors in</th><th style="width:13%">Language</th><th style="width:20%">Encoder</th><th>Isolates — comparison enabled</th></tr></thead>
+<tbody>
+<tr><td class="rid">R0</td><td>none</td><td>none</td><td>MLP(ego,nav) → 128</td><td><strong>The floor and the leak detector.</strong> Establishes what the nav signal alone buys. Gate: R1 must beat it substantially.</td></tr>
+<tr><td class="rid">R1</td><td>front RGB</td><td>none</td><td>tokeniser → queries → 128</td><td><strong>A · benefit of RGB.</strong> R1 − R0.</td></tr>
+<tr><td class="rid">R2</td><td>4× RGB</td><td>none</td><td>+ shared tokeniser, view embeddings</td><td><strong>B · benefit of multiple views.</strong> R2 − R1. Pre-registered sub-metric: junction and side-impact collisions.</td></tr>
+<tr><td class="rid">R3</td><td>4× RGB + LiDAR BEV</td><td>none</td><td>+ BEV branch, modality embeddings</td><td><strong>C · benefit of LiDAR.</strong> R3 − R2. Pre-registered sub-metric: collisions in HardRain / night, and with low-contrast actors.</td></tr>
+<tr><td class="rid">R4</td><td>4× RGB + LiDAR BEV</td><td>real, frozen text encoder</td><td>+ text tokens in cross-attention</td><td><strong>D · benefit of language.</strong> R4 − R3, plus the C2 counterfactual triad. The only rung where instruction-critical routes are scored.</td></tr>
+<tr><td class="rid">R5*</td><td>= best of R3/R4</td><td>= that rung</td><td>fusion operator swapped</td><td><strong>E · benefit of fusion mechanism.</strong> A family of four, not a rung — see below.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>R5 — the fusion family</h4>
+<p>Four variants at identical sensors, identical parameters, identical everything else. <strong>Selected offline first</strong> on waypoint ADE/FDE and auxiliary-head accuracy, which costs no CARLA time at all; only the top two go to closed-loop PPO. This is where most of the compute savings in this plan come from.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th class="num" style="width:80px">ID</th><th style="width:22%">Fusion operator</th><th>What it can and cannot express</th></tr></thead>
+<tbody>
+<tr><td class="rid">R5-cat</td><td class="nm">Concatenation</td><td>Per-modality pooled vectors concatenated, then MLP. No cross-modal interaction at all. The honest floor for fusion.</td></tr>
+<tr><td class="rid">R5-film</td><td class="nm">FiLM</td><td>Global affine modulation — what the legacy code does. Can express "drive cautiously"; cannot express "the vehicle on your left".</td></tr>
+<tr><td class="rid">R5-xatt</td><td class="nm">Cross-attention (Perceiver / Q-Former)</td><td>M learned queries attend over the union of all modality tokens. Can ground referring expressions to spatial locations. <strong>Recommended default.</strong></td></tr>
+<tr><td class="rid">R5-mmt</td><td class="nm">Joint multimodal transformer</td><td>Full self-attention over all tokens. Most expressive, quadratic cost. Included as the expressiveness ceiling, not as a deployment candidate.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Mandatory controls</h4>
+<div class="tw">
+<table>
+<thead><tr><th class="num" style="width:56px">ID</th><th style="width:24%">Control</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td class="rid">C1</td><td class="nm">Parameter matching</td><td>Every rung's encoder widened to within ±10% of the richest rung. Without this, "more sensors helped" is indistinguishable from "more parameters helped", and reviewers will say so.</td></tr>
+<tr><td class="rid">C2</td><td class="nm">Language counterfactual triad</td><td>The <em>trained</em> R4 policy evaluated three ways with no retraining: correct instruction / shuffled instruction / null instruction. The primary language result. Costs three evaluation passes, no training.</td></tr>
+<tr><td class="rid">C3</td><td class="nm">Legacy encoder under the new protocol</td><td>The old VAE latent, param-matched, dropped into the R-rung harness. Gives a fair comparison to the previous work <em>without extending it</em> — the legacy numbers as published are not comparable to anything.</td></tr>
+<tr><td class="rid">X1</td><td class="nm">Direct-control interface</td><td>Validates Decision 2.1. One rung only.</td></tr>
+<tr><td class="rid">X2</td><td class="nm">Encoder fine-tuning</td><td>Validates Decision 0.1. Winning rung only, <strong>after</strong> the ladder concludes — it breaks comparability by construction and must never be inside the ladder.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Not on the ladder, and why</h4>
+<p>Weather ablations (weather is an evaluation axis — training a rung per weather answers nothing about perception). Reward tuning studies (the reward is an invariant; tuning it mid-ladder invalidates every completed rung). Pedestrian-density ablations (a scenario property, not a perception treatment). Resolution sweeps (a hyperparameter, decided once offline against the edge budget). Every one of these is a real question; none of them is <em>this</em> question.</p>
+
+<div class="callout warn">
+  <span class="label">Compute budget — check this before committing</span>
+  <p>6 rungs + 2 surviving fusion variants + C3 + X1 = <strong>10 configurations × 3 seeds = 30 PPO runs</strong>. At 4 parallel CARLA envs and ~80 environment steps/second wall-clock, 1.5 M steps is roughly 5.2 hours per run: <strong>≈ 160 GPU-hours, about 7 days of continuous running</strong>, plus Stage 0 collection (~1 day) and Stage 1 offline training (~1–2 days, parallelisable and CARLA-free). Measure your actual throughput on one dry run before committing to 1.5 M steps — if you get half the expected rate, cut to 1.0 M steps <em>uniformly</em> rather than cutting rungs.</p>
+</div>
+</section>
+
+<section id="language">
+<h2>4 · The language experiment</h2>
+
+<p>The existing hash encoder is discarded entirely. But replacing it with a real text encoder is the easy half. The hard half is designing instructions that <em>carry information the rest of the observation does not</em> — because if the instruction is redundant with <code>nav.command</code>, the policy will learn to ignore it and you will measure nothing while appearing to run a language experiment.</p>
+
+<h3>What language provides beyond an 8-way command ID</h3>
+<div class="tw">
+<table>
+<thead><tr><th style="width:20%">Class</th><th style="width:34%">Example</th><th>Why an ID cannot express it</th></tr></thead>
+<tbody>
+<tr><td class="nm">Object-referential</td><td>"stop behind the white van"</td><td>Requires binding a linguistic description to a specific visual entity. No finite command vocabulary enumerates the referents.</td></tr>
+<tr><td class="nm">Ordinal / compositional</td><td>"take the second left, then go straight"</td><td>Multi-step structure over a horizon longer than one junction decision.</td></tr>
+<tr><td class="nm">Constraint</td><td>"stay in the right lane through the tunnel"</td><td>A persistent condition with a spatial scope, not a momentary action.</td></tr>
+<tr><td class="nm">Speed / style</td><td>"drive slowly, the road is wet"</td><td>Modulates a continuous parameter with a stated reason.</td></tr>
+<tr><td class="nm">Hazard notice</td><td>"careful, a cyclist is coming from your right"</td><td><strong>Supplies information the sensors do not yet have.</strong> The strongest case — see below.</td></tr>
+<tr><td class="nm">Negation</td><td>"don't change lanes here"</td><td>Prohibitions have no natural encoding in a positive action vocabulary.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout">
+  <span class="label">The cleanest possible language result</span>
+  <p>Scenario <strong>IC-5</strong>: a hazard notice is delivered <em>before the hazard is visible to any sensor</em> — a cyclist behind an occlusion, an emergency vehicle approaching from a side street. At that instant, no amount of perception richness can supply what the sentence supplies. If R4 decelerates earlier or gives more lateral clearance than R3 on these scenarios, that is not a marginal statistical effect: it is a demonstration that language contributed information the sensor stack structurally could not have. Build this scenario family deliberately; it is the strongest evidence the project can produce.</p>
+</div>
+
+<h3>Generating instructions in CARLA</h3>
+<p>Programmatic generation from privileged state at collection time, then LLM paraphrase for surface diversity. Instructions are inputs from a human passenger or nav system, so generating them from ground truth is legitimate — the constraint is that the instruction may only reference things a passenger could plausibly know or see.</p>
+
+<ol class="steps">
+  <li>
+    <h4>Template instantiation from privileged state</h4>
+    <p>At each collection frame, CARLA knows the route plan, the actor list with types and colours, lane topology, traffic-light states and weather. Templates draw from these: <code>"{action} at the {ordinal} intersection"</code>, <code>"follow the {colour} {type} ahead"</code>, <code>"stop behind the {colour} {type}"</code>, <code>"stay in the {lane} lane for {distance} metres"</code>, <code>"careful, a {actor} is approaching from the {side}"</code>. Target ~40 templates across the six classes above.</p>
+  </li>
+  <li>
+    <h4>LLM paraphrase, offline, on the Windows box</h4>
+    <p>15–20 paraphrases per template, generated once and reviewed by hand for meaning preservation. This is what turns a template set into something a text encoder can generalise over, rather than 40 memorisable strings.</p>
+  </li>
+  <li>
+    <h4>Split on two axes, not one</h4>
+    <p><strong>Held-out paraphrases</strong> of seen templates test surface-form generalisation. <strong>Held-out templates</strong> — new structures, new referent types — test compositional generalisation. These are different claims and must be reported separately; a system can pass the first and fail the second completely.</p>
+  </li>
+  <li>
+    <h4>Cache every embedding</h4>
+    <p>The instruction set is finite (≈ 40 × 18 ≈ 700 strings). Encode all of them once with the frozen text encoder and store a lookup table. The text encoder therefore <strong>never runs in the control loop</strong>, on the training machine or on the edge device — the language pathway costs a 128-float table lookup at inference. This is an honest architecture, not a shortcut, and it is what makes language affordable at the edge.</p>
+  </li>
+</ol>
+
+<div class="dc">
+  <span class="dc-tag">Decision 4.1</span>
+  <div class="dc-head">Instruction compliance is made instrumentally necessary, not directly rewarded</div>
+  <p>The reward function contains no compliance term. Instead, instruction-critical routes are constructed so that ignoring the instruction reduces route progress — and at those junctions, <code>nav.command</code> is suppressed so only the sentence disambiguates the branch.</p>
+  <div class="dc-slots">
+    <div class="dc-slot why"><span class="lbl">Why</span><p>Three things at once. The reward stays byte-identical across R0–R4, so R4 − R3 is a pure input difference. There is no compliance term to reward-hack. And compliance becomes something the agent <em>needs</em> rather than something it is bribed for, which is a far stronger result.</p></div>
+    <div class="dc-slot rej"><span class="lbl">Rejected</span><p>An explicit compliance reward term — it either differs between R3 and R4 (confound) or is present-but-unachievable in R0–R3 (adds uncontrollable noise to their returns). The legacy <code>_compute_speech_reward</code> is also directly hackable: it rewards steering sign, so a policy can comply by swerving.</p></div>
+    <div class="dc-slot val"><span class="lbl">Validated by</span><p>C2, the counterfactual triad. If ICR(correct) − ICR(shuffled) is not clearly positive with a CI excluding zero, the language claim is not supported and the project reframes around R3.</p></div>
+  </div>
+</div>
+
+<h3>Text encoder</h3>
+<p><strong>Recommendation: a frozen sentence encoder — MiniLM-L6 (22 M) or the MobileCLIP-S0 text tower — with a trainable 128-d projection.</strong> Both are small, both produce genuinely compositional embeddings, and both are cached away at inference. Qwen2-0.5B hidden states are the alternative worth considering, purely because it connects to the existing <code>Aanchal_Spring</code> speech work and would let a later phase run audio → embedding end to end. Choose on one offline test: encode all held-out paraphrases and check that each sits nearest its own template's cluster. That test costs minutes and is decisive.</p>
+
+<div class="callout warn">
+  <span class="label">Terminology, held to</span>
+  <p>R4 is <strong>language-conditioned multimodal perception</strong>. It is not a VLM. The term becomes earned only when visual tokens are projected into a language model's embedding space and that language model does the reasoning — the LMDrive or DriveVLM structure. Nothing in this ladder does that, by design: it would break the frozen-PPO invariant and blow the edge budget. If a later phase adds a real VLM as a 2 Hz slow pathway feeding a typed intent record, the word applies then. Use it then and not before.</p>
+</div>
+</section>
+
+<section id="arch">
+<h2>5 · Fusion and architecture <span class="pill t-a" style="vertical-align:middle;margin-left:6px;">Deliverable C</span></h2>
+
+<h3>Comparing the four operators</h3>
+<div class="tw">
+<table>
+<thead><tr><th style="width:17%">Operator</th><th class="num" style="width:14%">Cost</th><th style="width:30%">Strength</th><th>Fatal limitation for this project</th></tr></thead>
+<tbody>
+<tr><td class="nm">Concatenation</td><td class="num">O(1)</td><td>Trivial, no interaction to get wrong</td><td>Modalities cannot inform each other at all. Language cannot select a region; LiDAR cannot disambiguate a camera pixel.</td></tr>
+<tr><td class="nm">FiLM</td><td class="num">O(N)</td><td>Cheap global mode-switching</td><td>One γ/β per frame, applied identically to every token. Structurally incapable of "the van on your right" — which is the entire reason language is being added.</td></tr>
+<tr><td class="nm">Cross-attention</td><td class="num">O(M·N)</td><td>Spatial grounding; fixed-size output regardless of token count; attention maps are inspectable evidence</td><td>Needs the query count tuned; correspondence between camera and BEV frames is learned rather than given.</td></tr>
+<tr><td class="nm">Joint transformer</td><td class="num">O(N²)</td><td>Maximum expressiveness</td><td>At ~2000 tokens and 20 Hz this is the single line item that ends the edge story.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="dc">
+  <span class="dc-tag">Decision 5.1</span>
+  <div class="dc-head">Cross-attention with a fixed set of learned latent queries (Perceiver-style)</div>
+  <p>M = 32 queries cross-attend over the union of camera tokens, BEV tokens and instruction tokens; 2 self-attention layers among the queries; pooled and projected to the 128-d latent.</p>
+  <div class="dc-slots">
+    <div class="dc-slot why"><span class="lbl">Why</span><p>It is the only operator whose output width is <em>independent of how many modalities feed it</em> — which is precisely what the ladder's fixed-latent invariant requires. Adding LiDAR adds tokens, not output dimensions. Cost is linear in tokens, so the edge budget survives. Attention maps give you inspectable evidence for the "reasoning helped" claim rather than only a number. And it subsumes concatenation and FiLM, which remain available as R5 ablations.</p></div>
+    <div class="dc-slot rej"><span class="lbl">Rejected</span><p><em>Mean-pooling</em> — the current design's approach, which computes a 1000-token spatial representation and then averages it away. <em>Joint self-attention</em> — quadratic, and the thing that would make the edge target unreachable. <em>FiLM alone</em> — cannot ground referring expressions.</p></div>
+    <div class="dc-slot val"><span class="lbl">Validated by</span><p>The R5 family, decided offline on waypoint ADE/FDE, then confirmed closed-loop on the top two.</p></div>
+  </div>
+</div>
+
+<div class="dc">
+  <span class="dc-tag">Decision 5.2</span>
+  <div class="dc-head">Camera and BEV stay in separate token sets with modality embeddings — for now</div>
+  <p>Rather than lifting camera features into a shared BEV frame using known intrinsics and extrinsics.</p>
+  <div class="dc-slots">
+    <div class="dc-slot why"><span class="lbl">Why</span><p>Geometric lifting (LSS / BEVFormer style) is more correct but is a substantial subsystem, and it is not what the ladder is testing. Learned correspondence via cross-attention is the TransFuser-lite position and is adequate to answer "does LiDAR help".</p></div>
+    <div class="dc-slot rej"><span class="lbl">Rejected</span><p>Geometric lifting <em>in this phase</em>. Also rejected: sharing one tokeniser between perspective RGB and top-down BEV, as the legacy code's docstring claims TransFuser does. TransFuser deliberately uses separate backbones because the two frames have incompatible statistics.</p></div>
+    <div class="dc-slot val"><span class="lbl">Validated by</span><p>An optional R3-lift variant after the ladder, offline only: if geometric lifting improves waypoint ADE by a clear margin, it earns a closed-loop run. This is honestly the weakest link in the architecture and should be labelled as such in any write-up.</p></div>
+  </div>
+</div>
+
+<div class="spec">                4x RGB (2 frames)          LiDAR sweep (2)        instruction
+                       |                          |                     |
+              shared DWS tokeniser        BEV rasteriser +          cached frozen
+              + view + time embeds        BEV tokeniser             text embedding
+                       |                          |                     |
+                  ~4 x 196 tokens            ~196 tokens            8 text tokens
+                       \__________________________|_____________________/
+                                                  |
+                                    +-------------v--------------+
+                                    |  32 learned latent queries |
+                                    |  2 x cross-attn (Q&lt;-KV)    |
+                                    |  2 x self-attn among Q     |
+                                    +-------------+--------------+
+                                                  |
+                                          pool -&gt; Linear -&gt; LayerNorm
+                                                  |
+                                             z_t  (128)   &lt;-- FROZEN after Stage 1
+                              ____________________|____________________
+                             |                    |                    |
+                   waypoint head          aux heads (Stage 1      PPO actor-critic
+                   4 x (x,y)              only: TL state,         [z,ego,nav,tau] -&gt; [dl, dv]
+                   FROZEN after S1        BEV occupancy,          TRAINED in Stage 3
+                        |                 instr-complete)                |
+                     tau_nom  ------------------------------------------&gt;+
+                                                                          |
+                                              pure-pursuit + PI  &lt;--------+
+                                                        |
+                                                  steer/throttle/brake</div>
+</section>
+
+<section id="output">
+<h2>6 · Output representation</h2>
+
+<div class="tw">
+<table>
+<thead><tr><th style="width:17%">Option</th><th style="width:20%">Pretrainable from autopilot?</th><th style="width:24%">Interpretable on failure?</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td class="nm">Compact latent only</td><td>Only via a proxy task</td><td>No</td><td>Necessary as PPO's input, insufficient as the training target.</td></tr>
+<tr><td class="nm">Waypoints</td><td><strong>Yes, directly</strong></td><td>Yes — you can see whether the plan or the tracking was wrong</td><td><strong>Recommended.</strong></td></tr>
+<tr><td class="nm">Driving intent (typed record)</td><td>Partly — needs a labelling schema</td><td>Best of all</td><td>Right answer for a later dual-system phase; premature here.</td></tr>
+<tr><td class="nm">Direct controls</td><td>Yes, but with action-distribution mismatch</td><td>No</td><td>Rejected as the primary interface; retained as control X1.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Yes — waypoints can be pretrained from autopilot and consumed by PPO</h3>
+<p>This is the mechanism, concretely:</p>
+<ul>
+  <li><strong>Label.</strong> At collection frame <em>t</em>, record the expert's future poses at t+0.5, +1.0, +1.5, +2.0 s and transform them into the ego frame at time <em>t</em>. Four (x, y) pairs. The transform is exact, so labels are noise-free.</li>
+  <li><strong>Train.</strong> Stage 1 trains encoder + waypoint head with L1 loss on those four points, alongside the auxiliary heads. This is a supervised regression problem over ~400 K frames — it converges in hours and needs no simulator.</li>
+  <li><strong>Freeze.</strong> Both encoder and waypoint head are frozen for Stage 3. At every control step the head emits τ_nom, which is <em>also</em> fed to PPO as 8 of its 152 input dimensions, so the policy knows what it is correcting.</li>
+  <li><strong>Correct.</strong> PPO's δ_lat shifts τ_nom laterally by up to ±1.5 m and δ_v scales the target speed by up to ±40%. Pure-pursuit and a PI loop turn that into controls.</li>
+</ul>
+<p>The design consequence worth stating plainly: PPO's ceiling is bounded by what a ±1.5 m lateral shift and a ±40% speed change can repair. It can slow for a hazard the expert did not slow for, nudge away from a drifting vehicle, and recover from moderate lateral error. It cannot invent a different route or execute an unplanned lane change. If the ladder shows PPO adding almost nothing in any rung, widen the residual bounds before concluding that RL does not help — and report that you did.</p>
+
+<div class="callout warn">
+  <span class="label">Covariate shift — the thing that quietly ruins IL-pretrained waypoints</span>
+  <p>Behaviour cloning on clean autopilot data produces a head that is excellent on-distribution and useless once the car drifts, because it never saw a drifted state. Mitigate at collection time, not later: during ~20% of frames, inject a bounded lateral or heading perturbation into the ego vehicle, then <strong>record the expert's recovery trajectory as the label</strong>. This gives recovery supervision at a fraction of DAgger's cost and no extra training loop. Without it, PPO's ±1.5 m residual will spend its entire budget compensating for a fragile nominal trajectory.</p>
+</div>
+</section>
+
+<section id="training">
+<h2>7 · Training pipeline <span class="pill t-a" style="vertical-align:middle;margin-left:6px;">Deliverable D</span></h2>
+
+<ol class="steps">
+  <li>
+    <h4>Stage 0 — Collection (CARLA, once)</h4>
+    <p>Privileged expert or tuned autopilot on Town01 + Town03 + Town04, ~400 K frames across 6 weather presets, with 20% perturbation-recovery frames. <strong>Store raw, not derived:</strong> raw LiDAR points (not a rasterised BEV), the full route (not just the sampled target), and all Tier-P state. You will change the BEV representation and the target-point distance at least once; re-collecting is the expensive mistake.</p>
+    <p>Instructions are generated and stored per frame at this stage. Trainable: nothing.</p>
+  </li>
+  <li>
+    <h4>Stage 1 — Representation pretraining (offline, no CARLA)</h4>
+    <p>Encoder + waypoint head + auxiliary heads, trained by supervised learning on the Stage 0 dataset. Losses: waypoint L1 (primary), traffic-light-state cross-entropy, BEV drivable-area/occupancy BCE, and — in R4 — instruction-completion BCE.</p>
+    <p><strong>Frozen:</strong> text encoder (always), and the pretrained vision backbone if one is used. <strong>Trainable:</strong> tokenisers, latent queries, cross-attention, projection, all heads. Split by <em>route and weather</em>, never by shuffled row index — driving frames are temporally correlated and a random split leaks neighbouring frames into validation.</p>
+  </li>
+  <li>
+    <h4>Stage 2 — Offline architecture selection (no CARLA)</h4>
+    <p>The R5 fusion family and any resolution or query-count choices are decided here, on waypoint ADE/FDE and auxiliary-head accuracy. Cheap, fast, parallelisable, and it prunes the closed-loop matrix from four fusion variants to two. Frozen/trainable as Stage 1.</p>
+  </li>
+  <li>
+    <h4>Stage 3 — PPO (CARLA, the ladder)</h4>
+    <p><strong>Frozen:</strong> encoder, waypoint head, auxiliary heads, text encoder, normalisation statistics. <strong>Trainable:</strong> actor-critic only, ~140 K parameters. Identical configuration and seeds in every rung. This stage <em>is</em> the ladder.</p>
+  </li>
+  <li>
+    <h4>Stage 4 — Partial fine-tuning · <span class="pill t-f">outside the ladder</span></h4>
+    <p>Unfreeze the last cross-attention block at LR/10 on the winning rung only, after all ladder results are recorded. Report separately.</p>
+    <p><strong>This is the stage to be suspicious of.</strong> It breaks the frozen-encoder invariant by construction, so its results cannot be compared to any rung — and a common outcome is a modest closed-loop gain accompanied by a collapse in waypoint ADE, meaning the representation was traded for reward-specific overfitting. Run it as a curiosity with a clearly-labelled result, or skip it. Do not let it into the main comparison.</p>
+  </li>
+</ol>
+</section>
+
+<section id="edge">
+<h2>8 · Edge constraint and deployment path <span class="pill t-a" style="vertical-align:middle;margin-left:6px;">Deliverable F</span></h2>
+
+<p>The constraint has to shape the research model now, or the compression phase becomes a rewrite. Two things make this tractable: the policy is trivially small (~140 K parameters — never the bottleneck), and the text encoder never runs online (§4). <strong>Essentially the entire edge budget is the visual encoder.</strong></p>
+
+<div class="tw">
+<table>
+<thead><tr><th style="width:24%">Budget</th><th class="num">Research model</th><th class="num">Jetson Orin Nano 8 GB</th><th class="num">Raspberry Pi 5 (CPU)</th></tr></thead>
+<tbody>
+<tr><td class="nm">Encoder parameters</td><td class="num">≤ 25 M</td><td class="num">≤ 12 M</td><td class="num">≤ 3 M</td></tr>
+<tr><td class="nm">FLOPs / control step</td><td class="num">≤ 40 G</td><td class="num">≤ 8 G</td><td class="num">≤ 1.5 G</td></tr>
+<tr><td class="nm">Precision</td><td class="num">FP32 / TF32</td><td class="num">INT8</td><td class="num">INT8</td></tr>
+<tr><td class="nm">p95 latency, sensor→control</td><td class="num">≤ 50 ms</td><td class="num">≤ 30 ms</td><td class="num">≤ 50 ms</td></tr>
+<tr><td class="nm">Peak RAM</td><td class="num">—</td><td class="num">≤ 1 GB</td><td class="num">≤ 400 MB</td></tr>
+<tr><td class="nm">Realistic sensor set</td><td class="num">4 RGB + LiDAR</td><td class="num">4 RGB + LiDAR @ 160²</td><td class="num">2 RGB @ 128², no LiDAR</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout warn">
+  <span class="label">Say this out loud in the thesis</span>
+  <p>Four cameras plus LiDAR plus language at 20 Hz on a Raspberry Pi CPU is <strong>not achievable</strong>, and no amount of quantisation changes that. Either the edge target is a Jetson-class device with an accelerator, or the deployed configuration is a reduced sensor set and the thesis reports the accuracy cost of that reduction — which is itself a legitimate and interesting result. What is not acceptable is projecting a Pi latency number that no measurement supports, as the legacy design documents do.</p>
+</div>
+
+<h3>Path from research model to device</h3>
+<ol class="steps">
+  <li>
+    <h4>Architectural slimming</h4>
+    <p>Reduce latent queries 32 → 16, drop one self-attention layer, halve input resolution, drop the second temporal frame. Re-run Stage 1 offline and read the ADE cost of each cut. All decisions offline, no CARLA.</p>
+  </li>
+  <li>
+    <h4>Distil the encoder, keep the policy</h4>
+    <p>Train the slim encoder to match the research encoder's <strong>128-d latent</strong> (cosine + MSE) and its waypoint outputs, on the Stage 0 dataset. Because the latent is matched, <strong>the frozen PPO policy transfers unchanged</strong> — no RL re-training is needed for the edge model. This is the single most valuable consequence of the fixed-latent invariant, and it is worth stating as a design contribution.</p>
+  </li>
+  <li>
+    <h4>Quantise</h4>
+    <p>Post-training INT8 with a 2 K-frame calibration set drawn from the training distribution. If driving score drops more than 2 points, escalate to quantisation-aware training. Measure the drop on the closed-loop metric, not on ADE — they diverge.</p>
+  </li>
+  <li>
+    <h4>Export and accelerate</h4>
+    <p>TorchScript → ONNX → TensorRT (Jetson) or ONNX Runtime / ExecuTorch (Pi). The legacy TF-Lite path in <code>convert.py</code> targets the old TensorFlow VAE and is not reusable.</p>
+  </li>
+  <li>
+    <h4>Measure honestly on the device</h4>
+    <p>p50/p95/p99 broken out per stage — preprocessing, encoder, policy, controller — with real sensor decoding included, not synthetic tensors. Then a closed-loop processor-in-the-loop run reusing the existing PIL harness, reporting driving score <em>at the device's achieved control rate</em>, since latency degrades driving and that degradation is the actual finding.</p>
+  </li>
+</ol>
+</section>
+
+<section id="eval">
+<h2>9 · Evaluation matrix <span class="pill t-a" style="vertical-align:middle;margin-left:6px;">Deliverable E</span></h2>
+
+<h3>Metrics</h3>
+<div class="tw">
+<table>
+<thead><tr><th style="width:16%">Family</th><th>Metrics</th></tr></thead>
+<tbody>
+<tr><td class="nm">Driving</td><td>Route completion %, infraction score, <strong>driving score = RC × IS</strong> (primary), success rate (goal reached, no collision, not blocked), collisions/km split by <em>vehicle / pedestrian / static</em>, red-light violations/km, lane invasions/km, off-road/km, blocked rate, mean speed</td></tr>
+<tr><td class="nm">Trajectory (offline)</td><td>Waypoint ADE and FDE at 0.5 / 1.0 / 1.5 / 2.0 s; traffic-light-state F1; BEV occupancy IoU. No CARLA needed — these are the fast feedback loop.</td></tr>
+<tr><td class="nm">Command adherence</td><td>Per class: junction-branch accuracy; speed-band compliance fraction; lane-occupancy fraction; referred-object stop success (2–6 m behind the correct actor); hazard-notice reaction time. Aggregated as <strong>ICR</strong>. Primary language statistic: <strong>ΔICR = ICR(correct) − ICR(shuffled)</strong>.</td></tr>
+<tr><td class="nm">Comfort</td><td>Mean |jerk|, mean |steering rate|. Guards against a policy that scores well by oscillating.</td></tr>
+<tr><td class="nm">Efficiency</td><td>Total / trainable / RL-trainable parameters; FLOPs per control step; model size FP32 and INT8; peak RAM; p50, <strong>p95</strong>, p99 latency per stage; achieved closed-loop FPS</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Attributing a gain to the right cause</h3>
+<p>A number going up is not a finding. The design that turns it into one is <strong>pre-registration of which sub-metric each rung should move</strong>, written down before the run.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th style="width:16%">Claim</th><th style="width:30%">Evidence required</th><th>What would falsify it</th></tr></thead>
+<tbody>
+<tr><td class="nm">"More sensors helped"</td><td>Monotone DS gain R1→R2→R3 at matched parameters, <em>concentrated in the pre-registered sub-metric</em> — side collisions for R2, adverse-weather and occluded-actor collisions for R3</td><td>The gain appears in mean speed or comfort instead. That is a different mechanism (better-conditioned features), not better perception, and must be reported as such.</td></tr>
+<tr><td class="nm">"Language helped"</td><td>ΔICR &gt; 0 with a bootstrap CI excluding zero; DS gain on instruction-critical routes; <strong>and no DS gain on instruction-neutral routes</strong></td><td>R4 also beats R3 on instruction-neutral routes. Then the embedding is acting as a regulariser or extra capacity, not as understood language.</td></tr>
+<tr><td class="nm">"Multimodal reasoning helped"</td><td>Within R5 at identical sensors and parameters, cross-attention beats concatenation and FiLM; plus attention maps showing referring expressions attending to the correct region</td><td>R5-cat matches R5-xatt. Then the modalities are not interacting and the fusion machinery is decoration.</td></tr>
+<tr><td class="nm">"PPO helped"</td><td>ΔDS = DS(R_k^PPO) − DS(R_k^IL) &gt; 0, reported per rung</td><td>ΔDS ≈ 0 everywhere. Then widen the residual bounds and re-run one rung before concluding anything about RL.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Generalisation suite — all zero-shot, no retraining</h3>
+<div class="tw">
+<table>
+<thead><tr><th class="num" style="width:56px">ID</th><th style="width:26%">Test</th><th>What it establishes</th></tr></thead>
+<tbody>
+<tr><td class="rid">G1</td><td class="nm">Unseen routes, seen town</td><td>Not memorising specific routes. The weakest test; report it, don't lead with it.</td></tr>
+<tr><td class="rid">G2</td><td class="nm">Unseen town (Town02 and Town05)</td><td><strong>Primary generalisation result.</strong> Two towns because Town02 is structurally similar to Town01 and Town05 is not.</td></tr>
+<tr><td class="rid">G3</td><td class="nm">Unseen weather (incl. night, hard rain)</td><td>Where LiDAR should earn its place if it earns it anywhere.</td></tr>
+<tr><td class="rid">G4</td><td class="nm">Unseen paraphrases, seen templates</td><td>Surface-form language generalisation. The easy language test.</td></tr>
+<tr><td class="rid">G5</td><td class="nm">Unseen templates and referents</td><td>Compositional language generalisation. <strong>The real language test</strong> — a system can pass G4 and fail this completely.</td></tr>
+<tr><td class="rid">G6</td><td class="nm">Unseen traffic density</td><td>Robustness beyond the training regime.</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Report each generalisation number <em>and the gap from the matched training condition</em>. The gap is the claim; the absolute number depends on route difficulty and is not comparable across papers.</p>
+
+<div class="callout">
+  <span class="label">Statistics — decide before you run</span>
+  <p>3 seeds minimum, 5 preferred. ≥ 30 evaluation routes per condition — CARLA driving score has enough route-to-route variance that fewer will not separate rungs. Report mean ± std across seeds and a bootstrap CI over routes. <strong>Pre-register the primary metric (DS on G2) and the primary language metric (ΔICR) in writing before the first run.</strong> The ladder has enough numbers in it that post-hoc selection of a favourable one is very easy and completely invalidating.</p>
+</div>
+</section>
+
+<section id="first">
+<h2>10 · The first experiment <span class="pill t-a" style="vertical-align:middle;margin-left:6px;">Deliverable G</span></h2>
+
+<p><strong>E-0: the protocol harness plus rungs R0 and R1, parameter-matched, 3 seeds.</strong> Nothing about VLMs, LiDAR, or language. Four steps, with a hard gate at the end.</p>
+
+<ol class="steps">
+  <li>
+    <h4>Build the harness — no learning at all</h4>
+    <p>The two-record environment (SensorObs / PrivilegedState with the enforced signature), the route set (40 train / 30 eval), the weather schedule, the reward, the full metric pipeline, seeding, and the parallel-env wrapper. Validate it with a scripted controller: a pure-pursuit agent driven by the <em>privileged</em> route should score near-perfectly, and the same controller with the route withheld should fail. That pair of runs proves the harness measures driving.</p>
+  </li>
+  <li>
+    <h4>Stage 0 collection on Town01</h4>
+    <p>~400 K frames with recovery perturbations, raw LiDAR, full Tier-P state. The long pole in wall-clock, and everything downstream depends on getting the stored schema right. Review the schema before starting the run.</p>
+  </li>
+  <li>
+    <h4>Offline Stage 1 for R0 and R1</h4>
+    <p>Waypoint ADE/FDE for both. No CARLA. First real signal — and if R1's ADE is not clearly better than R0's, the vision path has a bug and you find out in hours rather than after a week of RL.</p>
+  </li>
+  <li>
+    <h4>PPO for R0 and R1, 3 seeds each</h4>
+    <p>Six runs, ~30 hours. Produces the first driving scores and exercises the whole pipeline end to end.</p>
+  </li>
+</ol>
+
+<div class="callout stop">
+  <span class="label">Gate — do not build R2 before this passes</span>
+  <ul>
+    <li><strong>DS(R0) &lt; 0.6 × DS(R1)</strong> — otherwise the observation contract is still leaking, and every rung above would be measuring the leak.</li>
+    <li><strong>DS(R1) meaningfully &gt; DS(R0)</strong>, with the gap larger than the seed spread — otherwise the environment does not reward perception, and adding sensors cannot possibly help.</li>
+    <li><strong>ΔDS = DS(R1<sup>PPO</sup>) − DS(R1<sup>IL</sup>) &gt; 0</strong> — otherwise PPO's residual authority is too narrow to matter and the bounds need widening before the ladder runs.</li>
+    <li><strong>Seed spread small enough</strong> that a plausible rung-to-rung effect would be visible above it. If not, more seeds or more evaluation routes, decided now rather than after ten rungs.</li>
+  </ul>
+  <p>Every one of these four failure modes is cheap to fix at this point and enormously expensive to discover at R4.</p>
+</div>
+</section>
+
+<section id="risks">
+<h2>11 · Risks and decisions still open</h2>
+
+<h3>Risks I would put in the plan</h3>
+<ul>
+  <li><strong>Throughput.</strong> The 7-day estimate assumes ~80 environment steps/second with 4 CARLA instances rendering 4 cameras each. Measure it on one dry run. If it is half that, cut steps uniformly — never cut rungs.</li>
+  <li><strong>Template artifacts.</strong> The policy may learn instruction <em>templates</em> rather than language. The paraphrase and template splits (G4/G5) are the mitigation, but this is the most likely way the language result turns out hollow, and it should be named as a limitation regardless of the outcome.</li>
+  <li><strong>Residual ceiling.</strong> If PPO adds nothing anywhere, that is a finding about the interface, not about RL. The X1 control and widened bounds are the response.</li>
+  <li><strong>Camera/BEV correspondence is learned, not given</strong> (Decision 5.2). This is the architecturally weakest point in the design and should be stated as such.</li>
+  <li><strong>Everything is simulation.</strong> No sim-to-real claim is supported by any of this, and the edge deployment demonstrates <em>latency feasibility</em>, not real-world driving.</li>
+</ul>
+
+<h3>Decisions I need from you before this becomes implementable</h3>
+<ul>
+  <li><strong>CARLA version.</strong> 0.9.15 with Leaderboard-2.0-style routes is my recommendation. 0.9.10.1 only if comparability with LMDrive's published numbers matters to you. This choice affects the route API, the traffic manager, and LiDAR semantics, and changing it later invalidates collected data.</li>
+  <li><strong>Edge target device.</strong> Jetson-class or Raspberry Pi? §8 has two entirely different budgets and this decision constrains the research model's size <em>now</em>.</li>
+  <li><strong>Is the speech pathway in scope?</strong> If <code>Aanchal_Spring</code> must be integrated, the text encoder should be Qwen2-0.5B for continuity, and an audio→instruction rung joins the ladder. If not, MiniLM is the better choice.</li>
+  <li><strong>Seeds: 3 or 5?</strong> Five is a 66% compute increase and materially strengthens every claim. Worth deciding against the wall-clock budget rather than by default.</li>
+  <li><strong>Which towns for Stage 0?</strong> Town01-only is faster and matches the legacy setup; Town01+03+04 gives a much better representation and makes G2 a stronger result.</li>
+</ul>
+</section>
+
+<footer class="foot">
+  <p><strong>Status.</strong> Specification for review. No repository file was created or modified, no CARLA process was started, and nothing here has been implemented. Parameter counts, latency budgets and wall-clock estimates are engineering targets to be validated by measurement — they are not results.</p>
+  <p>Companion document: the <a href="https://claude.ai/code/artifact/b512d245-91d9-4807-929a-0606a117366e">VLM-PPO Stack Audit</a>, which establishes the findings this specification responds to.</p>
+</footer>
+
+</div>
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true" style="visibility: visible !important;"><template shadowrootmode="open"><style>
+      div.grammarly-desktop-integration {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select:none;
+        user-select:none;
+      }
+
+      div.grammarly-desktop-integration:before {
+        content: attr(data-content);
+      }
+    </style><div aria-label="grammarly-integration" role="group" tabindex="-1" class="grammarly-desktop-integration" data-content="{&quot;mode&quot;:&quot;full&quot;,&quot;isActive&quot;:true,&quot;isUserDisabled&quot;:false}"></div></template></grammarly-desktop-integration></html>
