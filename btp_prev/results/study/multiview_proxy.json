@@ -1,0 +1,66 @@
+{
+  "n_train": 12000,
+  "n_test": 2000,
+  "scale": 0.00392156862745098,
+  "variants": {
+    "view A (left half)": {
+      "dims": 95,
+      "effective_rank": 8.113665285972102,
+      "r2_mean": 0.6224913484693586,
+      "r2": {
+        "road_frac": 0.6333663410650903,
+        "lane_offset": 0.5423590625526706,
+        "lane_heading": 0.5930712654719177,
+        "roadline_frac": 0.8626910648959808,
+        "obstacle_frac": 0.27293561630499275,
+        "free_ahead": 0.8305247405254995
+      }
+    },
+    "view B (right half)": {
+      "dims": 95,
+      "effective_rank": 5.908400551582801,
+      "r2_mean": 0.6878397180481982,
+      "r2": {
+        "road_frac": 0.9225824116282415,
+        "lane_offset": 0.9608280887380528,
+        "lane_heading": 0.5792516186042779,
+        "roadline_frac": 0.6432854477067235,
+        "obstacle_frac": 0.33385900987796224,
+        "free_ahead": 0.6872317317339318
+      }
+    },
+    "concat [A, B]": {
+      "dims": 190,
+      "effective_rank": 8.843382084589495,
+      "r2_mean": 0.8748389872252317,
+      "r2": {
+        "road_frac": 0.9817264288498826,
+        "lane_offset": 0.9820587433146911,
+        "lane_heading": 0.8950626528743817,
+        "roadline_frac": 0.9657866866355487,
+        "obstacle_frac": 0.5553780576395525,
+        "free_ahead": 0.8690213540373325
+      }
+    },
+    "full frame (1 pass)": {
+      "dims": 95,
+      "effective_rank": 7.740969728837768,
+      "r2_mean": 0.8358853879299816,
+      "r2": {
+        "road_frac": 0.9731715995541721,
+        "lane_offset": 0.976357644534678,
+        "lane_heading": 0.8165526760864212,
+        "roadline_frac": 0.9544286213323312,
+        "obstacle_frac": 0.45179176797494813,
+        "free_ahead": 0.8430100180973391
+      }
+    }
+  },
+  "best_single_r2": 0.6878397180481982,
+  "concat_r2": 0.8748389872252317,
+  "full_frame_r2": 0.8358853879299816,
+  "fusion_gain": 0.18699926917703347,
+  "rank_if_independent": 14.022065837554903,
+  "rank_additivity": 0.6306761205545416,
+  "concat_dim_utilisation": 0.04654411623468155
+}

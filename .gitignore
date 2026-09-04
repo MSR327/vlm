@@ -1,4 +1,4 @@
-# Python
+# Python bytecode & environments
 __pycache__/
 *.pyc
 *.pyo
@@ -10,48 +10,10 @@ build/
 .venv*/
 venv*/
 
-# OS
+# OS metadata
 .DS_Store
 Thumbs.db
 .vs/
-
-# Model Weights & Checkpoints (too large for GitHub)
-*.pth
-*.pt
-*.onnx
-*.tflite
-*.pb
-*.h5
-*.hdf5
-variables/
-*.data-00000-of-*
-*.index
-checkpoint
-
-# Datasets & Large Binary Files
-*.zip
-*.tar.gz
-*.npz
-data_collected_*/
-
-# Audio Datasets (Aanchal_Spring speech samples)
-Aanchal_Spring/dataset1/
-Aanchal_Spring/dataset2/
-Aanchal_Spring/test_results/
-*.mp3
-*.wav
-*.flac
-
-# TensorFlow / VAE Legacy Models
-VAE/
-Results_05/
-
-# Reference PDFs (copyrighted papers)
-references/*.pdf
-*.pdf
-
-# Previous BTP work (legacy backup)
-btp_prev/
 
 # IDE & Editor
 .idea/
@@ -59,9 +21,5 @@ btp_prev/
 *.swp
 *.swo
 
-# Logs
-*.log
-runs/
-
-# Screenshots
-*.png
+# Collected driving data (generated at runtime, too large)
+data_collected_*/

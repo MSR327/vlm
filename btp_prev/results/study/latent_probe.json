@@ -1,0 +1,115 @@
+{
+  "n_train": 12000,
+  "n_test": 2000,
+  "targets": [
+    "road_frac",
+    "lane_offset",
+    "lane_heading",
+    "roadline_frac",
+    "obstacle_frac",
+    "free_ahead"
+  ],
+  "conditions": [
+    {
+      "layout": "train_style",
+      "arm": "scaled",
+      "alpha": 10.0,
+      "nonfinite_frac_train": 0.0,
+      "nonfinite_frac_test": 0.0,
+      "nan_elements_train": 0,
+      "inf_elements_train": 0,
+      "latent_std": 9.927659521368703,
+      "latent_absmax": 44.074180603027344,
+      "effective_rank": 7.7409650129478305,
+      "r2": {
+        "road_frac": 0.973175534691072,
+        "lane_offset": 0.9763606569595814,
+        "lane_heading": 0.8165987872170951,
+        "roadline_frac": 0.9544171770989671,
+        "obstacle_frac": 0.4517966585021026,
+        "free_ahead": 0.8430189885794037
+      },
+      "r2_mean": 0.8358946338413703
+    },
+    {
+      "layout": "train_style",
+      "arm": "raw",
+      "alpha": 10.0,
+      "nonfinite_frac_train": 6.140350877192982e-06,
+      "nonfinite_frac_test": 1.0526315789473684e-05,
+      "nan_elements_train": 0,
+      "inf_elements_train": 7,
+      "latent_std": 362753.0120057517,
+      "latent_absmax": 100000000.0,
+      "effective_rank": 1.0000399539996174,
+      "r2": {
+        "road_frac": 0.9473414324136261,
+        "lane_offset": 0.9494862639942656,
+        "lane_heading": 0.782228628499934,
+        "roadline_frac": 0.9550278930390785,
+        "obstacle_frac": 0.36171527167700646,
+        "free_ahead": 0.8527122455934492
+      },
+      "r2_mean": 0.8080852892028934
+    },
+    {
+      "layout": "carla_legacy",
+      "arm": "scaled",
+      "alpha": 0.001,
+      "nonfinite_frac_train": 0.0,
+      "nonfinite_frac_test": 0.0,
+      "nan_elements_train": 0,
+      "inf_elements_train": 0,
+      "latent_std": 7.05235529713675,
+      "latent_absmax": 35.599464416503906,
+      "effective_rank": 7.127562961922409,
+      "r2": {
+        "road_frac": 0.9726991870254985,
+        "lane_offset": 0.9747171780947519,
+        "lane_heading": 0.7292858590532973,
+        "roadline_frac": 0.8777062021703496,
+        "obstacle_frac": 0.37895085601447587,
+        "free_ahead": 0.6799143423234617
+      },
+      "r2_mean": 0.7688789374469724
+    },
+    {
+      "layout": "carla_legacy",
+      "arm": "raw",
+      "alpha": 10.0,
+      "nonfinite_frac_train": 0.0,
+      "nonfinite_frac_test": 0.0,
+      "nan_elements_train": 0,
+      "inf_elements_train": 0,
+      "latent_std": 2984.4244476607523,
+      "latent_absmax": 14031.3037109375,
+      "effective_rank": 5.837160199708146,
+      "r2": {
+        "road_frac": 0.9562818257587157,
+        "lane_offset": 0.9710304241513004,
+        "lane_heading": 0.7057885080140016,
+        "roadline_frac": 0.8654784176698586,
+        "obstacle_frac": 0.3258285724812029,
+        "free_ahead": 0.7253774122162273
+      },
+      "r2_mean": 0.7582975267152178
+    }
+  ],
+  "pixel_baseline": {
+    "road_frac": 0.7193297933083926,
+    "lane_offset": 0.732022576192487,
+    "lane_heading": 0.6189544709577046,
+    "roadline_frac": 0.9122406946062817,
+    "obstacle_frac": 0.30692234157243103,
+    "free_ahead": 0.6994651438163771
+  },
+  "pixel_baseline_mean": 0.6648225034089456,
+  "ood": {
+    "bev_effective_rank": 18.936535289704594,
+    "cam_effective_rank": 8.909087414230479,
+    "bev_latent_std": 6129285.76994107,
+    "cam_latent_std": 2931.0845004416037,
+    "bev_mean_pairwise_cos": 0.13818546866172565,
+    "cam_mean_pairwise_cos": 0.9051392160984829
+  }
+}
