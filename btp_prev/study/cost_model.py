@@ -68,7 +68,7 @@ def mlp_cost(in_dim, hidden=(500, 300, 100), out_dim=2):
 RUNGS = {
     1: dict(name='1cam',       n_cam=1, lidar=False),
     2: dict(name='3cam',       n_cam=3, lidar=False),
-    3: dict(name='3cam_lidar', n_cam=3, lidar=True),
+    3: dict(name='1cam_lidar', n_cam=1, lidar=True),
 }
 
 

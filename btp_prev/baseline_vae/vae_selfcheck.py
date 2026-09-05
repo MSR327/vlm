@@ -48,13 +48,14 @@ def run_check(params):
     rng = np.random.default_rng(0)
     imgs = [rng.integers(0, 256, (params.IM_WIDTH, params.IM_HEIGHT, 3)).astype(np.float32)
             for _ in range(params.NUM_CAMERAS_VAE)]
+    images = imgs[0] if params.NUM_CAMERAS_VAE == 1 else imgs
     nav = np.array([0.5, 8.3, 0.42, 0.11, 0.03], dtype=np.float32)
 
     if params.USE_LIDAR_VAE:
         bev = rng.integers(0, 256, (params.BEV_GRID_W, params.BEV_GRID_H, 3)).astype(np.float32)
-        obs_in = [imgs, bev, nav]
+        obs_in = [images, bev, nav]
     else:
-        obs_in = [imgs, nav]
+        obs_in = [images, nav]
 
     try:
         t0 = time.perf_counter()

@@ -1,7 +1,12 @@
 """
-RUNG 3 -- VAE + 3 cameras (Front + Left + Right) + 2D BEV LiDAR.
+RUNG 3 -- VAE + 1 front camera + 2D BEV LiDAR.
 
-    OBSERVATION_DIM = 95 * 4 + 5 = 385
+    OBSERVATION_DIM = 95 * 2 + 5 = 195
+
+Adds a complementary geometric sensor (LiDAR BEV) to the single front camera
+instead of adding redundant visual sensors (more cameras). This tests whether
+orthogonal spatial information (3D obstacle geometry) helps driving more than
+redundant visual information (side/rear camera views).
 
 The BEV occupancy grid is encoded by a SECOND VAE, not the camera one.
 The pretrained camera VAE was trained on semantic-segmentation RGB; a BEV
@@ -22,10 +27,10 @@ from params_vae_base import *
 from params_vae_base import derive_observation_dim, make_paths
 
 RUNG            = 3
-RUNG_NAME       = '3cam_lidar'
-NUM_CAMERAS_VAE = 3
+RUNG_NAME       = '1cam_lidar'
+NUM_CAMERAS_VAE = 1
 USE_LIDAR_VAE   = True
-CAMERA_YAWS     = CAMERA_YAWS_3
+CAMERA_YAWS     = CAMERA_YAWS_1
 
-OBSERVATION_DIM = derive_observation_dim(NUM_CAMERAS_VAE, USE_LIDAR_VAE)   # 385
+OBSERVATION_DIM = derive_observation_dim(NUM_CAMERAS_VAE, USE_LIDAR_VAE)   # 195
 globals().update(make_paths(RUNG_NAME))
