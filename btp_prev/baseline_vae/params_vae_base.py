@@ -61,26 +61,22 @@ VAR_AUTO_MODEL_PATH = 'VAE'
 BEV_VAE_PATH        = 'VAE/bev_encoder_model'   # rung 3 only; trained separately
 
 # --- camera rig ---------------------------------------------------------------
-# Yaws match the 360 deg surround layout used by the new multimodal system,
-# so the baseline and the proposed method see the same viewpoints.
-CAMERA_YAWS_4 = [0.0, -60.0, 60.0, 180.0]       # front, left, right, rear
-CAMERA_YAWS_1 = [0.0]                           # original single front camera
+# 3-camera surround rig covering a continuous 210 deg panoramic field of view
+# (Front: 125 deg FOV, Left: 90 deg FOV at -60 deg, Right: 90 deg FOV at +60 deg).
+CAMERA_YAWS_3 = [0.0, -60.0, 60.0]       # front, left, right (optimal surround)
+CAMERA_YAWS_1 = [0.0]                     # original single front camera
 
-# Full rig placement. The front entry is byte-for-byte the original single
-# camera (main.py:535-539), so rung 1 is an exact reproduction of the baseline.
+# Rig placement. The front entry is byte-for-byte the original single camera.
 CAMERA_RIG = {
      0.0: dict(x= 2.4, y= 0.0, z=1.5, pitch=-10.0, fov=125),   # front
    -60.0: dict(x= 1.0, y=-0.4, z=1.5, pitch= -5.0, fov=90),    # left
     60.0: dict(x= 1.0, y= 0.4, z=1.5, pitch= -5.0, fov=90),    # right
-   180.0: dict(x=-1.5, y= 0.0, z=1.5, pitch=-10.0, fov=125),   # rear
 }
 
 # The legacy baseline uses CARLA's semantic_segmentation camera (main.py:523),
-# i.e. ground-truth labels from the simulator. The proposed multimodal method
-# uses true RGB. Recorded here so the write-up can state it explicitly.
+# i.e. ground-truth labels from the simulator.
 CAMERA_SENSOR_NAME = 'sensor.camera.semantic_segmentation'
 CAMERA_FOV         = 125
-MASK_REAR_CAMERA   = os.environ.get('BTP_MASK_REAR', '0') == '1'
 
 # --- BEV LiDAR (rung 3) -------------------------------------------------------
 # Reuses project_lidar_to_bev() from collect_data.py:45 -- same grid geometry.

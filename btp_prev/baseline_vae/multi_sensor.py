@@ -103,15 +103,10 @@ class MultiCameraSensor:
         self.buffers = {yaw: [] for yaw in self.yaws}
         self.sensors = []
 
-        mask_rear = getattr(params, 'MASK_REAR_CAMERA', False) or (os.environ.get('BTP_MASK_REAR') == '1')
-        self.masked_yaws = set([180.0]) if mask_rear else set()
-
         world = vehicle.get_world()
         bp_lib = world.get_blueprint_library()
 
         for yaw in self.yaws:
-            if yaw in self.masked_yaws:
-                continue
             spec = params.CAMERA_RIG[yaw]
             bp = bp_lib.find(params.CAMERA_SENSOR_NAME)
             bp.set_attribute('image_size_x', str(params.IM_WIDTH))
@@ -140,15 +135,12 @@ class MultiCameraSensor:
 
     # ------------------------------------------------------------------
     def ready(self):
-        return all(len(self.buffers[y]) for y in self.yaws if y not in self.masked_yaws)
+        return all(len(self.buffers[y]) for y in self.yaws)
 
     def get_frames(self):
         """Latest frame from each view, in CAMERA_YAWS order -> list of (W,H,3)."""
         frames = []
         for yaw in self.yaws:
-            if yaw in self.masked_yaws:
-                frames.append(np.zeros((self.p.IM_WIDTH, self.p.IM_HEIGHT, 3), dtype=np.uint8))
-                continue
             buf = self.buffers[yaw]
             frames.append(buf.pop(-1))
             buf.clear()          # drop backlog; we always want the freshest frame
