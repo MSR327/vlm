@@ -80,6 +80,7 @@ CAMERA_RIG = {
 # uses true RGB. Recorded here so the write-up can state it explicitly.
 CAMERA_SENSOR_NAME = 'sensor.camera.semantic_segmentation'
 CAMERA_FOV         = 125
+MASK_REAR_CAMERA   = os.environ.get('BTP_MASK_REAR', '0') == '1'
 
 # --- BEV LiDAR (rung 3) -------------------------------------------------------
 # Reuses project_lidar_to_bev() from collect_data.py:45 -- same grid geometry.

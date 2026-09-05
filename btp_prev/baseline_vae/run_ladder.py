@@ -316,7 +316,13 @@ def main():
                     help="spawn-point indices to evaluate on, cycled across "
                          "episodes. Omit for the canonical single route. Use "
                          "the SAME list for all three rungs.")
+    ap.add_argument('--mask-rear', action='store_true', default=False,
+                    help="mask rear camera with zeros (Town02 simulator fault-tolerant workaround)")
     args = ap.parse_args()
+
+    if args.mask_rear:
+        os.environ['BTP_MASK_REAR'] = '1'
+        P.MASK_REAR_CAMERA = True
 
     if args.town is None:
         args.town = TRAIN_TOWN if args.mode == 'train' else TEST_TOWN
