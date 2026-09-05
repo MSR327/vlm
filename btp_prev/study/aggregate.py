@@ -18,9 +18,12 @@ import os
 import numpy as np
 import pandas as pd
 
-RUNGS = [(1, '1cam', 'VAE + 1 RGB'),
-         (2, '4cam', 'VAE + 4 RGB'),
-         (3, '4cam_lidar', 'VAE + 4 RGB + LiDAR')]
+RUNGS = [
+    (1, '1cam',       'VAE + 1 RGB (100-dim)'),
+    (2, '4cam',       'VAE + 4 RGB 360° (385-dim)'),
+    (2, '3cam',       'VAE + 3 RGB Surround (290-dim)'),
+    (3, '1cam_lidar', 'VAE + 1 RGB + LiDAR (195-dim)'),
+]
 ARMS = ['raw', 'scaled']
 
 
