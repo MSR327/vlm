@@ -48,8 +48,34 @@ import tensorflow as tf
 
 # Reuse the EXACT baseline architecture and recipe.
 from VAE_Trainer_dont_touch import (
-    VariationalAutoencoder, LATENT_DIM, BATCH_SIZE, LEARNING_RATE, EPOCHS, LOSS,
+    VariationalAutoencoder, Encoder, LATENT_DIM, BATCH_SIZE, LEARNING_RATE, EPOCHS, LOSS,
 )
+import tensorflow_probability as tfp
+tfd = tfp.distributions
+
+# Patch Encoder.call with numerical stability safeguard:
+# Sparse BEV occupancy (mean ~0.0059) causes unconstrained dense sigma layer to produce
+# activations > 88, which makes tf.exp(sigma) overflow to inf -> NaN loss.
+# Clipping sigma log-space to [-15.0, 15.0] keeps exp(sigma) strictly bounded in [3e-7, 3.2e6].
+def _stable_encoder_call(self, inputs):
+    x = self.conv1(inputs)
+    x = self.conv2(x)
+    x = self.bn1(x)
+    x = self.conv3(x)
+    x = self.conv4(x)
+    x = self.flatten(x)
+    x = self.dense1(x)
+
+    mu = self.mu(x)
+
+    clipped_sigma_log = tf.clip_by_value(self.sigma(x), -15.0, 15.0)
+    sigma = tf.exp(clipped_sigma_log)
+    z = mu + sigma * tfd.Normal(0.0, 1.0).sample(tf.shape(mu))
+    self.kl = tf.reduce_sum(sigma**2 + mu**2 - tf.math.log(sigma + 1e-8) - 0.5)
+
+    return z
+
+Encoder.call = _stable_encoder_call
 
 
 def load_bev_frames(data_dir, limit=None):
@@ -76,6 +102,18 @@ def load_bev_frames(data_dir, limit=None):
 
 
 def main():
+    # Configure GPU memory growth
+    gpus = tf.config.list_physical_devices('GPU')
+    if gpus:
+        try:
+            for gpu in gpus:
+                tf.config.experimental.set_memory_growth(gpu, True)
+            print(f"GPUs available: {gpus}")
+        except RuntimeError as e:
+            print(f"GPU config error: {e}")
+    else:
+        print("WARNING: No GPU detected, running on CPU!")
+
     ap = argparse.ArgumentParser()
     ap.add_argument('--data', default='data_collected_town01')
     ap.add_argument('--out', default='VAE/bev_encoder_model')
@@ -96,8 +134,10 @@ def main():
     print(f"  train {len(train)} / val {len(val)}")
 
     model = VariationalAutoencoder()
-    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=LEARNING_RATE),
-                  loss=LOSS)
+    model.compile(
+        optimizer=tf.keras.optimizers.Adam(learning_rate=LEARNING_RATE, clipnorm=1.0),
+        loss=LOSS
+    )
 
     model.fit(train, train,
               batch_size=BATCH_SIZE,
