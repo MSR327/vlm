@@ -54,13 +54,14 @@ import tensorflow_probability as tfp
 tfd = tfp.distributions
 
 # Patch Encoder.call with numerical stability safeguard:
-# 1. During training: bound log-sigma to [-15.0, 2.0] (sigma in [3e-7, 7.4]) to prevent
-#    exp overflow to inf/NaN and keep noise on the same scale as latent features.
-# 2. At inference (training=False): return mu directly for deterministic, noise-free latents.
-def _stable_encoder_call(self, inputs, training=False):
+# Sparse BEV occupancy (mean ~0.0059) causes unconstrained dense sigma layer to produce
+# activations > 88, which makes tf.exp(sigma) overflow to inf -> NaN loss.
+# Clipping sigma log-space to [-15.0, 1.0] keeps sigma strictly bounded in [3e-7, 2.7],
+# matching standard VAE scale and ensuring both mu and sigma are fully built and saved.
+def _stable_encoder_call(self, inputs):
     x = self.conv1(inputs)
     x = self.conv2(x)
-    x = self.bn1(x, training=training)
+    x = self.bn1(x)
     x = self.conv3(x)
     x = self.conv4(x)
     x = self.flatten(x)
@@ -68,14 +69,12 @@ def _stable_encoder_call(self, inputs, training=False):
 
     mu = self.mu(x)
 
-    if training:
-        clipped_sigma_log = tf.clip_by_value(self.sigma(x), -15.0, 2.0)
-        sigma = tf.exp(clipped_sigma_log)
-        z = mu + sigma * tfd.Normal(0.0, 1.0).sample(tf.shape(mu))
-        self.kl = tf.reduce_sum(sigma**2 + mu**2 - tf.math.log(sigma + 1e-8) - 0.5)
-        return z
-    else:
-        return mu
+    clipped_sigma_log = tf.clip_by_value(self.sigma(x), -15.0, 1.0)
+    sigma = tf.exp(clipped_sigma_log)
+    z = mu + sigma * tfd.Normal(0.0, 1.0).sample(tf.shape(mu))
+    self.kl = tf.reduce_sum(sigma**2 + mu**2 - tf.math.log(sigma + 1e-8) - 0.5)
+
+    return z
 
 Encoder.call = _stable_encoder_call
 
