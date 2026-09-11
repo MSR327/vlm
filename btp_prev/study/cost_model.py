@@ -66,10 +66,10 @@ def mlp_cost(in_dim, hidden=(500, 300, 100), out_dim=2):
 
 
 RUNGS = {
-    1:    dict(name='1cam',       n_cam=1, lidar=False),
-    2:    dict(name='3cam',       n_cam=3, lidar=False),
-    3:    dict(name='1cam_lidar', n_cam=1, lidar=True),
-    '3b': dict(name='3cam_lidar', n_cam=3, lidar=True),
+    1:    dict(name='1cam',       n_cam=1, lidar=False, pooled=False),
+    2:    dict(name='3cam',       n_cam=3, lidar=False, pooled=False),
+    3:    dict(name='1cam_lidar', n_cam=1, lidar=True,  pooled=False),
+    '3b': dict(name='3cam_lidar_pooled', n_cam=3, lidar=True, pooled=True),
 }
 
 
@@ -77,7 +77,10 @@ def config_cost(rung):
     cfg = RUNGS[rung]
     enc = vae_encoder_cost()
     n_streams = cfg['n_cam'] + (1 if cfg['lidar'] else 0)
-    obs_dim = LATENT_DIM * n_streams + NAV_DIM
+    if cfg.get('pooled', False):
+        obs_dim = LATENT_DIM * (1 if cfg['n_cam'] > 0 else 0) + (LATENT_DIM if cfg['lidar'] else 0) + NAV_DIM
+    else:
+        obs_dim = LATENT_DIM * n_streams + NAV_DIM
 
     # Camera VAE weights are SHARED across views -> counted once.
     # A LiDAR BEV encoder is a SEPARATE set of weights -> counted again.

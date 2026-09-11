@@ -94,7 +94,12 @@ class EncodeStateVAE:
         # One batched forward pass rather than N calls: cheaper, and latency
         # is one of the reported metrics. Safe because BatchNorm runs with
         # frozen moving statistics in inference mode.
-        latents = np.asarray(self.cam_encoder(batch)).reshape(-1)
+        cam_latents = np.asarray(self.cam_encoder(batch))
+        if getattr(self.p, 'POOL_CAMERAS', False) and cam_latents.ndim == 2 and cam_latents.shape[0] > 1:
+            # Channel-wise max-pooling across the surround views -> (95,)
+            latents = np.max(cam_latents, axis=0)
+        else:
+            latents = cam_latents.reshape(-1)
 
         parts = [latents]
 

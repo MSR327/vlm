@@ -185,11 +185,14 @@ To isolate the empirical trade-offs between perceptual coverage, representation 
     \begin{equation}
         \mathbf{s}_t = [\mathbf{z}_{\text{cam}} \in \mathbb{R}^{95} \,\|\, \mathbf{z}_{\text{lidar}} \in \mathbb{R}^{95} \,\|\, \mathbf{x}_{\text{nav}} \in \mathbb{R}^5] \in \mathbb{R}^{195}
     \end{equation}
-    \item \textbf{Rung 3b: Panoramic Multimodal Fusion (385-dim):} To establish an exact dimension-matched control against the Rung 2a visual baseline ($d=385$), Rung 3b integrates the three forward surround cameras ($0^\circ, \pm 60^\circ$) with the 2D BEV LiDAR grid:
+    \item \textbf{Rung 3b: Panoramic Multimodal Fusion with Max-Pooling (195-dim):} To prevent state dimensionality bloat while capturing full $210^\circ$ lateral context, the three forward camera views are channel-wise max-pooled into a single 95-dimensional panoramic visual token:
     \begin{equation}
-        \mathbf{s}_t = [\mathbf{z}_{\text{front}} \,\|\, \mathbf{z}_{\text{left}} \,\|\, \mathbf{z}_{\text{right}} \,\|\, \mathbf{z}_{\text{lidar}} \,\|\, \mathbf{x}_{\text{nav}}] \in \mathbb{R}^{385}
+        \mathbf{z}_{\text{panoramic}} = \max(\mathbf{z}_{\text{front}}, \, \mathbf{z}_{\text{left}}, \, \mathbf{z}_{\text{right}}) \in \mathbb{R}^{95}
     \end{equation}
-    This formulation isolates whether cross-modal geometric complementarity outperforms purely visual redundancy under an identical policy state representation capacity ($d=385$).
+    \begin{equation}
+        \mathbf{s}_t = [\mathbf{z}_{\text{panoramic}} \in \mathbb{R}^{95} \,\|\, \mathbf{z}_{\text{lidar}} \in \mathbb{R}^{95} \,\|\, \mathbf{x}_{\text{nav}} \in \mathbb{R}^5] \in \mathbb{R}^{195}
+    \end{equation}
+    This formulation matches Rung 3's compact 195-dimensional policy space while maintaining panoramic peripheral vision and metric LiDAR depth.
 \end{enumerate}
 
 \subsection{2D Bird's-Eye-View (BEV) LiDAR Projection Geometry}
@@ -363,18 +366,18 @@ Table~\ref{tab:master_table} summarizes the structural parameters, memory footpr
 \resizebox{\textwidth}{!}{
 \begin{tabular}{lccccc}
 \toprule
-\textbf{Empirical Metric} & \textbf{Rung 1 (Monocular)} & \textbf{Rung 2a (4-Cam Surround)} & \textbf{Rung 2b (Pruned 3-Cam)} & \textbf{Rung 3 (1-Cam + LiDAR)} & \textbf{Rung 3b (3-Cam + LiDAR)} \\
+\textbf{Empirical Metric} & \textbf{Rung 1 (Monocular)} & \textbf{Rung 2a (4-Cam Surround)} & \textbf{Rung 2b (Pruned 3-Cam)} & \textbf{Rung 3 (1-Cam + LiDAR)} & \textbf{Rung 3b (3-Cam Pooled + LiDAR)} \\
 \midrule
 \textbf{Sensory Rig} & 1 Front Cam ($125^\circ$) & 4 Cams ($0^\circ, \pm 90^\circ, 180^\circ$) & 3 Cams ($0^\circ, \pm 60^\circ$) & 1 Front Cam + 1 Top LiDAR & 3 Cams ($0^\circ, \pm 60^\circ$) + 1 Top LiDAR \\
-\textbf{Perceptual Modalities} & Semantic RGB & Semantic RGB & Semantic RGB & Semantic RGB + 2D BEV Depth & Semantic RGB + 2D BEV Depth \\
-\textbf{Observation Dim ($\mathbf{s}_t$)} & \textbf{100} & \textbf{385} & \textbf{290} & \textbf{195} & \textbf{385} \\
-\textbf{Encoder Architecture} & Single Frozen VAE & Shared Frozen VAE & Shared Frozen VAE & Dual Frozen VAEs & Dual Frozen VAEs \\
+\textbf{Perceptual Modalities} & Semantic RGB & Semantic RGB & Semantic RGB & Semantic RGB + 2D BEV Depth & Pooled Semantic RGB + 2D BEV Depth \\
+\textbf{Observation Dim ($\mathbf{s}_t$)} & \textbf{100} & \textbf{385} & \textbf{290} & \textbf{195} & \textbf{195} \\
+\textbf{Encoder Architecture} & Single Frozen VAE & Shared Frozen VAE & Shared Frozen VAE & Dual Frozen VAEs & Dual Frozen VAEs (Max-Pooled) \\
 \textbf{Encoder Parameters} & 13,749,662 & 13,749,662 & 13,749,662 & 27,499,324 & 27,499,324 \\
-\textbf{Actor Policy Parameters} & 231,102 & 373,602 & 326,102 & 278,602 & 373,602 \\
-\textbf{Critic Policy Parameters} & 231,001 & 373,501 & 326,001 & 278,501 & 373,501 \\
-\textbf{Total Model Parameters} & \textbf{14,211,765} & \textbf{14,496,765} & \textbf{14,401,765} & \textbf{28,056,427} & \textbf{28,246,427} \\
-\textbf{Inference Memory (FP32)} & \textbf{53.33 MB} & \textbf{53.88 MB} & \textbf{53.69 MB} & \textbf{105.96 MB} & \textbf{106.33 MB} \\
-\textbf{Inference MACs (FLOPs)} & \textbf{74.20M} & \textbf{296.26M} & \textbf{222.25M} & \textbf{148.23M} & \textbf{296.27M} \\
+\textbf{Actor Policy Parameters} & 231,102 & 373,602 & 326,102 & 278,602 & 278,602 \\
+\textbf{Critic Policy Parameters} & 231,001 & 373,501 & 326,001 & 278,501 & 278,501 \\
+\textbf{Total Model Parameters} & \textbf{14,211,765} & \textbf{14,496,765} & \textbf{14,401,765} & \textbf{28,056,427} & \textbf{28,056,427} \\
+\textbf{Inference Memory (FP32)} & \textbf{53.33 MB} & \textbf{53.88 MB} & \textbf{53.69 MB} & \textbf{105.96 MB} & \textbf{105.96 MB} \\
+\textbf{Inference MACs (FLOPs)} & \textbf{74.20M} & \textbf{296.26M} & \textbf{222.25M} & \textbf{148.23M} & \textbf{296.17M} \\
 \midrule
 \textbf{Town01 Training Timesteps} & $\sim 105,000$ & $\sim 63,000$ & $\sim 12,205$ & Active / In Progress & Configured \\
 \textbf{Town01 Route Completion} & \textbf{39.0\% ($195\text{ m}$)} & \textbf{3.4\% ($17\text{ m}$)} & \textbf{25.0\% ($125\text{ m}$)} & Converging & Target Control \\
