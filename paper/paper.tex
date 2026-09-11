@@ -105,61 +105,124 @@ We formulate the closed-loop autonomous driving problem as an episodic Partially
 
 \begin{figure*}[!t]
 \centering
-\resizebox{0.95\textwidth}{!}{
-\begin{tikzpicture}[scale=0.9, every node/.style={transform shape}]
-% Subfigure 1: Rung 1
+\resizebox{0.98\textwidth}{!}{
+\begin{tikzpicture}[
+    car/.style={draw=black!70, fill=gray!20, rounded corners=4pt, line width=1pt},
+    wheel/.style={draw=black!80, fill=black!85, rounded corners=1pt},
+    sensorlabel/.style={font=\scriptsize\bfseries, align=center},
+    subcap/.style={font=\small, align=center}
+]
+
+% ==================== (a) Rung 1: Monocular ====================
 \begin{scope}[shift={(0,0)}]
-    \draw[thick, rounded corners=3pt, fill=blue!10] (0,0) rectangle (1.4, 2.2);
-    \node at (0.7, 1.1) {\textbf{Ego Car}};
-    % Front Cam
-    \draw[-{Stealth[length=2.5mm]}, line width=1.5pt, blue!80!black] (0.7, 2.2) -- (0.7, 3.4) node[above, align=center] {\textbf{Front Cam}\\$0^\circ, 125^\circ\text{ FOV}$};
-    \draw[dashed, blue!60] (0.7, 2.2) -- (-0.2, 3.2);
-    \draw[dashed, blue!60] (0.7, 2.2) -- (1.6, 3.2);
-    \node[below, align=center] at (0.7, -0.2) {\textbf{(a) Rung 1: Monocular Baseline}\\\small $\mathbf{s}_t \in \mathbb{R}^{100}$ ($95\text{ cam} + 5\text{ nav}$)};
+    % FOV Cone (125 deg)
+    \fill[blue!20, opacity=0.6] (0.7, 1.8) -- ++(62.5:2.2) arc (62.5:117.5:2.2) -- cycle;
+    \draw[blue!70!black, thick, dashed] (0.7, 1.8) -- ++(62.5:2.2);
+    \draw[blue!70!black, thick, dashed] (0.7, 1.8) -- ++(117.5:2.2);
+    \draw[blue!80!black, -{Stealth[length=2.5mm]}, line width=1.5pt] (0.7, 1.8) -- (0.7, 3.4);
+    \node[sensorlabel, text=blue!80!black] at (0.7, 3.7) {Front Cam\\$0^\circ,\, 125^\circ\text{ FOV}$};
+    
+    % Wheels
+    \fill[wheel] (-0.05, 0.2) rectangle (0.1, 0.6);
+    \fill[wheel] (1.3, 0.2) rectangle (1.45, 0.6);
+    \fill[wheel] (-0.05, 1.4) rectangle (0.1, 1.8);
+    \fill[wheel] (1.3, 1.4) rectangle (1.45, 1.8);
+    % Car Body
+    \draw[car] (0,0) rectangle (1.4, 2.0);
+    % Windshield
+    \draw[fill=cyan!30, draw=black!50] (0.15, 1.3) -- (1.25, 1.3) -- (1.1, 1.6) -- (0.3, 1.6) -- cycle;
+    \draw[fill=cyan!20, draw=black!40] (0.2, 0.3) rectangle (1.2, 0.5);
+    \node[font=\footnotesize\bfseries, text=black!80] at (0.7, 0.9) {Ego};
+
+    \node[subcap] at (0.7, -1.4) {\textbf{(a) Rung 1: Monocular}\\\footnotesize $\mathbf{s}_t \in \mathbb{R}^{100}$ ($95\text{c} + 5\text{n}$)};
 \end{scope}
 
-% Subfigure 2: Rung 2a
-\begin{scope}[shift={(4.8,0)}]
-    \draw[thick, rounded corners=3pt, fill=red!10] (0,0) rectangle (1.4, 2.2);
-    \node at (0.7, 1.1) {\textbf{Ego Car}};
-    % Front Cam
-    \draw[-{Stealth[length=2.5mm]}, line width=1.2pt, red!80!black] (0.7, 2.2) -- (0.7, 3.3) node[above, align=center] {\textbf{Front}\\$0^\circ$};
-    % Left Cam
-    \draw[-{Stealth[length=2.5mm]}, line width=1.2pt, red!80!black] (0.0, 1.1) -- (-1.0, 1.1) node[left, align=center] {\textbf{Left}\\$-90^\circ$};
-    % Right Cam
-    \draw[-{Stealth[length=2.5mm]}, line width=1.2pt, red!80!black] (1.4, 1.1) -- (2.4, 1.1) node[right, align=center] {\textbf{Right}\\$+90^\circ$};
-    % Rear Cam
-    \draw[-{Stealth[length=2.5mm]}, line width=1.2pt, red!80!black] (0.7, 0.0) -- (0.7, -1.0) node[below, align=center] {\textbf{Rear}\\$180^\circ$};
-    \node[below, align=center] at (0.7, -1.4) {\textbf{(b) Rung 2a: Naive 4-Cam Surround}\\\small $\mathbf{s}_t \in \mathbb{R}^{385}$ ($380\text{ cam} + 5\text{ nav}$)};
+% ==================== (b) Rung 2a: 4-Cam Surround ====================
+\begin{scope}[shift={(5.2,0)}]
+    % Front Cam FOV
+    \fill[red!20, opacity=0.5] (0.7, 1.8) -- ++(62.5:1.6) arc (62.5:117.5:1.6) -- cycle;
+    \draw[red!80!black, -{Stealth[length=2mm]}, line width=1.2pt] (0.7, 1.8) -- (0.7, 3.1) node[above, sensorlabel, text=red!80!black] {Front\\$0^\circ$};
+    % Left Cam FOV
+    \fill[red!20, opacity=0.5] (0.1, 1.0) -- ++(135:1.4) arc (135:225:1.4) -- cycle;
+    \draw[red!80!black, -{Stealth[length=2mm]}, line width=1.2pt] (0.1, 1.0) -- (-1.1, 1.0) node[left, sensorlabel, text=red!80!black] {Left\\$-90^\circ$};
+    % Right Cam FOV
+    \fill[red!20, opacity=0.5] (1.3, 1.0) -- ++(45:1.4) arc (45:-45:1.4) -- cycle;
+    \draw[red!80!black, -{Stealth[length=2mm]}, line width=1.2pt] (1.3, 1.0) -- (2.5, 1.0) node[right, sensorlabel, text=red!80!black] {Right\\$+90^\circ$};
+    % Rear Cam FOV
+    \fill[red!20, opacity=0.5] (0.7, 0.2) -- ++(225:1.0) arc (225:315:1.0) -- cycle;
+    \draw[red!80!black, -{Stealth[length=2mm]}, line width=1.2pt] (0.7, 0.2) -- (0.7, -0.6) node[below, font=\scriptsize\bfseries, text=red!80!black] {Rear $180^\circ$};
+
+    % Wheels
+    \fill[wheel] (-0.05, 0.2) rectangle (0.1, 0.6);
+    \fill[wheel] (1.3, 0.2) rectangle (1.45, 0.6);
+    \fill[wheel] (-0.05, 1.4) rectangle (0.1, 1.8);
+    \fill[wheel] (1.3, 1.4) rectangle (1.45, 1.8);
+    % Car Body
+    \draw[car] (0,0) rectangle (1.4, 2.0);
+    % Windshield
+    \draw[fill=cyan!30, draw=black!50] (0.15, 1.3) -- (1.25, 1.3) -- (1.1, 1.6) -- (0.3, 1.6) -- cycle;
+    \node[font=\footnotesize\bfseries, text=black!80] at (0.7, 0.9) {Ego};
+
+    \node[subcap] at (0.7, -1.4) {\textbf{(b) Rung 2a: 4-Cam}\\\footnotesize $\mathbf{s}_t \in \mathbb{R}^{385}$ ($380\text{c} + 5\text{n}$)};
 \end{scope}
 
-% Subfigure 3: Rung 2b
+% ==================== (c) Rung 2b: Pruned 3-Cam ====================
 \begin{scope}[shift={(10.4,0)}]
-    \draw[thick, rounded corners=3pt, fill=green!10] (0,0) rectangle (1.4, 2.2);
-    \node at (0.7, 1.1) {\textbf{Ego Car}};
-    % Front Cam
-    \draw[-{Stealth[length=2.5mm]}, line width=1.2pt, green!60!black] (0.7, 2.2) -- (0.7, 3.3) node[above, align=center] {\textbf{Front}\\$0^\circ, 125^\circ$};
-    % Left Angled
-    \draw[-{Stealth[length=2.5mm]}, line width=1.2pt, green!60!black] (0.0, 2.0) -- (-0.9, 2.8) node[above left, align=center] {\textbf{L-Angle}\\$-60^\circ$};
-    % Right Angled
-    \draw[-{Stealth[length=2.5mm]}, line width=1.2pt, green!60!black] (1.4, 2.0) -- (2.3, 2.8) node[above right, align=center] {\textbf{R-Angle}\\$+60^\circ$};
-    \node[below, align=center] at (0.7, -0.2) {\textbf{(c) Rung 2b: Pruned 3-Cam Rig}\\\small $\mathbf{s}_t \in \mathbb{R}^{290}$ ($285\text{ cam} + 5\text{ nav}$)};
+    % Front Cam FOV
+    \fill[green!20, opacity=0.5] (0.7, 1.8) -- ++(62.5:1.8) arc (62.5:117.5:1.8) -- cycle;
+    \draw[green!60!black, -{Stealth[length=2mm]}, line width=1.2pt] (0.7, 1.8) -- (0.7, 3.2) node[above, sensorlabel, text=green!60!black] {Front\\$0^\circ, 125^\circ$};
+    % Left Angled Cam FOV (-60 deg)
+    \fill[green!20, opacity=0.4] (0.2, 1.7) -- ++(95:1.6) arc (95:185:1.6) -- cycle;
+    \draw[green!60!black, -{Stealth[length=2mm]}, line width=1.2pt] (0.2, 1.7) -- (-0.8, 2.6) node[above left, sensorlabel, text=green!60!black] {L-Angle\\$-60^\circ$};
+    % Right Angled Cam FOV (+60 deg)
+    \fill[green!20, opacity=0.4] (1.2, 1.7) -- ++(-5:1.6) arc (-5:85:1.6) -- cycle;
+    \draw[green!60!black, -{Stealth[length=2mm]}, line width=1.2pt] (1.2, 1.7) -- (2.2, 2.6) node[above right, sensorlabel, text=green!60!black] {R-Angle\\$+60^\circ$};
+
+    % Wheels
+    \fill[wheel] (-0.05, 0.2) rectangle (0.1, 0.6);
+    \fill[wheel] (1.3, 0.2) rectangle (1.45, 0.6);
+    \fill[wheel] (-0.05, 1.4) rectangle (0.1, 1.8);
+    \fill[wheel] (1.3, 1.4) rectangle (1.45, 1.8);
+    % Car Body
+    \draw[car] (0,0) rectangle (1.4, 2.0);
+    % Windshield
+    \draw[fill=cyan!30, draw=black!50] (0.15, 1.3) -- (1.25, 1.3) -- (1.1, 1.6) -- (0.3, 1.6) -- cycle;
+    \node[font=\footnotesize\bfseries, text=black!80] at (0.7, 0.9) {Ego};
+
+    \node[subcap] at (0.7, -1.4) {\textbf{(c) Rung 2b: Pruned 3-Cam}\\\footnotesize $\mathbf{s}_t \in \mathbb{R}^{290}$ ($285\text{c} + 5\text{n}$)};
 \end{scope}
 
-% Subfigure 4: Rung 3
+% ==================== (d) Rung 3: Multimodal ====================
 \begin{scope}[shift={(15.6,0)}]
-    \draw[thick, rounded corners=3pt, fill=orange!10] (0,0) rectangle (1.4, 2.2);
-    \node at (0.7, 1.1) {\textbf{Ego Car}};
-    % Front Cam
-    \draw[-{Stealth[length=2.5mm]}, line width=1.2pt, blue!80!black] (0.7, 2.2) -- (0.7, 3.3) node[above, align=center] {\textbf{Front Cam}\\$0^\circ$};
-    % Top LiDAR
-    \fill[orange!80!black] (0.7, 1.1) circle (3pt);
-    \draw[-{Stealth[length=2mm]}, thick, orange!80!black] (0.7, 1.1) -- (0.7, 0.4);
-    % BEV Grid representation
-    \draw[thick, dashed, orange!80!black] (-0.6, -0.6) rectangle (2.0, 2.8);
-    \node[orange!90!black, font=\scriptsize] at (0.7, 2.5) {BEV: $[-15\text{m}, +35\text{m}]$};
-    \node[below, align=center] at (0.7, -0.8) {\textbf{(d) Rung 3: Cam + BEV LiDAR}\\\small $\mathbf{s}_t \in \mathbb{R}^{195}$ ($95\text{c} + 95\text{L} + 5\text{n}$)};
+    % Front Cam FOV
+    \fill[blue!20, opacity=0.5] (0.7, 1.8) -- ++(62.5:1.6) arc (62.5:117.5:1.6) -- cycle;
+    \draw[blue!80!black, -{Stealth[length=2mm]}, line width=1.2pt] (0.7, 1.8) -- (0.7, 3.2) node[above, sensorlabel, text=blue!80!black] {Front Cam\\$0^\circ$};
+
+    % BEV LiDAR Box
+    \draw[thick, dashed, orange!80!black, fill=orange!10, fill opacity=0.3] (-0.8, -0.6) rectangle (2.2, 2.7);
+    % Range rings
+    \draw[orange!60!black, densely dotted] (0.7, 1.0) circle (0.8);
+    \draw[orange!60!black, densely dotted] (0.7, 1.0) circle (1.4);
+    \node[orange!90!black, font=\scriptsize\bfseries, fill=white, inner sep=1pt, rounded corners=1pt] at (0.7, 2.5) {BEV: $[-15\text{m}, +35\text{m}]$};
+
+    % Wheels
+    \fill[wheel] (-0.05, 0.2) rectangle (0.1, 0.6);
+    \fill[wheel] (1.3, 0.2) rectangle (1.45, 0.6);
+    \fill[wheel] (-0.05, 1.4) rectangle (0.1, 1.8);
+    \fill[wheel] (1.3, 1.4) rectangle (1.45, 1.8);
+    % Car Body
+    \draw[car] (0,0) rectangle (1.4, 2.0);
+    % Windshield
+    \draw[fill=cyan!30, draw=black!50] (0.15, 1.3) -- (1.25, 1.3) -- (1.1, 1.6) -- (0.3, 1.6) -- cycle;
+    % LiDAR Puck
+    \fill[orange!90!black] (0.7, 1.0) circle (3.5pt);
+    \draw[black, thick] (0.7, 1.0) circle (3.5pt);
+    \node[font=\tiny\bfseries, text=white] at (0.7, 1.0) {L};
+    \node[font=\footnotesize\bfseries, text=black!80] at (0.7, 0.5) {Ego};
+
+    \node[subcap] at (0.7, -1.4) {\textbf{(d) Rung 3: Cam + LiDAR}\\\footnotesize $\mathbf{s}_t \in \mathbb{R}^{195}$ ($95\text{c} + 95\text{L} + 5\text{n}$)};
 \end{scope}
+
 \end{tikzpicture}
 }
 \caption{Architectural diagrams of the four sensor ladder rigs evaluated in CARLA. (a) Rung 1: Monocular front baseline. (b) Rung 2a: Naive 4-camera surround rig. (c) Rung 2b: Pruned 3-camera forward rig ($210^\circ$ panoramic forward arc). (d) Rung 3: Orthogonal multimodal fusion of front camera and 2D BEV LiDAR.}
@@ -191,29 +254,63 @@ To isolate the empirical trade-offs between perceptual coverage, representation 
 
 \begin{figure}[!t]
 \centering
-\resizebox{0.85\columnwidth}{!}{
-\begin{tikzpicture}[scale=0.85]
-    % Outer BEV Box
-    \draw[thick, fill=gray!5] (-2.5, -1.5) rectangle (2.5, 3.5);
-    % Grid lines
-    \draw[step=0.5, gray!25, very thin] (-2.5, -1.5) grid (2.5, 3.5);
-    
-    % Axis indicators
-    \draw[-{Stealth[length=2mm]}, thick] (0,0) -- (0, 3.8) node[above] {$+x$ (Front, $+35\text{ m}$) [Row 0]};
-    \draw[-{Stealth[length=2mm]}, thick] (0,0) -- (2.8, 0) node[right] {$+y$ ($+25\text{ m}$) [Col 159]};
-    \draw[-{Stealth[length=2mm]}, thick] (0,0) -- (-2.8, 0) node[left] {$-y$ ($-25\text{ m}$) [Col 0]};
-    \draw[-{Stealth[length=2mm]}, thick] (0,0) -- (0, -1.8) node[below] {$-x$ (Rear, $-15\text{ m}$) [Row 79]};
-    
-    % Ego vehicle
-    \draw[thick, fill=blue!30, rounded corners=2pt] (-0.3, -0.4) rectangle (0.3, 0.4);
-    \node[font=\scriptsize] at (0, 0) {\textbf{Ego}};
-    
-    % Dimension callouts
-    \draw[decorate, decoration={brace, amplitude=5pt}, thick] (-2.5, 3.5) -- (2.5, 3.5) node[midway, above=6pt, font=\scriptsize] {Width: $50\text{ m}$ ($160\text{ px}, 0.3125\text{m/px}$)};
-    \draw[decorate, decoration={brace, amplitude=5pt}, thick] (2.5, 3.5) -- (2.5, -1.5) node[midway, right=6pt, font=\scriptsize, align=left] {Length: $50\text{ m}$\\($80\text{ px}, 0.625\text{m/px}$)};
+\resizebox{0.92\columnwidth}{!}{
+\begin{tikzpicture}[
+    scale=0.9,
+    font=\small,
+    axis/.style={-{Stealth[length=2.5mm]}, line width=1.1pt, black!85},
+    gridbox/.style={draw=black!70, fill=blue!2!gray!4, line width=1pt},
+    point/.style={fill=orange!80!black, circle, inner sep=1pt},
+    dimlabel/.style={font=\scriptsize, text=black!70, align=center},
+    idxbadge/.style={font=\tiny\ttfamily, fill=gray!20, draw=gray!50, rounded corners=2pt, inner sep=2pt}
+]
+    % Outer BEV Box (50m x 50m mapped to width 4.8, height 5.0)
+    % x in [-2.4, 2.4] -> 50m width (y_world in [-25m, +25m])
+    % y in [-1.5, 3.5] -> 50m length (x_world in [-15m, +35m])
+    \draw[gridbox] (-2.4, -1.5) rectangle (2.4, 3.5);
+    \draw[step=0.6, gray!30, thin] (-2.4, -1.5) grid (2.4, 3.5);
+
+    % Matrix Corner Indices
+    \node[idxbadge, anchor=north west] at (-2.35, 3.45) {[Row 0, Col 0]};
+    \node[idxbadge, anchor=north east] at (2.35, 3.45) {[Row 0, Col 159]};
+    \node[idxbadge, anchor=south west] at (-2.35, -1.45) {[Row 79, Col 0]};
+    \node[idxbadge, anchor=south east] at (2.35, -1.45) {[Row 79, Col 159]};
+
+    % Road curb points (simulated LiDAR returns)
+    \foreach \y in {-1.2, -0.6, 0.0, 0.6, 1.2, 1.8, 2.4, 3.0} {
+        \fill[orange!80!black] (-0.85, \y) circle (1.2pt);
+        \fill[orange!80!black] (0.85, \y) circle (1.2pt);
+    }
+    % Leading obstacle returns
+    \fill[red!80!black] (-0.1, 2.2) rectangle (0.3, 2.6);
+    \node[font=\tiny\bfseries, text=red!80!black, above] at (0.1, 2.6) {Obstacle};
+
+    % Coordinate axes (Forward = +x, Right = +y)
+    \draw[axis, blue!80!black] (0, 0) -- (0, 3.8) node[above, font=\footnotesize\bfseries, text=blue!90!black] {$+x$ (Forward, $+35\text{ m}$)};
+    \draw[axis, black!70] (0, 0) -- (0, -1.1);
+    \node[font=\scriptsize\bfseries, text=black!70, right=2pt] at (0, -0.85) {$-x$ ($-15\text{ m}$)};
+    \draw[axis, black!70] (0, 0) -- (2.7, 0) node[right, font=\footnotesize\bfseries, text=black!70] {$+y$ ($+25\text{ m}$)};
+    \draw[axis, black!70] (0, 0) -- (-2.7, 0) node[left, font=\footnotesize\bfseries, text=black!70] {$-y$ ($-25\text{ m}$)};
+
+    % Ego Vehicle at Origin
+    \draw[draw=blue!80!black, fill=blue!20, rounded corners=2pt, line width=1pt] (-0.25, -0.35) rectangle (0.25, 0.35);
+    \draw[-{Stealth[length=1.5mm]}, blue!90!black, line width=1pt] (0, 0) -- (0, 0.5);
+    \node[font=\scriptsize\bfseries, text=blue!90!black] at (0, -0.15) {Ego};
+
+    % Physical Metric Dimensions (Braces placed cleanly on outside edges)
+    % Length Dimension (Left side)
+    \draw[decorate, decoration={brace, amplitude=5pt, mirror}, thick, black!60] 
+        (-3.1, -1.5) -- (-3.1, 3.5) 
+        node[midway, left=7pt, dimlabel] {Length: $50\text{ m}$\\($80\text{ bins}, 0.625\text{ m/px}$)};
+
+    % Width Dimension (Bottom side)
+    \draw[decorate, decoration={brace, amplitude=5pt, mirror}, thick, black!60] 
+        (-2.4, -1.8) -- (2.4, -1.8) 
+        node[midway, below=5pt, dimlabel] {Width: $50\text{ m}$ ($160\text{ bins}, 0.3125\text{ m/px}$)};
+
 \end{tikzpicture}
 }
-\caption{Geometric coordinate mapping of the 2D Bird's-Eye-View (BEV) LiDAR projection grid. Raw point clouds are discretely binned into an asymmetric $80 \times 160$ matrix centered around the ego-vehicle.}
+\caption{Geometric coordinate mapping and binning discretization of the 2D Bird's-Eye-View (BEV) LiDAR projection raster ($80 \times 160$ channels) centered egocentrically around the vehicle.}
 \label{fig:bev_geometry}
 \end{figure}
 
@@ -509,27 +606,67 @@ Fig.~\ref{fig:route_comp} and Fig.~\ref{fig:reward_curve} plot the closed-loop t
 
 \begin{figure}[!t]
 \centering
-\resizebox{0.95\columnwidth}{!}{
-\begin{tikzpicture}[scale=0.85]
-    % Route trajectory line
-    \draw[ultra thick, black!70] (0,0) -- (4.2,0);
-    \draw[ultra thick, black!70] (4.2,0) -- (4.2,-2.2);
+\resizebox{0.98\columnwidth}{!}{
+\begin{tikzpicture}[
+    font=\small,
+    road/.style={fill=gray!25, draw=gray!50, line width=1pt},
+    curb/.style={draw=gray!70, line width=2pt},
+    lane/.style={draw=white, dashed, line width=1pt},
+    badge/.style={font=\tiny\bfseries, rounded corners=2pt, inner sep=2.5pt, align=left}
+]
+    % Background Asphalt Road: Straight section [0 to 4.2] then 90-degree right turn [to 4.2, -2.8]
+    \draw[fill=gray!20, draw=gray!60, line width=1.2pt] 
+        (-0.2, -0.6) -- (3.8, -0.6) arc (-90:0:0.6) -- (4.4, -2.8) -- 
+        (5.6, -2.8) -- (5.6, 0.6) -- (-0.2, 0.6) -- cycle;
     
-    % Checkpoints
-    \fill[black] (0,0) circle (3pt) node[above] {\textbf{Spawn 12}};
-    \node[midway, above, font=\scriptsize] at (2.1,0) {$190\text{ m}$ Straightaway};
-    
-    \fill[red] (4.2,0) circle (4pt) node[above right] {\textbf{Meter 190} ($90^\circ$ Turn)};
-    \fill[black] (4.2,-2.2) circle (3pt) node[below] {\textbf{500m Goal}};
-    
-    % Annotations
-    \draw[-{Stealth[length=2mm]}, thick, blue] (4.2,0) -- (5.2, 0.4) node[right, align=left, font=\scriptsize] {\textbf{Rung 1: Curb Collision}\\Lane leaves $125^\circ$ FOV};
-    \draw[-{Stealth[length=2mm]}, thick, red] (1.2,0) -- (1.2, -1.0) node[below, align=left, font=\scriptsize] {\textbf{Rung 2a: Straight-Line Trap}\\Stalls at $17\text{ m}$ (optic conflict)};
-    \draw[-{Stealth[length=2mm]}, thick, green!60!black] (4.2,-0.8) -- (5.2, -0.8) node[right, align=left, font=\scriptsize] {\textbf{Rung 2b: Turn Entry}\\Advance $\pm 60^\circ$ preview};
-    \draw[-{Stealth[length=2mm]}, thick, orange!90!black] (1.8,0) -- (1.8, 0.9) node[above, align=left, font=\scriptsize] {\textbf{Rung 3: Heading Drift}\\Drifts $3.0\text{m}$ at Step 70};
+    % Sidewalk / Curb highlight at outside corner (Meter 190 collision zone)
+    \draw[line width=3.5pt, red!70!black] (3.8, 0.6) -- (5.6, 0.6) -- (5.6, -0.8);
+    \node[font=\tiny\bfseries, text=red!80!black, anchor=west] at (5.7, 0.1) {Outside Curb};
+
+    % Lane dividers (dashed center line)
+    \draw[lane] (0.0, 0.0) -- (4.0, 0.0);
+    \draw[lane] (4.0, 0.0) arc (90:0:1.0) -- (5.0, -2.6);
+
+    % Distance checkpoints along straightaway
+    \node[font=\tiny\bfseries, text=black!60, above] at (0.2, 0.05) {$0\text{m}$};
+    \node[font=\tiny\bfseries, text=black!60, above] at (2.0, 0.05) {$100\text{m}$};
+    \node[font=\tiny\bfseries, text=black!60, above] at (3.7, 0.05) {$190\text{m}$};
+
+    % Spawn point marker
+    \fill[black] (0.0, 0.0) circle (3pt);
+    \node[badge, fill=white, draw=black!70, anchor=east] at (-0.25, 0.0) {\textbf{Spawn 12}\\Start};
+
+    % ==================== TRAJECTORIES ====================
+    % 1. Rung 2a: Red stall at 17m
+    \draw[red!80!black, line width=2pt, -{Stealth[length=2mm]}] (0.0, -0.15) -- (0.5, -0.15);
+    \fill[red!80!black] (0.5, -0.15) circle (2.5pt);
+    \draw[-Stealth, red!80!black, thin] (0.5, -0.15) -- (0.8, -1.0);
+    \node[badge, fill=red!10, draw=red!70, text=red!80!black, anchor=north] at (0.8, -1.05) {\textbf{Rung 2a: Optic Trap}\\Standstill at $17\text{ m}$};
+
+    % 2. Rung 3: Orange heading drift at 30m
+    \draw[orange!90!black, line width=1.8pt, -{Stealth[length=2mm]}] (0.0, 0.15) -- (0.9, 0.15) -- (1.3, 0.55);
+    \fill[orange!90!black] (1.3, 0.55) circle (2.5pt);
+    \draw[-Stealth, orange!90!black, thin] (1.3, 0.55) -- (1.3, 1.15);
+    \node[badge, fill=orange!10, draw=orange!70, text=orange!90!black, anchor=south] at (1.3, 1.2) {\textbf{Rung 3: Lateral Drift ($28\text{ m}$)}\\Heading offset $>3.5^\circ$ exits lane};
+
+    % 3. Rung 1: Blue trajectory shoots straight into curb at 195m
+    \draw[blue!80!black, line width=1.8pt, dashed] (0.0, 0.0) -- (4.0, 0.0) -- (5.0, 0.0);
+    \node[text=red, font=\bfseries] at (5.0, 0.0) {\Large $\times$};
+    \draw[-Stealth, blue!80!black, thin] (5.0, 0.0) -- (4.5, 1.15);
+    \node[badge, fill=blue!10, draw=blue!70, text=blue!90!black, anchor=south] at (4.5, 1.2) {\textbf{Meter 190: Rung 1 Curb Collision ($195\text{ m}$)}\\Single Cam blind to $90^\circ$ curve tangent};
+
+    % 4. Rung 2b: Green trajectory cleanly navigates curve
+    \draw[green!60!black, line width=2pt, -{Stealth[length=2.5mm]}] (0.0, -0.05) -- (3.9, -0.05) arc (90:10:1.1) -- (5.0, -2.4);
+    \draw[-Stealth, green!60!black, thin] (5.0, -1.8) -- (5.55, -1.8);
+    \node[badge, fill=green!10, draw=green!70, text=green!70!black, anchor=west] at (5.6, -1.8) {\textbf{Rung 2b: Turn Entry}\\$\pm 60^\circ$ views track arc};
+
+    % Goal marker
+    \fill[black!80] (5.0, -2.7) circle (3pt);
+    \node[font=\tiny\bfseries, right] at (5.1, -2.7) {$500\text{ m}$ Goal};
+
 \end{tikzpicture}
 }
-\caption{Trajectory bottleneck map in CARLA Town01. The $90^\circ$ unbanked right turn at Meter 190 acts as the decisive failure boundary between perceptual configurations.}
+\caption{Trajectory bottleneck map in CARLA Town01. At Meter 190, the road transitions from a $190\text{ m}$ straightaway into an unbanked $90^\circ$ right turn. Monocular agents (Rung 1) miss the curve and collide with the outside curb; 4-camera agents (Rung 2a) stall at $17\text{ m}$; camera-LiDAR agents (Rung 3) drive smoothly but drift at $28\text{ m}$; while angled multi-camera agents (Rung 2b) maintain turn tracking.}
 \label{fig:trajectory_map}
 \end{figure}
 
