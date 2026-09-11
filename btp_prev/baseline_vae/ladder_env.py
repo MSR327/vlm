@@ -212,7 +212,7 @@ class LadderEnvironment(CarlaEnvironment):
                     elif self.town == "Town02":
                         nxt = nxts[-1] if x > 100 else nxts[0]
                     else:
-                        nxt = nxts[0] if x < 300 else nxts[-1]
+                        nxt = nxts[-1] if x < 300 else nxts[0]
                     self.route_waypoints.append(nxt)
                     current_waypoint = nxt
             else:
