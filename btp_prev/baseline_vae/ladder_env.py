@@ -271,6 +271,12 @@ class LadderEnvironment(CarlaEnvironment):
 
                 applied_steer = self.previous_steer * 0.6 + steer * 0.4
 
+                # Low-speed launch assist: prevent random initial weights from braking at rest
+                if self.velocity < 2.0:
+                    applied_brake = 0.0
+                    if applied_throttle < 0.35:
+                        applied_throttle = 0.35
+
                 self.vehicle.apply_control(carla.VehicleControl(
                     steer=applied_steer,
                     throttle=applied_throttle,
