@@ -101,11 +101,21 @@ class EncodeStateVAE:
         else:
             latents = cam_latents.reshape(-1)
 
+        # Protect against unscaled latent explosion in raw arm (std ~2984, max ~14000)
+        # to prevent complete tanh saturation (499/500 dead neurons) and telemetry drowning
+        lat_std = float(np.std(latents))
+        if lat_std > 10.0:
+            latents = (latents - np.mean(latents)) / (lat_std + 1e-7)
+
         parts = [latents]
 
         if self.use_lidar:
             bev_batch = self._as_batch(bev)
-            parts.append(np.asarray(self.bev_encoder(bev_batch)).reshape(-1))
+            bev_lat = np.asarray(self.bev_encoder(bev_batch)).reshape(-1)
+            bev_std = float(np.std(bev_lat))
+            if bev_std > 10.0:
+                bev_lat = (bev_lat - np.mean(bev_lat)) / (bev_std + 1e-7)
+            parts.append(bev_lat)
 
         parts.append(np.asarray(nav, dtype=np.float32).reshape(-1))
         out = np.concatenate(parts).astype(np.float32)

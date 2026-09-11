@@ -835,8 +835,9 @@ class PPOAgent(tf.keras.Model):
             self.memory.observation.append(obs)
             self.memory.actions.append(action)
             self.memory.log_probs.append(log_probs)
-        
-        return action.numpy().flatten(),mean.numpy().flatten()
+            return action.numpy().flatten(), mean.numpy().flatten()
+        else:
+            return mean.numpy().flatten(), mean.numpy().flatten()
 
 
     def update_old_policy(self):
@@ -905,17 +906,15 @@ class PPOAgent(tf.keras.Model):
 
         advantages, returns = self.compute_advantages(rewards, values, dones)
         advantages = (advantages - tf.reduce_mean(advantages)) / (tf.math.reduce_std(advantages) + 1e-7)
-        returns = (returns - tf.reduce_mean(returns))/(tf.math.reduce_std(returns)+1e-7)
-        # tf.keras.layers.LayerNormalization()(advantages)
-        # tf.keras.layers.LayerNormalization()(returns)
+        # returns standardization removed: standardizing returns breaks Bellman equation scale
+        # by forcing V(s) to ~0 while raw rewards are -10.0 or +1.0.
 
         for i in range(self.n_updates_per_iteration):
             with tf.GradientTape() as tape_a, tf.GradientTape() as tape_c:
 
                 log_probs, values, dist_entropy = self.evaluate(old_states, old_actions)
                 values = tf.squeeze(values)
-                #ratios = tf.exp(tf.clip_by_value(log_probs - old_logprobs, -10, 10))
-                ratios = tf.exp(log_probs - old_logprobs)
+                ratios = tf.exp(tf.clip_by_value(log_probs - old_logprobs, -10.0, 10.0))
 
                 surr1 = ratios * advantages
                 surr2 = tf.clip_by_value(ratios, 1 - self.clip, 1 + self.clip) * advantages
