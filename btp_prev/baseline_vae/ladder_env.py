@@ -221,9 +221,12 @@ class LadderEnvironment(CarlaEnvironment):
                 self.current_waypoint_index = self.checkpoint_waypoint_index
 
             self.route_start_index = self.current_waypoint_index
+            normalized_velocity = float(np.clip(self.velocity / self.target_speed, 0.0, 2.0))
+            normalized_distance_from_center = float(np.clip(self.distance_from_center / self.max_distance_from_center, -1.0, 1.0))
+            normalized_angle = float(np.clip(self.angle / np.deg2rad(20), -1.0, 1.0))
             self.navigation_obs = np.array(
-                [self.throttle, self.velocity, self.previous_steer,
-                 self.distance_from_center, self.angle])
+                [self.throttle, self.velocity, normalized_velocity,
+                 normalized_distance_from_center, normalized_angle], dtype=np.float32)
             # Settle the physics. main.py used time.sleep(0.5), which advances a
             # wall-clock-dependent number of frames; a fixed tick count is
             # identical for every rung.
@@ -258,19 +261,21 @@ class LadderEnvironment(CarlaEnvironment):
                 if raw_longitudinal >= 0.0:
                     throttle = raw_longitudinal
                     brake = 0.0
+                    applied_throttle = self.throttle * 0.7 + throttle * 0.3
+                    applied_brake = 0.0
                 else:
                     throttle = 0.0
                     brake = -raw_longitudinal
+                    applied_throttle = 0.0
+                    applied_brake = self.brake * 0.5 + brake * 0.5
 
-                applied_steer = self.previous_steer * 0.9 + steer * 0.1
-                applied_throttle = self.throttle * 0.9 + throttle * 0.1
-                applied_brake = self.brake * 0.9 + brake * 0.1
+                applied_steer = self.previous_steer * 0.6 + steer * 0.4
 
                 self.vehicle.apply_control(carla.VehicleControl(
                     steer=applied_steer,
                     throttle=applied_throttle,
                     brake=applied_brake))
-                self.previous_steer = steer
+                self.previous_steer = applied_steer
                 self.throttle = applied_throttle
                 self.brake = applied_brake
 
@@ -363,12 +368,18 @@ class LadderEnvironment(CarlaEnvironment):
                 while not self.lidar_obj.ready():
                     self._tick() if self.p.SYNCHRONOUS_MODE else time.sleep(0.0001)
 
-            normalized_velocity = self.velocity / self.target_speed
-            normalized_distance_from_center = self.distance_from_center / self.max_distance_from_center
-            normalized_angle = abs(self.angle / np.deg2rad(20))
+            wp_vec = self.vector(self.next_waypoint.transform.location)[:2] - self.vector(self.current_waypoint.transform.location)[:2]
+            veh_vec = self.vector(self.location)[:2] - self.vector(self.current_waypoint.transform.location)[:2]
+            cross_2d = float(wp_vec[0] * veh_vec[1] - wp_vec[1] * veh_vec[0])
+            lat_sign = 1.0 if cross_2d >= 0.0 else -1.0
+            signed_distance = lat_sign * self.distance_from_center
+
+            normalized_velocity = float(np.clip(self.velocity / self.target_speed, 0.0, 2.0))
+            normalized_distance_from_center = float(np.clip(signed_distance / self.max_distance_from_center, -1.0, 1.0))
+            normalized_angle = float(np.clip(self.angle / np.deg2rad(20), -1.0, 1.0))
             self.navigation_obs = np.array(
                 [self.throttle, self.velocity, normalized_velocity,
-                 normalized_distance_from_center, normalized_angle])
+                 normalized_distance_from_center, normalized_angle], dtype=np.float32)
 
             obs = self._observation()
             info = self._info(done)
