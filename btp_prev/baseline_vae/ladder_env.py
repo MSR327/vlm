@@ -257,33 +257,21 @@ class LadderEnvironment(CarlaEnvironment):
 
             if self.continous_action_space:
                 steer = max(min(float(action_idx[0]), 1.0), -1.0)
-                raw_longitudinal = max(min(float(action_idx[1]), 1.0), -1.0)
-                if raw_longitudinal >= 0.0:
-                    throttle = raw_longitudinal
-                    brake = 0.0
-                    applied_throttle = self.throttle * 0.7 + throttle * 0.3
-                    applied_brake = 0.0
-                else:
-                    throttle = 0.0
-                    brake = -raw_longitudinal
-                    applied_throttle = 0.0
-                    applied_brake = self.brake * 0.5 + brake * 0.5
+                # Map [-1,1] → [0,1] exactly like main.py (Rung 1, 39% completion).
+                # Random init (tanh output ~0, noise std=0.2) → throttle ~0.5 → car drives.
+                # No brake channel: deceleration comes from drag + low throttle.
+                throttle = float((action_idx[1] + 1.0) / 2.0)
+                throttle = max(min(throttle, 1.0), 0.0)
 
                 applied_steer = self.previous_steer * 0.6 + steer * 0.4
-
-                # Low-speed launch assist: prevent random initial weights from braking at rest
-                if self.velocity < 2.0:
-                    applied_brake = 0.0
-                    if applied_throttle < 0.35:
-                        applied_throttle = 0.35
+                applied_throttle = self.throttle * 0.7 + throttle * 0.3
 
                 self.vehicle.apply_control(carla.VehicleControl(
                     steer=applied_steer,
                     throttle=applied_throttle,
-                    brake=applied_brake))
+                    brake=0.0))
                 self.previous_steer = applied_steer
                 self.throttle = applied_throttle
-                self.brake = applied_brake
 
             if self.vehicle.is_at_traffic_light():
                 tl = self.vehicle.get_traffic_light()
