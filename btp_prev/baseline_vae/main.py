@@ -906,8 +906,7 @@ class PPOAgent(tf.keras.Model):
 
         advantages, returns = self.compute_advantages(rewards, values, dones)
         advantages = (advantages - tf.reduce_mean(advantages)) / (tf.math.reduce_std(advantages) + 1e-7)
-        # returns standardization removed: standardizing returns breaks Bellman equation scale
-        # by forcing V(s) to ~0 while raw rewards are -10.0 or +1.0.
+        returns = (returns - tf.reduce_mean(returns)) / (tf.math.reduce_std(returns) + 1e-7)
 
         for i in range(self.n_updates_per_iteration):
             with tf.GradientTape() as tape_a, tf.GradientTape() as tape_c:

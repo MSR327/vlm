@@ -263,8 +263,12 @@ class LadderEnvironment(CarlaEnvironment):
                 throttle = float((action_idx[1] + 1.0) / 2.0)
                 throttle = max(min(throttle, 1.0), 0.0)
 
-                applied_steer = self.previous_steer * 0.6 + steer * 0.4
+                applied_steer = self.previous_steer * 0.8 + steer * 0.2
                 applied_throttle = self.throttle * 0.7 + throttle * 0.3
+
+                # Prevent policy collapse into zero-velocity standstill deadlock at spawn
+                if self.velocity < 1.0 and applied_throttle < 0.3:
+                    applied_throttle = 0.3
 
                 self.vehicle.apply_control(carla.VehicleControl(
                     steer=applied_steer,
