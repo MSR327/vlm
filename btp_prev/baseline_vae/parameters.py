@@ -31,8 +31,8 @@ no run can overwrite another's numbers.
 import os
 
 _RUNG = os.environ.get('BTP_RUNG', '1').strip()
-if _RUNG not in ('1', '2', '3'):
-    raise ValueError(f"BTP_RUNG must be 1, 2 or 3 -- got {_RUNG!r}")
+if _RUNG not in ('1', '2', '3', '3b', '3B'):
+    raise ValueError(f"BTP_RUNG must be 1, 2, 3, or 3b -- got {_RUNG!r}")
 
 if _RUNG == '1':
     from params_rung1 import *
@@ -40,6 +40,9 @@ if _RUNG == '1':
 elif _RUNG == '2':
     from params_rung2 import *
     import params_rung2 as _cfg
+elif _RUNG in ('3b', '3B'):
+    from params_rung3b import *
+    import params_rung3b as _cfg
 else:
     from params_rung3 import *
     import params_rung3 as _cfg

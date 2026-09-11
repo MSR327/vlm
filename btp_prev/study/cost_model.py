@@ -66,9 +66,10 @@ def mlp_cost(in_dim, hidden=(500, 300, 100), out_dim=2):
 
 
 RUNGS = {
-    1: dict(name='1cam',       n_cam=1, lidar=False),
-    2: dict(name='3cam',       n_cam=3, lidar=False),
-    3: dict(name='1cam_lidar', n_cam=1, lidar=True),
+    1:    dict(name='1cam',       n_cam=1, lidar=False),
+    2:    dict(name='3cam',       n_cam=3, lidar=False),
+    3:    dict(name='1cam_lidar', n_cam=1, lidar=True),
+    '3b': dict(name='3cam_lidar', n_cam=3, lidar=True),
 }
 
 
@@ -103,9 +104,9 @@ def config_cost(rung):
 
 
 if __name__ == '__main__':
-    for r in (1, 2, 3):
+    for r in (1, 2, 3, '3b'):
         c = config_cost(r)
-        print(f"rung {r} {c['name']:>11s}  obs {c['obs_dim']:4d}  "
+        print(f"rung {str(r):>2s} {c['name']:>11s}  obs {c['obs_dim']:4d}  "
               f"enc_params {c['encoder_params']:>10,}  "
               f"MACs {c['inference_macs']/1e6:8.2f}M  "
               f"size {c['inference_fp32_mb']:6.2f} MB")

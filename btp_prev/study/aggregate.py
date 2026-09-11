@@ -23,6 +23,7 @@ RUNGS = [
     (2, '4cam',       'VAE + 4 RGB 360° (385-dim)'),
     (2, '3cam',       'VAE + 3 RGB Surround (290-dim)'),
     (3, '1cam_lidar', 'VAE + 1 RGB + LiDAR (195-dim)'),
+    ('3b', '3cam_lidar', 'VAE + 3 RGB Surround + LiDAR (385-dim)'),
 ]
 ARMS = ['raw', 'scaled']
 
