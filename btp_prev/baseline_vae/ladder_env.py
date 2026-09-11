@@ -178,6 +178,7 @@ class LadderEnvironment(CarlaEnvironment):
             self.min_speed = self.p.MIN_SPEED
             self.max_distance_from_center = self.p.MAX_DISTANCE_FROM_CENTER
             self.throttle = float(0.0)
+            self.brake = float(0.0)
             self.previous_steer = float(0.0)
             self.velocity = float(0.0)
             self.distance_from_center = float(0.0)
@@ -253,12 +254,25 @@ class LadderEnvironment(CarlaEnvironment):
 
             if self.continous_action_space:
                 steer = max(min(float(action_idx[0]), 1.0), -1.0)
-                throttle = max(min(float((action_idx[1] + 1.0) / 2), 1.0), 0.0)
+                raw_longitudinal = max(min(float(action_idx[1]), 1.0), -1.0)
+                if raw_longitudinal >= 0.0:
+                    throttle = raw_longitudinal
+                    brake = 0.0
+                else:
+                    throttle = 0.0
+                    brake = -raw_longitudinal
+
+                applied_steer = self.previous_steer * 0.9 + steer * 0.1
+                applied_throttle = self.throttle * 0.9 + throttle * 0.1
+                applied_brake = self.brake * 0.9 + brake * 0.1
+
                 self.vehicle.apply_control(carla.VehicleControl(
-                    steer=self.previous_steer * 0.9 + steer * 0.1,
-                    throttle=self.throttle * 0.9 + throttle * 0.1))
+                    steer=applied_steer,
+                    throttle=applied_throttle,
+                    brake=applied_brake))
                 self.previous_steer = steer
-                self.throttle = throttle
+                self.throttle = applied_throttle
+                self.brake = applied_brake
 
             if self.vehicle.is_at_traffic_light():
                 tl = self.vehicle.get_traffic_light()
@@ -301,7 +315,7 @@ class LadderEnvironment(CarlaEnvironment):
             done = False
             reward = 0
 
-            # --- termination, identical thresholds to main.py:301-315 -------
+            # --- termination criteria --------------------------------------
             if len(self.collision_history) != 0:
                 done, reward = True, -10
                 self.termination_reason = COLLISION
@@ -312,7 +326,8 @@ class LadderEnvironment(CarlaEnvironment):
             elif self._elapsed_sim_s() > 10.0 and self.velocity < 1.0:
                 done, reward = True, -10
                 self.termination_reason = STALL
-            elif self.velocity > self.max_speed:
+            elif self.velocity > 60.0:
+                # Extreme runaway overspeed safeguard (not normal highway cruising)
                 done, reward = True, -10
                 self.termination_reason = OVERSPEED
 
@@ -322,11 +337,14 @@ class LadderEnvironment(CarlaEnvironment):
             if not done:
                 if self.velocity < self.min_speed:
                     reward = (self.velocity / self.min_speed) * centering_factor * angle_factor
-                elif self.velocity > self.target_speed:
+                elif self.velocity <= self.target_speed:
+                    reward = 1.0 * centering_factor * angle_factor
+                elif self.velocity <= self.max_speed:
                     reward = (1.0 - (self.velocity - self.target_speed) /
                               (self.max_speed - self.target_speed)) * centering_factor * angle_factor
                 else:
-                    reward = 1.0 * centering_factor * angle_factor
+                    # velocity > max_speed (35 km/h): negative speeding penalty, removes reward hack
+                    reward = -1.0 * min((self.velocity - self.max_speed) / 10.0, 2.0)
 
             if self.current_waypoint_index >= len(self.route_waypoints) - 2:
                 done = True
