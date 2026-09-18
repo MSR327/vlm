@@ -19,6 +19,13 @@ IM_WIDTH  = 160
 IM_HEIGHT = 80
 VAE_INPUT_SCALE = 1.0 / 255.0
 
+# Sensor ladder compatibility attributes
+NUM_CAMERAS_VAE = 1
+USE_LIDAR_VAE   = False
+RUNG            = 1
+RUNG_NAME       = 'capacity'
+NORM_ARM        = 'scaled'
+
 # --- Model Path Resolution ----------------------------------------------------
 custom_model_dir = os.path.join(
     os.path.dirname(__file__),
