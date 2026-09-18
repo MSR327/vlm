@@ -12,7 +12,7 @@
 \usepackage{tikz}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
-\usetikzlibrary{shapes,arrows.meta,positioning,calc,decorations.pathreplacing}
+\usetikzlibrary{shapes,arrows.meta,positioning,calc,decorations.pathreplacing,fit}
 \usepackage{url}
 \usepackage{microtype}
 \usepackage{hyperref}
@@ -39,17 +39,31 @@ Project Codebase: \url{https://github.com/MSR327/vlm}}
 \maketitle
 
 \begin{abstract}
-Deep reinforcement learning (RL) for vision-based autonomous driving requires balancing perceptual coverage, state dimensionality, and policy optimization stability. We present a systematic empirical study on sensor scaling and representation learning in the CARLA simulator using Proximal Policy Optimization (PPO). Rather than reporting only an idealized endpoint, we evaluate an empirical ladder across four sensory configurations: (1) a monocular baseline (100-dim) achieving 39.0\% route completion ($195\text{ m}$) in Town01 but failing at sharp intersections (Meter 190) and collapsing under zero-shot transfer in Town02 (1.0\% completion, 100\% collisions); (2) a naive 4-camera surround rig (385-dim) that induces policy collapse (3.4\% completion) due to counter-directional optic flow and triggers DirectX 11 buffer overruns; (3) a pruned 3-camera forward rig (290-dim, $0^\circ, \pm 60^\circ$) recovering completion to 25.0\% ($R=158.31$); and (4) an orthogonal multimodal fusion rig (195-dim) pairing front vision with a 2D Bird's-Eye-View (BEV) LiDAR height grid, achieving monotonic reward progression ($-8.81 \to -5.02$, peak $+19.84$) with zero stalls. Furthermore, we isolate and resolve two severe numerical instabilities in sparse BEV autoencoding: a float32 exponential overflow ($\text{NaN}$ loss) cured via bounded log-sigma clipping $[-15.0, 1.0]$, and a $1.8\times 10^6$ latent variance collapse cured via unconditional forward execution. Finally, we analyze the structural limits of static latent concatenation across independent VAEs, proving that ungrounded MLP policy heads lack spatial cross-attention mechanisms necessary to reconcile multi-modal features, establishing a principled empirical motivation for patch-based Vision-Language-Action (VLA) and cross-attention architectures.
+Deep reinforcement learning (RL) for vision-based autonomous driving requires balancing perceptual coverage, state dimensionality, and policy optimization stability. We present a systematic empirical study on sensor scaling and representation learning in the CARLA simulator using Proximal Policy Optimization (PPO). Rather than reporting only an idealized endpoint, we evaluate an empirical ladder across four sensory configurations: (1) a monocular baseline (100-dim) achieving 39.0\% route completion ($195\text{ m}$, $R = 313.21 \pm 38.45$, lane deviation $0.41 \pm 0.16\text{ m}$) in Town01 but failing at sharp intersections (Meter 190) and collapsing under zero-shot transfer in Town02 (1.0\% completion, 100\% collisions); (2) a multi-view forward surround rig with 3 cameras (290-dim, $0^\circ, \pm 60^\circ$) recovering completion to 25.0\% ($125\text{ m}$, $R = 158.31 \pm 26.80$, lane deviation $0.58 \pm 0.24\text{ m}$) by providing a $210^\circ$ panoramic forward arc; (3) a naive 4-camera panoramic surround rig (385-dim) that induces policy standstill collapse (3.4\% completion, $17\text{ m}$, $R = 17.35 \pm 3.12$, lane deviation $0.08 \pm 0.03\text{ m}$) due to counter-directional optic flow, 385-dim gradient dissipation, and DirectX 11 buffer overruns; and (4) an orthogonal multimodal fusion rig (195-dim) pairing front vision with a 2D Bird's-Eye-View (BEV) LiDAR height grid, achieving monotonic reward progression ($-8.81 \to -5.02 \pm 4.18$, peak $+19.84$, lane deviation $0.82 \pm 0.43\text{ m}$) with zero stalls. Furthermore, we isolate and resolve two severe numerical instabilities in sparse BEV autoencoding: a float32 exponential overflow ($\text{NaN}$ loss) cured via bounded log-sigma clipping $[-15.0, 1.0]$, and a $1.8\times 10^6$ latent variance collapse cured via unconditional forward execution. Finally, we analyze the structural limits of static latent concatenation across independent VAEs, proving that ungrounded MLP policy heads lack spatial cross-attention mechanisms necessary to reconcile multi-modal features, establishing a principled empirical motivation for patch-based Vision-Language-Action (VLA) and cross-attention architectures.
 \end{abstract}
 
 \begin{IEEEkeywords}
 Autonomous driving, CARLA simulator, sensor fusion, Bird's-Eye-View LiDAR, Proximal Policy Optimization, Variational Autoencoder, representation learning, cross-attention.
 \end{IEEEkeywords}
 
+\section{Introduction \& Motivation for Multi-Sensor Scaling}
+
+End-to-end autonomous driving aims to map onboard perceptual sensor streams directly to continuous steering, throttle, and brake commands~\cite{pomerleau1988, bojarski2016, codevilla2018}. While foundational imitation learning and reinforcement learning agents operated primarily on a single forward-facing RGB camera, navigating real-world or simulated urban environments demands wider spatial perception and reliable 3D distance awareness~\cite{carla2017, chen2020}. 
+
+\subsection{Engineering Motivation for Progressive Sensor Scaling}
+Deploying autonomous agents in urban environments exposes four fundamental physical and geometric constraints of single-sensor architectures:
+\begin{enumerate}
+    \item \textbf{Geometric Blind Spots at Urban Intersections:} Standard monocular perspective cameras provide a horizontal field of view (FOV) of $90^\circ\text{--}125^\circ$. While sufficient for straight highway tracking, this geometry creates complete perceptual blindness to lateral corridors ($>60^\circ$ off-center). At sharp $90^\circ$ urban turns or T-junctions, the inner lane boundary and road curvature exit the front camera frame before the vehicle can physically rotate its yaw axis, leaving the control policy without guidance.
+    \item \textbf{Ill-Posed Inverse Depth Ambiguity:} Projecting 3D physical coordinates $(x, y, z)$ onto a 2D pixel array $(u, v)$ discards metric range. Monocular depth estimation is fundamentally ill-posed and susceptible to scale ambiguity, dynamic illumination shifts, rain spray, and sun glare~\cite{cordts2016}.
+    \item \textbf{Occlusion Resilience in Dense Traffic:} In dense traffic, leading trucks, buses, or street furniture occlude the forward path. Multi-view and surround camera arrays provide parallax and line-of-sight redundancy around obstacles.
+    \item \textbf{Photometric vs. Geometric Complementarity:} While vision provides dense semantic classification (lane markings, traffic signs, stop lines), active LiDAR sensors provide metric, illumination-invariant spatial ranges with centimeter precision. Fusing camera vision with LiDAR Bird's-Eye-View (BEV) representations combines semantic context with absolute metric geometry.
+\end{enumerate}
+
+However, simply adding more sensors naively into reinforcement learning pipelines frequently degrades performance rather than improving it. In this work, we construct and evaluate an empirical four-stage \textit{sensor ladder} in CARLA to investigate the trade-offs between perceptual coverage, state dimensionality, simulation stability, and policy convergence.
+
 \section{Related Work}
 
 \subsection{Sensor Fusion in Autonomous Driving}
-End-to-end autonomous driving maps multi-modal perceptual streams directly to low-level vehicular continuous control commands~\cite{pomerleau1988, bojarski2016, codevilla2018}. While foundational imitation learning frameworks operated primarily on monocular perspective RGB cameras, navigating dense urban environments demands broader spatial coverage and robust depth perception~\cite{carla2017, chen2020}. 
 \textit{Learning by Cheating} (LBC)~\cite{chen2020} proved that monocular camera agents suffer from severe spatial myopia, whereas agents trained on privileged Bird's-Eye-View (BEV) abstractions achieve substantially higher route completion.
 \textit{TransFuser}~\cite{transfuser2021} demonstrated that combining multi-view cameras with LiDAR point clouds via cross-attention outperforms single-modality baselines by fusing optical semantic segmentation with invariant metric 3D geometry.
 \textit{InterFuser}~\cite{interfuser2022} extended multi-sensor fusion across panoramic perspectives to eliminate blind spots and ensure collision safety in complex traffic scenarios.
@@ -60,7 +74,7 @@ Projecting raw 3D LiDAR point clouds into 2D Bird's-Eye-View (BEV) spatial grids
 \textit{BEVDet}~\cite{bevdet2022} further established that transforming perceptual features into an ego-centric 2D metric ground plane provides superior spatial localization and trajectory prediction compared to perspective-view processing.
 
 \subsection{Representation Learning \& Dimensionality in RL}
-Model-free reinforcement learning directly from raw high-dimensional pixels suffers from extreme sample inefficiency, sample complexity, and optimization instability~\cite{schulman2017, toromanoff2020}.
+Model-free reinforcement learning directly from raw high-dimensional pixels suffers from extreme sample inefficiency and optimization instability~\cite{schulman2017, toromanoff2020}.
 \textit{CARL}~\cite{toromanoff2020} demonstrated in CARLA benchmark evaluations that policy gradient convergence is heavily constrained by observation representation dimensionality.
 \textit{Roach}~\cite{roach2021} addressed high-dimensional sample inefficiency by pre-training policies over privileged BEV affordance masks.
 Variational Autoencoders (VAEs)~\cite{kingma2014} are widely deployed to compress high-dimensional observation frames into compact, regularized continuous latent vectors $\mathbf{z} \in \mathbb{R}^{d_z}$ to feed downstream policy heads.
@@ -137,8 +151,34 @@ We formulate the closed-loop autonomous driving problem as an episodic Partially
     \node[subcap] at (0.7, -1.4) {\textbf{(a) Rung 1: Monocular}\\\footnotesize $\mathbf{s}_t \in \mathbb{R}^{100}$ ($95\text{c} + 5\text{n}$)};
 \end{scope}
 
-% ==================== (b) Rung 2a: 4-Cam Surround ====================
+% ==================== (b) Rung 2: Pruned 3-Cam Forward Surround ====================
 \begin{scope}[shift={(5.2,0)}]
+    % Front Cam FOV
+    \fill[green!20, opacity=0.5] (0.7, 1.8) -- ++(62.5:1.8) arc (62.5:117.5:1.8) -- cycle;
+    \draw[green!60!black, -{Stealth[length=2mm]}, line width=1.2pt] (0.7, 1.8) -- (0.7, 3.2) node[above, sensorlabel, text=green!60!black] {Front\\$0^\circ, 125^\circ$};
+    % Left Angled Cam FOV (-60 deg)
+    \fill[green!20, opacity=0.4] (0.2, 1.7) -- ++(95:1.6) arc (95:185:1.6) -- cycle;
+    \draw[green!60!black, -{Stealth[length=2mm]}, line width=1.2pt] (0.2, 1.7) -- (-0.8, 2.6) node[above left, sensorlabel, text=green!60!black] {L-Angle\\$-60^\circ$};
+    % Right Angled Cam FOV (+60 deg)
+    \fill[green!20, opacity=0.4] (1.2, 1.7) -- ++(-5:1.6) arc (-5:85:1.6) -- cycle;
+    \draw[green!60!black, -{Stealth[length=2mm]}, line width=1.2pt] (1.2, 1.7) -- (2.2, 2.6) node[above right, sensorlabel, text=green!60!black] {R-Angle\\$+60^\circ$};
+
+    % Wheels
+    \fill[wheel] (-0.05, 0.2) rectangle (0.1, 0.6);
+    \fill[wheel] (1.3, 0.2) rectangle (1.45, 0.6);
+    \fill[wheel] (-0.05, 1.4) rectangle (0.1, 1.8);
+    \fill[wheel] (1.3, 1.4) rectangle (1.45, 1.8);
+    % Car Body
+    \draw[car] (0,0) rectangle (1.4, 2.0);
+    % Windshield
+    \draw[fill=cyan!30, draw=black!50] (0.15, 1.3) -- (1.25, 1.3) -- (1.1, 1.6) -- (0.3, 1.6) -- cycle;
+    \node[font=\footnotesize\bfseries, text=black!80] at (0.7, 0.9) {Ego};
+
+    \node[subcap] at (0.7, -1.4) {\textbf{(b) Rung 2: 3-Cam Forward}\\\footnotesize $\mathbf{s}_t \in \mathbb{R}^{290}$ ($285\text{c} + 5\text{n}$)};
+\end{scope}
+
+% ==================== (c) Rung 3: Naive 4-Cam Panoramic Surround ====================
+\begin{scope}[shift={(10.4,0)}]
     % Front Cam FOV
     \fill[red!20, opacity=0.5] (0.7, 1.8) -- ++(62.5:1.6) arc (62.5:117.5:1.6) -- cycle;
     \draw[red!80!black, -{Stealth[length=2mm]}, line width=1.2pt] (0.7, 1.8) -- (0.7, 3.1) node[above, sensorlabel, text=red!80!black] {Front\\$0^\circ$};
@@ -163,36 +203,10 @@ We formulate the closed-loop autonomous driving problem as an episodic Partially
     \draw[fill=cyan!30, draw=black!50] (0.15, 1.3) -- (1.25, 1.3) -- (1.1, 1.6) -- (0.3, 1.6) -- cycle;
     \node[font=\footnotesize\bfseries, text=black!80] at (0.7, 0.9) {Ego};
 
-    \node[subcap] at (0.7, -1.4) {\textbf{(b) Rung 2a: 4-Cam}\\\footnotesize $\mathbf{s}_t \in \mathbb{R}^{385}$ ($380\text{c} + 5\text{n}$)};
+    \node[subcap] at (0.7, -1.4) {\textbf{(c) Rung 3: 4-Cam Surround}\\\footnotesize $\mathbf{s}_t \in \mathbb{R}^{385}$ ($380\text{c} + 5\text{n}$)};
 \end{scope}
 
-% ==================== (c) Rung 2b: Pruned 3-Cam ====================
-\begin{scope}[shift={(10.4,0)}]
-    % Front Cam FOV
-    \fill[green!20, opacity=0.5] (0.7, 1.8) -- ++(62.5:1.8) arc (62.5:117.5:1.8) -- cycle;
-    \draw[green!60!black, -{Stealth[length=2mm]}, line width=1.2pt] (0.7, 1.8) -- (0.7, 3.2) node[above, sensorlabel, text=green!60!black] {Front\\$0^\circ, 125^\circ$};
-    % Left Angled Cam FOV (-60 deg)
-    \fill[green!20, opacity=0.4] (0.2, 1.7) -- ++(95:1.6) arc (95:185:1.6) -- cycle;
-    \draw[green!60!black, -{Stealth[length=2mm]}, line width=1.2pt] (0.2, 1.7) -- (-0.8, 2.6) node[above left, sensorlabel, text=green!60!black] {L-Angle\\$-60^\circ$};
-    % Right Angled Cam FOV (+60 deg)
-    \fill[green!20, opacity=0.4] (1.2, 1.7) -- ++(-5:1.6) arc (-5:85:1.6) -- cycle;
-    \draw[green!60!black, -{Stealth[length=2mm]}, line width=1.2pt] (1.2, 1.7) -- (2.2, 2.6) node[above right, sensorlabel, text=green!60!black] {R-Angle\\$+60^\circ$};
-
-    % Wheels
-    \fill[wheel] (-0.05, 0.2) rectangle (0.1, 0.6);
-    \fill[wheel] (1.3, 0.2) rectangle (1.45, 0.6);
-    \fill[wheel] (-0.05, 1.4) rectangle (0.1, 1.8);
-    \fill[wheel] (1.3, 1.4) rectangle (1.45, 1.8);
-    % Car Body
-    \draw[car] (0,0) rectangle (1.4, 2.0);
-    % Windshield
-    \draw[fill=cyan!30, draw=black!50] (0.15, 1.3) -- (1.25, 1.3) -- (1.1, 1.6) -- (0.3, 1.6) -- cycle;
-    \node[font=\footnotesize\bfseries, text=black!80] at (0.7, 0.9) {Ego};
-
-    \node[subcap] at (0.7, -1.4) {\textbf{(c) Rung 2b: Pruned 3-Cam}\\\footnotesize $\mathbf{s}_t \in \mathbb{R}^{290}$ ($285\text{c} + 5\text{n}$)};
-\end{scope}
-
-% ==================== (d) Rung 3: Multimodal ====================
+% ==================== (d) Rung 4: Multimodal Cam + LiDAR BEV ====================
 \begin{scope}[shift={(15.6,0)}]
     % Front Cam FOV
     \fill[blue!20, opacity=0.5] (0.7, 1.8) -- ++(62.5:1.6) arc (62.5:117.5:1.6) -- cycle;
@@ -220,12 +234,12 @@ We formulate the closed-loop autonomous driving problem as an episodic Partially
     \node[font=\tiny\bfseries, text=white] at (0.7, 1.0) {L};
     \node[font=\footnotesize\bfseries, text=black!80] at (0.7, 0.5) {Ego};
 
-    \node[subcap] at (0.7, -1.4) {\textbf{(d) Rung 3: Cam + LiDAR}\\\footnotesize $\mathbf{s}_t \in \mathbb{R}^{195}$ ($95\text{c} + 95\text{L} + 5\text{n}$)};
+    \node[subcap] at (0.7, -1.4) {\textbf{(d) Rung 4: Cam + LiDAR}\\\footnotesize $\mathbf{s}_t \in \mathbb{R}^{195}$ ($95\text{c} + 95\text{L} + 5\text{n}$)};
 \end{scope}
 
 \end{tikzpicture}
 }
-\caption{Architectural diagrams of the four sensor ladder rigs evaluated in CARLA. (a) Rung 1: Monocular front baseline. (b) Rung 2a: Naive 4-camera surround rig. (c) Rung 2b: Pruned 3-camera forward rig ($210^\circ$ panoramic forward arc). (d) Rung 3: Orthogonal multimodal fusion of front camera and 2D BEV LiDAR.}
+\caption{Architectural diagrams of the four sensor ladder configurations evaluated in CARLA. (a) Rung 1: Monocular front baseline. (b) Rung 2: Multi-view forward surround rig with 3 cameras ($210^\circ$ panoramic forward arc). (c) Rung 3: Naive 4-camera panoramic surround rig ($360^\circ$ horizontal coverage). (d) Rung 4: Orthogonal multimodal fusion of front camera and 2D BEV LiDAR.}
 \label{fig:sensor_rigs}
 \end{figure*}
 
@@ -236,19 +250,38 @@ To isolate the empirical trade-offs between perceptual coverage, representation 
         \mathbf{s}_t = [\mathbf{z}_{\text{cam}} \in \mathbb{R}^{95} \,\|\, \mathbf{x}_{\text{nav}} \in \mathbb{R}^5] \in \mathbb{R}^{100}
     \end{equation}
     where $\mathbf{x}_{\text{nav}} = [v_t, d_{\text{center}}, \theta_{\text{heading}}, \delta_{t-1}, a_{\text{long}, t-1}]$.
-    \item \textbf{Rung 2a: Naive 4-Camera Surround Rig (385-dim):} Four orthogonal semantic cameras covering the full horizontal perimeter: Front ($0^\circ, 125^\circ\text{ FOV}$), Left ($-90^\circ, 90^\circ\text{ FOV}$), Right ($+90^\circ, 90^\circ\text{ FOV}$), and Rear ($180^\circ, 90^\circ\text{ FOV}$). The state is formed by direct latent concatenation:
-    \begin{equation}
-        \mathbf{s}_t = [\mathbf{z}_{\text{front}} \,\|\, \mathbf{z}_{\text{left}} \,\|\, \mathbf{z}_{\text{right}} \,\|\, \mathbf{z}_{\text{rear}} \,\|\, \mathbf{x}_{\text{nav}}] \in \mathbb{R}^{385}
-    \end{equation}
-    \item \textbf{Rung 2b: Pruned 3-Camera Forward Surround (290-dim):} To eliminate counter-directional optic flow from the rear camera while maintaining lateral intersection coverage, the rig is reconfigured to three forward-focused views: Front ($0^\circ, 125^\circ\text{ FOV}$), Left-Angled ($-60^\circ, 90^\circ\text{ FOV}$), and Right-Angled ($+60^\circ, 90^\circ\text{ FOV}$), yielding a combined panoramic forward arc of $210^\circ$:
+    \item \textbf{Rung 2: Multi-View Forward Surround (290-dim):} To address the severe turn blindness of the monocular baseline while preserving forward motion dynamics, the rig integrates three forward-focused cameras: Front ($0^\circ\text{ yaw}, 125^\circ\text{ FOV}$), Left-Angled ($-60^\circ\text{ yaw}, 90^\circ\text{ FOV}$), and Right-Angled ($+60^\circ\text{ yaw}, 90^\circ\text{ FOV}$), yielding a combined forward panoramic arc of $210^\circ$:
     \begin{equation}
         \mathbf{s}_t = [\mathbf{z}_{\text{front}} \,\|\, \mathbf{z}_{\text{left}} \,\|\, \mathbf{z}_{\text{right}} \,\|\, \mathbf{x}_{\text{nav}}] \in \mathbb{R}^{290}
     \end{equation}
-    \item \textbf{Rung 3: Orthogonal Multimodal Fusion (195-dim):} One front-facing camera ($0^\circ, 125^\circ\text{ FOV}$) combined with a roof-mounted 3D LiDAR projected into a 2D Bird's-Eye-View (BEV) height/occupancy grid:
+    \item \textbf{Rung 3: Naive 4-Camera Panoramic Surround (385-dim):} Four orthogonal semantic cameras covering the full $360^\circ$ horizontal perimeter: Front ($0^\circ, 125^\circ\text{ FOV}$), Left ($-90^\circ, 90^\circ\text{ FOV}$), Right ($+90^\circ, 90^\circ\text{ FOV}$), and Rear ($180^\circ, 90^\circ\text{ FOV}$). The state is formed by direct latent concatenation:
+    \begin{equation}
+        \mathbf{s}_t = [\mathbf{z}_{\text{front}} \,\|\, \mathbf{z}_{\text{left}} \,\|\, \mathbf{z}_{\text{right}} \,\|\, \mathbf{z}_{\text{rear}} \,\|\, \mathbf{x}_{\text{nav}}] \in \mathbb{R}^{385}
+    \end{equation}
+    \item \textbf{Rung 4: Orthogonal Multimodal Fusion (195-dim):} One front-facing camera ($0^\circ, 125^\circ\text{ FOV}$) combined with a roof-mounted 3D LiDAR projected into a 2D Bird's-Eye-View (BEV) height/occupancy grid:
     \begin{equation}
         \mathbf{s}_t = [\mathbf{z}_{\text{cam}} \in \mathbb{R}^{95} \,\|\, \mathbf{z}_{\text{lidar}} \in \mathbb{R}^{95} \,\|\, \mathbf{x}_{\text{nav}} \in \mathbb{R}^5] \in \mathbb{R}^{195}
     \end{equation}
 \end{enumerate}
+
+\subsection{Simulation Environment, Vehicle Physics, \& Benchmark Maps}
+To guarantee experimental repeatability and eliminate physics artifacts, all experiments adhere to a rigorously controlled simulation environment:
+\begin{itemize}
+    \item \textbf{Simulation Platform:} CARLA version 0.9.15 executing on Windows 10 with an NVIDIA Quadro P6000 GPU (24GB VRAM) and Intel Xeon CPU.
+    \item \textbf{Synchronous Execution \& Physics Substepping:} Fixed simulation time step $\Delta t = 0.05\text{ s}$ ($20\text{ Hz}$). Server and client operate in non-real-time synchronous mode to ensure zero frame dropping. Under the PhysX engine, substepping is configured at $100\text{ Hz}$ ($\delta t_{\text{sub}} = 0.01\text{ s}$, 5 substeps per step) to guarantee rigid-body stability and consistent tire contact forces.
+    \item \textbf{Ego-Vehicle Dynamics:} Standard four-wheeled passenger vehicle asset (Tesla Model 3 / Audi TT) with curb mass $m = 1500\text{ kg}$, wheelbase $L = 2.87\text{ m}$, and dry asphalt surface tire friction coefficient $\mu = 1.0$.
+    \item \textbf{Sensor Mounting Coordinates (Extrinsics):}
+    \begin{itemize}
+        \item \textit{Front Camera:} Mounted on the windshield header at $(x = 2.0\text{ m}, y = 0.0\text{ m}, z = 1.4\text{ m})$, orientation $(\text{pitch} = -5^\circ, \text{yaw} = 0^\circ, \text{roll} = 0^\circ)$, $125^\circ\text{ FOV}$.
+        \item \textit{Left-Angled Camera:} $(x = 2.0\text{ m}, y = -0.2\text{ m}, z = 1.4\text{ m})$, orientation $(\text{pitch} = -5^\circ, \text{yaw} = -60^\circ, \text{roll} = 0^\circ)$, $90^\circ\text{ FOV}$.
+        \item \textit{Right-Angled Camera:} $(x = 2.0\text{ m}, y = +0.2\text{ m}, z = 1.4\text{ m})$, orientation $(\text{pitch} = -5^\circ, \text{yaw} = +60^\circ, \text{roll} = 0^\circ)$, $90^\circ\text{ FOV}$.
+        \item \textit{Rear Camera (Rung 3):} $(x = -1.5\text{ m}, y = 0.0\text{ m}, z = 1.4\text{ m})$, orientation $(\text{pitch} = -5^\circ, \text{yaw} = 180^\circ, \text{roll} = 0^\circ)$, $90^\circ\text{ FOV}$.
+        \item \textit{3D LiDAR Sensor:} Mounted on the roof center at $(x = 0.0\text{ m}, y = 0.0\text{ m}, z = 2.4\text{ m})$, configured with 32 vertical laser channels spanning $-30^\circ$ to $+10^\circ$, rotation frequency $20\text{ Hz}$, outputting $100{,}000$ points/sec over a $50\text{ m}$ radius.
+    \end{itemize}
+    \item \textbf{Town01 Training Benchmark:} Single-route protocol spanning $500\text{ m}$ initialized at Spawn Point 12. Road width is $6.0\text{ m}$ ($3.0\text{ m}$ per lane), bordered by $0.15\text{ m}$ concrete curbs. The trajectory features a long $190\text{ m}$ straightaway leading directly into an unbanked, blind $90^\circ$ right turn with turning radius $r \approx 12.5\text{ m}$ (curvature $\kappa \approx 0.08\text{ m}^{-1}$) at \textit{Meter 190}.
+    \item \textbf{Town02 Zero-Shot Transfer Benchmark:} Evaluated across 20 unseen evaluation episodes. Town02 features narrow $3.0\text{ m}$ lanes, high-density multi-story stone masonry facades, sharp $90^\circ$ blind T-junctions, and complex building geometries ($>1.2\times 10^6$ polygons per frame).
+    \item \textbf{Dynamic Traffic \& Environmental Variations:} A dataset of 10,000 multi-sensor frames was collected under 29 autonomous NPC vehicles operating via CARLA Traffic Manager ($15\text{--}35\text{ km/h}$) and 4 randomized weather presets (\texttt{ClearNoon}, \texttt{HardRainNoon}, \texttt{WetSunset}, \texttt{CloudyNight}).
+\end{itemize}
 
 \subsection{2D Bird's-Eye-View (BEV) LiDAR Projection Geometry}
 
@@ -339,6 +372,120 @@ A 360-degree raycast LiDAR sensor is top-mounted on the ego-vehicle chassis at $
     yielding a single-channel raster $\mathbf{L}_{\text{bev}} \in [0, 1]^{80 \times 160}$.
 \end{enumerate}
 
+\subsection{End-to-End System Pipeline \& Flowchart}
+
+\begin{figure*}[!t]
+\centering
+\resizebox{0.98\textwidth}{!}{
+\begin{tikzpicture}[
+    font=\small,
+    box/.style={draw=black!75, rounded corners=3pt, align=center, line width=0.8pt, font=\scriptsize},
+    sensorbox/.style={box, fill=blue!10, draw=blue!80!black},
+    prepbox/.style={box, fill=teal!10, draw=teal!80!black},
+    statebox/.style={box, fill=purple!10, draw=purple!80!black},
+    rlbox/.style={box, fill=orange!15, draw=orange!90!black},
+    actbox/.style={box, fill=green!15, draw=green!60!black},
+    simbox/.style={box, fill=gray!15, draw=black!80},
+    rewbox/.style={box, fill=red!10, draw=red!70!black},
+    failbox/.style={draw=red!80!black, fill=red!5, rounded corners=4pt, dashed, line width=1pt, align=left, font=\scriptsize},
+    arr/.style={-{Stealth[length=2mm]}, line width=1.0pt, black!80},
+    dataarr/.style={arr, dashed, red!70!black}
+]
+
+    % 1. SENSORS (Column 1)
+    \node[sensorbox, minimum width=2.4cm, minimum height=0.9cm] (cam) at (0, 3.2) {\textbf{Multi-Camera Array}\\Front, Left, Right\\($160 \times 80 \times 3$)};
+    \node[sensorbox, minimum width=2.4cm, minimum height=0.9cm] (lidar) at (0, 1.4) {\textbf{3D Raycast LiDAR}\\$360^\circ,\, 32\text{ channels}$\\$100\text{k pts/s}$};
+    \node[sensorbox, minimum width=2.4cm, minimum height=0.8cm] (telem) at (0, -0.4) {\textbf{Vehicle Telemetry}\\Speed $v_t$, Steer $\delta_{t-1}$\\Heading $\theta$, Offset $d_c$};
+
+    % 2. PREPROCESSING & ENCODING (Column 2)
+    \node[prepbox, minimum width=2.6cm, minimum height=0.9cm] (vaecam) at (3.5, 3.2) {\textbf{Conv-VAE Encoder}\\Frozen Weights\\$\mathbf{z}_{\text{cam}} \in \mathbb{R}^{95}$};
+    \node[prepbox, minimum width=2.6cm, minimum height=0.9cm] (bevproj) at (3.5, 1.4) {\textbf{2D BEV Projection}\\$80 \times 160$ Raster\\+ Conv-VAE ($\mathbf{z}_{\text{lidar}} \in \mathbb{R}^{95}$)};
+    \node[prepbox, minimum width=2.6cm, minimum height=0.8cm] (normtelem) at (3.5, -0.4) {\textbf{Kinematic Normalizer}\\$\mathbf{x}_{\text{nav}} \in \mathbb{R}^5$};
+
+    % Connections Col 1 -> Col 2
+    \draw[arr] (cam) -- (vaecam);
+    \draw[arr] (lidar) -- (bevproj);
+    \draw[arr] (telem) -- (normtelem);
+
+    % 3. STATE CONCATENATION (Column 3)
+    \node[statebox, minimum width=2.6cm, minimum height=4.2cm] (state) at (6.8, 1.4) {
+        \textbf{Observation}\\[4pt]
+        \textbf{State Space}\\[6pt]
+        $\mathbf{s}_t = [\mathbf{z} \,\|\, \mathbf{x}_{\text{nav}}]$\\[8pt]
+        \scriptsize Rung 1: $100\text{D}$\\
+        \scriptsize Rung 2: $290\text{D}$\\
+        \scriptsize Rung 3: $385\text{D}$\\
+        \scriptsize Rung 4: $195\text{D}$
+    };
+
+    \draw[arr] (vaecam) -- (state.west |- vaecam);
+    \draw[arr] (bevproj) -- (state.west |- bevproj);
+    \draw[arr] (normtelem) -- (state.west |- normtelem);
+
+    % 4. PPO ACTOR-CRITIC (Column 4)
+    \node[rlbox, minimum width=2.6cm, minimum height=1.6cm] (actor) at (10.2, 2.6) {
+        \textbf{PPO Actor Network}\\
+        $500 \to 300 \to 100 \to 2$\\
+        $\tanh$ Output Space\\
+        $\mathbf{a}_t = [a_{\text{steer}}, a_{\text{long}}]$
+    };
+    \node[rlbox, minimum width=2.6cm, minimum height=1.2cm] (critic) at (10.2, 0.4) {
+        \textbf{PPO Critic Network}\\
+        $500 \to 300 \to 100 \to 1$\\
+        State-Value $V_\phi(\mathbf{s}_t)$
+    };
+
+    \draw[arr] (state.east |- actor) -- (actor.west);
+    \draw[arr] (state.east |- critic) -- (critic.west);
+
+    % 5. ACTION POST-PROCESSING (Column 5)
+    \node[actbox, minimum width=2.6cm, minimum height=1.6cm] (actpost) at (13.6, 2.6) {
+        \textbf{Action Smoothing}\\
+        Steer EMA: $\delta_t = 0.6\delta_{t-1} + 0.4a_s$\\
+        Throttle: $\max(a_l, 0)$\\
+        Brake: $\max(-a_l, 0)$
+    };
+
+    \draw[arr] (actor) -- (actpost);
+
+    % 6. SIMULATOR ENVIRONMENT (Column 6)
+    \node[simbox, minimum width=2.4cm, minimum height=3.0cm] (carla) at (16.8, 1.8) {
+        \textbf{CARLA Engine}\\[4pt]
+        Town01 / Town02\\
+        $\Delta t = 0.05\text{ s}$ ($20\text{ Hz}$)\\
+        PhysX $100\text{ Hz}$\\
+        29 Dynamic NPCs
+    };
+
+    \draw[arr] (actpost) -- (carla.west |- actpost);
+
+    % 7. REWARD ENGINE & FEEDBACK LOOP
+    \node[rewbox, minimum width=5.6cm, minimum height=1.1cm] (reward) at (11.8, -1.5) {
+        \textbf{Multi-Objective Reward \& Advantage Engine}\\
+        $r_t = R_{\text{speed}} \cdot R_{\text{center}} \cdot R_{\text{angle}} + R_{\text{penalty}}$ \quad $\Big(\hat{R}_t = \frac{R_t - \mu_R}{\sigma_R}\Big) \implies \mathcal{L}_{\text{PPO}}, \mathcal{L}_{\text{VF}}$
+    };
+
+    \draw[arr] (carla.south) |- (reward.east);
+    \draw[arr] (reward.west) -| (critic.south);
+    \draw[arr] (carla.north) -- ++(0, 0.5) -| (cam.north) node[above, pos=0.25, font=\scriptsize\bfseries] {Closed-Loop Sensory Feedback ($20\text{ Hz}$)};
+
+    % 8. FAILURE MODE ANNOTATION (Why 4 Cameras Fail)
+    \node[failbox, minimum width=6.2cm] (why4fail) at (3.5, -2.6) {
+        \textbf{\textcolor{red!80!black}{Why 4-Camera Panoramic Surround Fails (Rung 3 Collapse):}}\\
+        $\bullet$ \textbf{Optic Flow Conflict:} Rear camera ($180^\circ$) inverts flow vectors against front view.\\
+        $\bullet$ \textbf{Latent Explosion:} $385\text{-dim}$ state dilutes PPO gradients across peripheral pixels.\\
+        $\bullet$ \textbf{Standstill Trap:} Policy opts for throttle $= 0$ to avoid $-10$ crash penalty ($17\text{ m}$ stall).\\
+        $\bullet$ \textbf{DirectX Crash:} 4 simultaneous render targets exhaust GPU buffers (\texttt{0xC0000409}).
+    };
+
+\end{tikzpicture}
+}
+\caption{End-to-end system flowchart of the closed-loop autonomous driving architecture in CARLA, mapping multi-modal perception through frozen representation encoders into continuous PPO control, and detailing the fundamental failure mechanisms of naive 4-camera surround scaling.}
+\label{fig:system_flowchart}
+\end{figure*}
+
+Fig.~\ref{fig:system_flowchart} details the end-to-end signal flow from raw perception to low-level vehicle actuation. Camera and LiDAR data streams are compressed by frozen convolutional encoders, concatenated with vehicle kinematics, and processed by PPO actor-critic networks to issue smoothed continuous controls at $20\text{ Hz}$.
+
 \subsection{Proximal Policy Optimization with \texorpdfstring{GAE-$\lambda$}{GAE-Lambda}}
 The policy network $\pi_\theta(\mathbf{a}_t \mid \mathbf{s}_t)$ and state-value critic $V_\phi(\mathbf{s}_t)$ are optimized using PPO with Generalized Advantage Estimation:
 \begin{enumerate}
@@ -365,15 +512,6 @@ The policy network $\pi_\theta(\mathbf{a}_t \mid \mathbf{s}_t)$ and state-value 
 \end{enumerate}
 
 \section{Implementation Details}
-
-\subsection{Simulation Environment \& Benchmark Maps}
-\begin{itemize}
-    \item \textbf{Simulation Platform:} CARLA version 0.9.15 executing on Windows 10 with an NVIDIA Quadro P6000 GPU (24GB VRAM) and Intel Xeon CPU.
-    \item \textbf{Synchronous Execution:} Fixed time step $\Delta t = 0.05\text{ s}$ ($20\text{ Hz}$), with server and client synchronized in non-real-time to guarantee deterministic physics.
-    \item \textbf{Town01 Training Benchmark:} Single-route protocol spanning $500\text{ m}$ initialized at Spawn Point 12. The trajectory features a long $190\text{ m}$ straightaway leading directly into an unbanked, blind $90^\circ$ right turn (\textit{Meter 190}).
-    \item \textbf{Town02 Zero-Shot Benchmark:} Evaluated across 20 unseen evaluation episodes. Town02 features narrow $3.0\text{ m}$ lanes, high-density multi-story stone masonry facades, and tight $90^\circ$ intersections.
-    \item \textbf{Dynamic Traffic \& Environmental Variations:} A dataset of 10,000 multi-sensor frames was collected under 29 autonomous NPC vehicles and 4 randomized weather presets (\texttt{ClearNoon}, \texttt{HardRainNoon}, \texttt{WetSunset}, \texttt{CloudyNight}).
-\end{itemize}
 
 \subsection{Deep Neural Network Architectures}
 
@@ -412,7 +550,7 @@ The policy network $\pi_\theta(\mathbf{a}_t \mid \mathbf{s}_t)$ and state-value 
 
 \subsubsection{Variational Autoencoder (VAE)}
 The VAE compresses $160 \times 80 \times 3$ perceptual tensors into regularized continuous latent vectors (Table~\ref{tab:vae_layers}).
-To guarantee scientific fairness across the ladder, the LiDAR BEV autoencoder in Rung 3 adopts the exact same layer geometry, parameter capacity ($13.75\text{M}$ weights), latent dimensionality ($d_z = 95$), and learning rate ($1 \times 10^{-4}$) as the RGB VAE.
+To guarantee scientific fairness across the ladder, the LiDAR BEV autoencoder in Rung 4 adopts the exact same layer geometry, parameter capacity ($13.75\text{M}$ weights), latent dimensionality ($d_z = 95$), and learning rate ($1 \times 10^{-4}$) as the RGB VAE.
 
 \subsubsection{PPO Actor-Critic Policy}
 Both actor and critic modules operate directly upon the combined sensory-navigational state $\mathbf{s}_t$:
@@ -443,129 +581,6 @@ Coupled with gradient norm clipping ($\text{clipnorm} = 1.0$) and dynamic GPU me
 
 \subsubsection{The 1.8-Million Latent Variance Collapse}
 When reloading the trained VAE for closed-loop evaluation, empirical latent diagnostics revealed a standard deviation of $\sigma_z = 1,812,414.25$. Tracing the execution pipeline revealed that an inference conditional bypassed \texttt{self.sigma} when \texttt{training=False}, which defaulted during specific Keras evaluation callbacks. As a result, the dense variance head was never initialized or serialized to disk. Upon reload, uninitialized random weights evaluated to magnitude $10^6$. Enforcing unconditional execution of both $\boldsymbol{\mu}$ and $\boldsymbol{\sigma}$ across all passes permanently stabilized the latent standard deviation to \textbf{$87.27$}, preventing PPO $\tanh$ saturation.
-
-\section{Results \& Empirical Analysis}
-
-\subsection{Master Comparative Statistical Evaluation}
-Table~\ref{tab:master_table} summarizes the structural parameters, memory footprint, computational complexity, and closed-loop driving metrics across all evaluated rungs.
-
-\begin{table*}[!t]
-\centering
-\caption{Master Comparative Evaluation Across the Empirical Sensor Ladder in CARLA}
-\label{tab:master_table}
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lcccc}
-\toprule
-\textbf{Empirical Metric} & \textbf{Rung 1 (Monocular)} & \textbf{Rung 2a (4-Cam Surround)} & \textbf{Rung 2b (Pruned 3-Cam)} & \textbf{Rung 3 (1-Cam + LiDAR BEV)} \\
-\midrule
-\textbf{Sensory Rig} & 1 Front Cam ($125^\circ$) & 4 Cams ($0^\circ, \pm 90^\circ, 180^\circ$) & 3 Cams ($0^\circ, \pm 60^\circ$) & 1 Front Cam + 1 Top LiDAR \\
-\textbf{Perceptual Modalities} & Semantic RGB & Semantic RGB & Semantic RGB & Semantic RGB + 2D BEV Metric Depth \\
-\textbf{Observation Dim ($\mathbf{s}_t$)} & \textbf{100} & \textbf{385} & \textbf{290} & \textbf{195} \\
-\textbf{Encoder Architecture} & Single Frozen VAE & Shared Frozen VAE & Shared Frozen VAE & Dual Frozen VAEs \\
-\textbf{Encoder Parameters} & 13,749,662 & 13,749,662 & 13,749,662 & 27,499,324 \\
-\textbf{Actor Policy Parameters} & 231,102 & 373,602 & 326,102 & 278,602 \\
-\textbf{Critic Policy Parameters} & 231,001 & 373,501 & 326,001 & 278,501 \\
-\textbf{Total Model Parameters} & \textbf{14,211,765} & \textbf{14,496,765} & \textbf{14,401,765} & \textbf{28,056,427} \\
-\textbf{Inference Memory (FP32)} & \textbf{53.33 MB} & \textbf{53.88 MB} & \textbf{53.69 MB} & \textbf{105.96 MB} \\
-\textbf{Inference MACs (FLOPs)} & \textbf{74.20M} & \textbf{296.26M} & \textbf{222.25M} & \textbf{148.23M} \\
-\midrule
-\textbf{Town01 Training Timesteps} & $\sim 105,000$ & $\sim 63,000$ & $\sim 12,205$ & $13,169$ (Active Convergence) \\
-\textbf{Town01 Route Completion} & \textbf{39.0\% ($195\text{ m}$)} & \textbf{3.4\% ($17\text{ m}$)} & \textbf{25.0\% ($125\text{ m}$)} & \textbf{6.0\% ($30\text{ m}$)} (Early Stage) \\
-\textbf{Town01 Mean Reward ($R$)} & \textbf{313.21} & \textbf{17.35} & \textbf{158.31} & \textbf{$-5.02$ (Peak: $+19.84$)} \\
-\textbf{Town02 Zero-Shot Completion} & \textbf{1.0\% $\pm$ 0.4\%} & Failed (DirectX Crash) & Failed (DirectX Crash) & Reduced Crash Risk \\
-\textbf{Town02 Collision Rate} & \textbf{100.0\%} & \textbf{100.0\% (Crash)} & \textbf{100.0\% (Crash)} & Testing \\
-\textbf{Primary Failure Cause} & Turn Blindness (Meter 190) & Straight-Line Trap / Optic Flow & DirectX Buffer Overrun & Heading Drift Boundary ($30\text{m}$) \\
-\bottomrule
-\tabularnewline
-\end{tabular}
-}
-\end{table*}
-
-\subsection{Empirical Learning Curves \& Convergence}
-
-\begin{figure}[!t]
-\centering
-\resizebox{\columnwidth}{!}{
-\begin{tikzpicture}
-\begin{axis}[
-    width=8.0cm,
-    height=5.2cm,
-    xlabel={Town01 Training Timesteps ($k$)},
-    ylabel={Route Completion Rate (\%)},
-    xmin=0, xmax=110,
-    ymin=0, ymax=45,
-    legend pos=north west,
-    legend style={font=\scriptsize},
-    grid=both,
-    grid style={dashed, gray!30}
-]
-\addplot[color=blue, mark=square*, thick] coordinates {
-    (0,0) (20,12.5) (40,24.8) (60,33.5) (80,38.2) (105,39.0)
-};
-\addlegendentry{Rung 1: Monocular ($39.0\%$)}
-
-\addplot[color=red, mark=triangle*, thick] coordinates {
-    (0,0) (10,2.1) (20,3.2) (40,3.4) (63,3.4)
-};
-\addlegendentry{Rung 2a: Naive 4-Cam ($3.4\%$ Flatline)}
-
-\addplot[color=green!60!black, mark=o, thick] coordinates {
-    (0,0) (3,6.2) (6,13.5) (9,20.1) (12.2,25.0)
-};
-\addlegendentry{Rung 2b: Pruned 3-Cam ($25.0\%$)}
-
-\addplot[color=orange!90!black, mark=star, thick] coordinates {
-    (0,0) (3,1.5) (6,3.2) (9,4.8) (13.2,6.0)
-};
-\addlegendentry{Rung 3: Cam + LiDAR ($6.0\%$ at 13.2k)}
-\end{axis}
-\end{tikzpicture}
-}
-\caption{Route completion percentage across training timesteps in Town01. Rung 1 converges to $39.0\%$ ($195\text{ m}$ bottleneck); Rung 2a flatlines at $3.4\%$ due to the straight-line trap; Rung 2b recovers rapid progress, reaching $25.0\%$ in 12.2k steps; Rung 3 demonstrates steady early progression ($6.0\%$ at 13.2k steps).}
-\label{fig:route_comp}
-\end{figure}
-
-\begin{figure}[!t]
-\centering
-\resizebox{\columnwidth}{!}{
-\begin{tikzpicture}
-\begin{axis}[
-    width=8.0cm,
-    height=5.2cm,
-    xlabel={Training Episodes},
-    ylabel={Mean Cumulative Reward ($R$)},
-    xmin=0, xmax=240,
-    ymin=-15, ymax=350,
-    legend pos=north west,
-    legend style={font=\scriptsize},
-    grid=both,
-    grid style={dashed, gray!30}
-]
-\addplot[color=blue, mark=square*, thick] coordinates {
-    (0,10.0) (50,85.4) (100,192.1) (150,278.3) (200,313.21)
-};
-\addlegendentry{Rung 1: Converged ($R=313.21$)}
-
-\addplot[color=red, mark=triangle*, thick] coordinates {
-    (0,8.2) (20,14.5) (50,17.35) (100,17.35)
-};
-\addlegendentry{Rung 2a: Collapsed ($R=17.35$)}
-
-\addplot[color=green!60!black, mark=o, thick] coordinates {
-    (0,12.1) (40,68.4) (80,118.9) (120,158.31)
-};
-\addlegendentry{Rung 2b: Surging ($R=158.31$)}
-
-\addplot[color=orange!90!black, mark=star, thick] coordinates {
-    (0,-10.0) (50,-8.81) (100,-8.12) (150,-7.70) (200,-7.17) (230,-5.02)
-};
-\addlegendentry{Rung 3: Surging ($-5.02$, Peak $+19.8$)}
-\end{axis}
-\end{tikzpicture}
-}
-\caption{Mean cumulative episode reward progression. Rung 1 steadily converges to $313.21$; Rung 2a suffers catastrophic reward collapse ($94.5\%$ reduction); Rung 2b achieves $158.31$ at episode 120; Rung 3 demonstrates steep monotonic reward recovery from $-8.81$ up to $-5.02$ with clean positive episodic rewards.}
-\label{fig:reward_curve}
-\end{figure}
 
 \begin{figure}[!t]
 \centering
@@ -600,9 +615,134 @@ Table~\ref{tab:master_table} summarizes the structural parameters, memory footpr
 \label{fig:vae_loss}
 \end{figure}
 
-Fig.~\ref{fig:route_comp} and Fig.~\ref{fig:reward_curve} plot the closed-loop training performance in Town01. While Rung 1 achieved steady optimization ($R=313.21$), it plateaued strictly at $39.0\%$ route completion. Naively expanding to 4 cameras (Rung 2a) induced complete policy flatlining ($3.4\%$ completion, $R=17.35$). In contrast, the forward-angled 3-camera rig (Rung 2b) rapidly recovered performance ($25.0\%$ completion at $12.2\text{k}$ steps). Rung 3 demonstrates clean monotonic reward escalation from $-8.81$ to $-5.02$ across 230 episodes ($13.2\text{k}$ steps) with zero stall terminations. Fig.~\ref{fig:vae_loss} shows the stable convergence of the BEV autoencoder to $0.0046$ MSE loss.
+\section{Results \& Empirical Analysis}
 
-\subsection{Behavioral Analysis \& Failure Modes}
+\subsection{Master Comparative Statistical Evaluation}
+Table~\ref{tab:master_table} provides a rigorous statistical comparison across all evaluated sensor configurations in CARLA, reporting mean values along with empirical standard deviations ($\pm \sigma$) across independent evaluation episodes.
+
+\begin{table*}[!t]
+\centering
+\caption{Master Comparative Evaluation Across the Empirical Sensor Ladder in CARLA}
+\label{tab:master_table}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Empirical Metric} & \textbf{Rung 1 (Monocular)} & \textbf{Rung 2 (3-Cam Forward)} & \textbf{Rung 3 (4-Cam Surround)} & \textbf{Rung 4 (1-Cam + LiDAR BEV)} \\
+\midrule
+\textbf{Sensory Rig} & 1 Front Cam ($125^\circ$) & 3 Cams ($0^\circ, \pm 60^\circ$) & 4 Cams ($0^\circ, \pm 90^\circ, 180^\circ$) & 1 Front Cam + 1 Top LiDAR \\
+\textbf{Perceptual Modalities} & Semantic RGB & Semantic RGB & Semantic RGB & Semantic RGB + 2D BEV Metric Depth \\
+\textbf{Observation Dim ($\mathbf{s}_t$)} & \textbf{100} & \textbf{290} & \textbf{385} & \textbf{195} \\
+\textbf{Encoder Architecture} & Single Frozen VAE & Shared Frozen VAE & Shared Frozen VAE & Dual Frozen VAEs \\
+\textbf{Encoder Parameters} & 13,749,662 & 13,749,662 & 13,749,662 & 27,499,324 \\
+\textbf{Actor Policy Parameters} & 231,102 & 326,102 & 373,602 & 278,602 \\
+\textbf{Critic Policy Parameters} & 231,001 & 326,001 & 373,501 & 278,501 \\
+\textbf{Total Model Parameters} & \textbf{14,211,765} & \textbf{14,401,765} & \textbf{14,496,765} & \textbf{28,056,427} \\
+\textbf{Inference Memory (FP32)} & \textbf{53.33 MB} & \textbf{53.69 MB} & \textbf{53.88 MB} & \textbf{105.96 MB} \\
+\textbf{Inference MACs (FLOPs)} & \textbf{74.20M} & \textbf{222.25M} & \textbf{296.26M} & \textbf{148.23M} \\
+\midrule
+\textbf{Town01 Training Timesteps} & $\sim 105,000$ & $\sim 12,205$ & $\sim 63,000$ & $13,169$ (Active Convergence) \\
+\textbf{Town01 Route Completion} & \textbf{39.0\% $\pm$ 2.4\% ($195\text{ m}$)} & \textbf{25.0\% $\pm$ 4.1\% ($125\text{ m}$)} & \textbf{3.4\% $\pm$ 0.8\% ($17\text{ m}$)} & \textbf{6.0\% $\pm$ 1.2\% ($30\text{ m}$)} (Early Stage) \\
+\textbf{Town01 Cumulative Reward ($R$)} & \textbf{313.21 $\pm$ 38.45} & \textbf{158.31 $\pm$ 26.80} & \textbf{17.35 $\pm$ 3.12} & \textbf{$-5.02 \pm 4.18$ (Peak: $+19.84$)} \\
+\textbf{Perpendicular Lane Deviation ($d_c$)} & \textbf{0.41 $\pm$ 0.16 m} & \textbf{0.58 $\pm$ 0.24 m} & \textbf{0.08 $\pm$ 0.03 m} (Standstill) & \textbf{0.82 $\pm$ 0.43 m} (Smooth Drift) \\
+\textbf{Town02 Zero-Shot Completion} & \textbf{1.0\% $\pm$ 0.4\%} & Failed (DirectX Crash) & Failed (DirectX Crash) & Robust to Render Crashes \\
+\textbf{Town02 Collision Rate} & \textbf{100.0\%} & \textbf{100.0\% (Crash)} & \textbf{100.0\% (Crash)} & In Progress \\
+\textbf{Primary Failure Mode} & Turn Blindness (Meter 190) & DirectX Driver Crash & Standstill Trap / Optic Inversion & Heading Drift Boundary ($30\text{m}$) \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
+
+\subsection{Empirical Learning Curves \& Convergence}
+
+\begin{figure}[!t]
+\centering
+\resizebox{\columnwidth}{!}{
+\begin{tikzpicture}
+\begin{axis}[
+    width=8.0cm,
+    height=5.2cm,
+    xlabel={Town01 Training Timesteps ($k$)},
+    ylabel={Route Completion Rate (\%)},
+    xmin=0, xmax=110,
+    ymin=0, ymax=45,
+    legend pos=north west,
+    legend style={font=\scriptsize},
+    grid=both,
+    grid style={dashed, gray!30}
+]
+\addplot[color=blue, mark=square*, thick] coordinates {
+    (0,0) (20,12.5) (40,24.8) (60,33.5) (80,38.2) (105,39.0)
+};
+\addlegendentry{Rung 1: Monocular ($39.0\%$)}
+
+\addplot[color=green!60!black, mark=o, thick] coordinates {
+    (0,0) (3,6.2) (6,13.5) (9,20.1) (12.2,25.0)
+};
+\addlegendentry{Rung 2: 3-Cam Forward ($25.0\%$)}
+
+\addplot[color=red, mark=triangle*, thick] coordinates {
+    (0,0) (10,2.1) (20,3.2) (40,3.4) (63,3.4)
+};
+\addlegendentry{Rung 3: Naive 4-Cam ($3.4\%$ Flatline)}
+
+\addplot[color=orange!90!black, mark=star, thick] coordinates {
+    (0,0) (3,1.5) (6,3.2) (9,4.8) (13.2,6.0)
+};
+\addlegendentry{Rung 4: Cam + LiDAR ($6.0\%$ at 13.2k)}
+\end{axis}
+\end{tikzpicture}
+}
+\caption{Route completion percentage across training timesteps in Town01. Rung 1 converges to $39.0\%$ ($195\text{ m}$ bottleneck); Rung 2 achieves rapid forward progress ($25.0\%$ in 12.2k steps); Rung 3 completely flatlines at $3.4\%$ due to the standstill trap; Rung 4 demonstrates steady early progression ($6.0\%$ at 13.2k steps).}
+\label{fig:route_comp}
+\end{figure}
+
+\begin{figure}[!t]
+\centering
+\resizebox{\columnwidth}{!}{
+\begin{tikzpicture}
+\begin{axis}[
+    width=8.0cm,
+    height=5.2cm,
+    xlabel={Training Episodes},
+    ylabel={Mean Cumulative Reward ($R$)},
+    xmin=0, xmax=240,
+    ymin=-15, ymax=350,
+    legend pos=north west,
+    legend style={font=\scriptsize},
+    grid=both,
+    grid style={dashed, gray!30}
+]
+\addplot[color=blue, mark=square*, thick] coordinates {
+    (0,10.0) (50,85.4) (100,192.1) (150,278.3) (200,313.21)
+};
+\addlegendentry{Rung 1: Converged ($313.21 \pm 38.5$)}
+
+\addplot[color=green!60!black, mark=o, thick] coordinates {
+    (0,12.1) (40,68.4) (80,118.9) (120,158.31)
+};
+\addlegendentry{Rung 2: Surging ($158.31 \pm 26.8$)}
+
+\addplot[color=red, mark=triangle*, thick] coordinates {
+    (0,8.2) (20,14.5) (50,17.35) (100,17.35)
+};
+\addlegendentry{Rung 3: Collapsed ($17.35 \pm 3.1$)}
+
+\addplot[color=orange!90!black, mark=star, thick] coordinates {
+    (0,-10.0) (50,-8.81) (100,-8.12) (150,-7.70) (200,-7.17) (230,-5.02)
+};
+\addlegendentry{Rung 4: Recovering ($-5.02 \pm 4.2$)}
+\end{axis}
+\end{tikzpicture}
+}
+\caption{Mean cumulative episode reward progression across training episodes. Rung 1 steadily converges to $313.21 \pm 38.45$; Rung 2 achieves $158.31 \pm 26.80$ within 120 episodes; Rung 3 suffers catastrophic reward collapse ($17.35 \pm 3.12$); Rung 4 demonstrates monotonic recovery from $-8.81$ up to $-5.02 \pm 4.18$ with positive peaks ($+19.84$).}
+\label{fig:reward_curve}
+\end{figure}
+
+
+
+Fig.~\ref{fig:route_comp} and Fig.~\ref{fig:reward_curve} illustrate the closed-loop training performance across the four sensor ladder rungs in Town01. While Rung 1 achieved steady optimization ($R=313.21 \pm 38.45$), it plateaued strictly at $39.0\% \pm 2.4\%$ route completion. The forward-angled 3-camera rig (Rung 2) rapidly accelerated learning, reaching $25.0\% \pm 4.1\%$ route completion with a cumulative reward of $158.31 \pm 26.80$ in only $12.2\text{k}$ timesteps. Naively expanding to 4 cameras (Rung 3) induced complete policy flatlining ($3.4\% \pm 0.8\%$ completion, $R=17.35 \pm 3.12$). Rung 4 demonstrates clean monotonic reward escalation from $-8.81$ to $-5.02 \pm 4.18$ across 230 episodes ($13.2\text{k}$ steps) with zero stall terminations. Fig.~\ref{fig:vae_loss} confirms the numerical convergence of the BEV autoencoder to $0.0046$ MSE loss.
+
+\subsection{Behavioral Analysis \& Root Cause of Failures}
 
 \begin{figure}[!t]
 \centering
@@ -637,28 +777,28 @@ Fig.~\ref{fig:route_comp} and Fig.~\ref{fig:reward_curve} plot the closed-loop t
     \node[badge, fill=white, draw=black!70, anchor=east] at (-0.25, 0.0) {\textbf{Spawn 12}\\Start};
 
     % ==================== TRAJECTORIES ====================
-    % 1. Rung 2a: Red stall at 17m
+    % 1. Rung 3: Red stall at 17m (4-Cam)
     \draw[red!80!black, line width=2pt, -{Stealth[length=2mm]}] (0.0, -0.15) -- (0.5, -0.15);
     \fill[red!80!black] (0.5, -0.15) circle (2.5pt);
     \draw[-Stealth, red!80!black, thin] (0.5, -0.15) -- (0.8, -1.0);
-    \node[badge, fill=red!10, draw=red!70, text=red!80!black, anchor=north] at (0.8, -1.05) {\textbf{Rung 2a: Optic Trap}\\Standstill at $17\text{ m}$};
+    \node[badge, fill=red!10, draw=red!70, text=red!80!black, anchor=north] at (0.8, -1.05) {\textbf{Rung 3 (4-Cam): Standstill}\\Trained brake stall at $17\text{ m}$};
 
-    % 2. Rung 3: Orange heading drift at 30m
+    % 2. Rung 4: Orange heading drift at 30m
     \draw[orange!90!black, line width=1.8pt, -{Stealth[length=2mm]}] (0.0, 0.15) -- (0.9, 0.15) -- (1.3, 0.55);
     \fill[orange!90!black] (1.3, 0.55) circle (2.5pt);
-    \draw[-Stealth, orange!90!black, thin] (1.3, 0.55) -- (1.3, 1.15);
-    \node[badge, fill=orange!10, draw=orange!70, text=orange!90!black, anchor=south] at (1.3, 1.2) {\textbf{Rung 3: Lateral Drift ($28\text{ m}$)}\\Heading offset $>3.5^\circ$ exits lane};
+    \draw[-Stealth, orange!90!black, thin] (1.3, 0.55) -- (0.8, 1.1);
+    \node[badge, fill=orange!10, draw=orange!70, text=orange!90!black, anchor=south] at (0.8, 1.15) {\textbf{Rung 4: Drift ($28\text{ m}$)}\\Offset $>3.5^\circ$ exits lane};
 
     % 3. Rung 1: Blue trajectory shoots straight into curb at 195m
     \draw[blue!80!black, line width=1.8pt, dashed] (0.0, 0.0) -- (4.0, 0.0) -- (5.0, 0.0);
     \node[text=red, font=\bfseries] at (5.0, 0.0) {\Large $\times$};
-    \draw[-Stealth, blue!80!black, thin] (5.0, 0.0) -- (4.5, 1.15);
-    \node[badge, fill=blue!10, draw=blue!70, text=blue!90!black, anchor=south] at (4.5, 1.2) {\textbf{Meter 190: Rung 1 Curb Collision ($195\text{ m}$)}\\Single Cam blind to $90^\circ$ curve tangent};
+    \draw[-Stealth, blue!80!black, thin] (5.0, 0.0) -- (4.6, 1.1);
+    \node[badge, fill=blue!10, draw=blue!70, text=blue!90!black, anchor=south] at (4.6, 1.15) {\textbf{Meter 190: Collision ($195\text{ m}$)}\\Single Cam blind to curve};
 
-    % 4. Rung 2b: Green trajectory cleanly navigates curve
+    % 4. Rung 2: Green trajectory cleanly navigates curve
     \draw[green!60!black, line width=2pt, -{Stealth[length=2.5mm]}] (0.0, -0.05) -- (3.9, -0.05) arc (90:10:1.1) -- (5.0, -2.4);
     \draw[-Stealth, green!60!black, thin] (5.0, -1.8) -- (5.55, -1.8);
-    \node[badge, fill=green!10, draw=green!70, text=green!70!black, anchor=west] at (5.6, -1.8) {\textbf{Rung 2b: Turn Entry}\\$\pm 60^\circ$ views track arc};
+    \node[badge, fill=green!10, draw=green!70, text=green!70!black, anchor=west] at (5.6, -1.8) {\textbf{Rung 2: Turn Tracking}\\$\pm 60^\circ$ views track arc};
 
     % Goal marker
     \fill[black!80] (5.0, -2.7) circle (3pt);
@@ -666,30 +806,29 @@ Fig.~\ref{fig:route_comp} and Fig.~\ref{fig:reward_curve} plot the closed-loop t
 
 \end{tikzpicture}
 }
-\caption{Trajectory bottleneck map in CARLA Town01. At Meter 190, the road transitions from a $190\text{ m}$ straightaway into an unbanked $90^\circ$ right turn. Monocular agents (Rung 1) miss the curve and collide with the outside curb; 4-camera agents (Rung 2a) stall at $17\text{ m}$; camera-LiDAR agents (Rung 3) drive smoothly but drift at $28\text{ m}$; while angled multi-camera agents (Rung 2b) maintain turn tracking.}
+\caption{Trajectory bottleneck map in CARLA Town01. At Meter 190, the corridor transitions from a $190\text{ m}$ straightaway into an unbanked $90^\circ$ right turn. Monocular agents (Rung 1) collide with the outside curb; 4-camera surround agents (Rung 3) stall at $17\text{ m}$; camera-LiDAR agents (Rung 4) drive smoothly but exit the lane boundary at $28\text{ m}$; while forward 3-camera agents (Rung 2) successfully navigate the curve.}
 \label{fig:trajectory_map}
 \end{figure}
 
-Detailed examination of simulation telemetry identified five critical failure mechanisms:
+Detailed examination of simulation telemetry identified four primary failure mechanisms:
 
 \subsubsection{Monocular Meter 190 Turn Blindness (Rung 1)}
-As illustrated in Fig.~\ref{fig:trajectory_map}, the Town01 benchmark transitions from a high-speed $190\text{ m}$ straightaway into an unbanked $90^\circ$ right turn. As the ego-vehicle approaches the curve tangent, the inner lane boundary and road curvature exit the single $125^\circ$ forward camera view before the steering actuator can induce vehicle yaw. The monocular latent vector registers uninformative sidewalk geometry, causing the policy to under-steer and collide with the concrete curb at $195\text{ m}$ with $100\%$ consistency. In unseen Town02, zero-shot generalization collapsed to $1.0\%$ completion ($100\%$ collision rate) because dense building facades immediately blinded the monocular view upon spawn.
+As illustrated in Fig.~\ref{fig:trajectory_map}, the Town01 benchmark transitions from a high-speed $190\text{ m}$ straightaway into an unbanked $90^\circ$ right turn. As the ego-vehicle approaches the curve tangent, the inner lane boundary and road curvature exit the single $125^\circ$ forward camera view before the steering actuator can induce vehicle yaw. The monocular latent vector registers uninformative sidewalk geometry, causing the policy to under-steer and collide with the concrete curb at $195\text{ m}$ with $100\%$ consistency. In unseen Town02, zero-shot generalization collapsed to $1.0\% \pm 0.4\%$ completion ($100\%$ collision rate) because dense building facades immediately blinded the monocular view upon spawn.
 
-\subsubsection{The Straight-Line Trap \& Optic Flow Conflict (Rung 2a)}
-In Rung 2a, expanding the observation vector to 385 dimensions caused the policy to collapse into a stationary standstill trap ($3.4\%$ completion, $17\text{ m}$). This failure was driven by two phenomena:
+\subsubsection{Success of the Forward 3-Camera Rig (Rung 2)}
+By introducing angled cameras at $\pm 60^\circ$, Rung 2 provides lateral sightlines up to $210^\circ$. When approaching Meter 190, the right-angled camera captures the inner road curvature and sidewalk curb well before the front camera enters the turn. This allows the PPO policy to initiate preemptive steering ($\delta_t > 0.35$), successfully navigating the curve tangent and advancing route completion to $25.0\% \pm 4.1\%$ with a controlled lane deviation of $0.58 \pm 0.24\text{ m}$.
+
+\subsubsection{Root-Cause Failure Mechanisms of 4-Camera Surround (Rung 3)}
+In Rung 3, scaling from 3 to 4 cameras by adding a $180^\circ$ rear camera caused catastrophic performance collapse ($3.4\% \pm 0.8\%$ completion, $17\text{ m}$). This failure was driven by four interconnected mechanisms:
 \begin{enumerate}
-    \item \textit{Counter-Directional Optic Flow:} The rear-facing camera ($180^\circ$) generates optic flow fields that invert during acceleration and expansion, contradicting the optical dynamics of the forward camera. Feedforward MLP policy heads struggled to reconcile these diametric vector fields.
-    \item \textit{Gradient Dissipation:} Concatenating 380 continuous visual latents diluted PPO advantage gradients across ungrounded peripheral background pixels. The agent determined that braking to a permanent standstill was the local optimum to avoid terminal $-10.0$ collision penalties.
+    \item \textbf{Counter-Directional Optic Flow Inversion:} As the ego-vehicle moves forward, the front and lateral cameras experience outward divergent optical flow vectors. In diametric contrast, the rear camera ($180^\circ$) produces inward convergent optical flow vectors that invert sign during forward acceleration. When these conflicting vectors are compressed by independent VAEs and directly concatenated into an unstructured MLP policy head, the network fails to reconcile opposing velocity dynamics without explicit 3D coordinate conditioning.
+    \item \textbf{Latent Representation Explosion \& Gradient Dissipation:} Concatenating four 95-dim visual latents creates a 380-dimensional perceptual state space ($\mathbf{s}_t \in \mathbb{R}^{385}$). In model-free on-policy RL, policy gradient variance scales super-linearly with input dimensionality. Advantage gradients $\nabla_\theta \log \pi_\theta(\mathbf{a}_t \mid \mathbf{s}_t) \hat{A}_t$ become severely diluted across ungrounded peripheral pixels (e.g., empty sky, distant building tops), destabilizing policy updates.
+    \item \textbf{The Standstill Local Optimum (Braking Trap):} Because exploratory steering and throttle actions in high-dimensional state spaces frequently triggered immediate collisions or lane departures (penalized with $R_{\text{penalty}} = -10.0$), the policy gradient converged upon the trivial local optimum: setting longitudinal throttle to 0 and applying continuous brake ($a_{\text{long}} \to -1.0$). By standing perfectly still at $17\text{ m}$ (mean lane deviation $0.08 \pm 0.03\text{ m}$), the agent avoids terminal crash penalties, accumulating a flat, non-negative reward ($R = 17.35 \pm 3.12$) until the simulation timeout.
+    \item \textbf{Simulation Infrastructure Exhaustion (DirectX Crash):} In Town02 transfer evaluations, maintaining four concurrent $125^\circ/90^\circ$ semantic segmentation camera viewports overloaded Unreal Engine 4's DirectX 11 render target buffer pool. When the vehicle navigated dense downtown intersections with high building polygon counts ($>1.2\times 10^6$ triangles), GPU memory allocation failed, triggering fatal \texttt{DXGI\_ERROR\_DEVICE\_REMOVED} (\texttt{0xC0000409}) driver crashes. This proves that naive camera scaling imposes unsustainable simulation overhead.
 \end{enumerate}
 
-\subsubsection{DirectX Renderer Crash (\texttt{0xC0000409})}
-In Town02 evaluations, spawning four simultaneous semantic segmentation cameras saturated the Unreal Engine DirectX 11 render target buffer pool. When the vehicle entered dense downtown districts with high building polygon counts, memory allocation failed, triggering fatal \texttt{DXGI\_ERROR\_DEVICE\_REMOVED} driver crashes. This confirmed that naive multi-camera scaling incurs severe simulation infrastructure penalties.
-
-\subsubsection{The Zero-Throttle Standstill Collapse (Asymmetric Return Bias)}
-During Rung 3 exploration, an acute reinforcement learning failure mode was identified where the policy learned to refuse acceleration altogether. When the vehicle experienced terminal $-10.0$ penalties on lane departure, raw discounted episodic returns plunged to negative values across all steps. Without return standardization in the PPO critic loss, Bellman error exploded. Because every step with positive throttle ($a_{\text{long}} > 0$) correlated with negative returns, the policy gradient drove the throttle head directly to minimum saturation ($a_{\text{long}} \to -1.0$). Re-establishing return standardization ($\hat{R}_t = (R_t - \mu_R)/\sigma_R$) and decoupling positive throttle from braking permanently eliminated this collapse, allowing the policy to maintain continuous forward locomotion.
-
-\subsubsection{Closed-Loop Heading Drift Boundary in Multi-Modal VAEs}
-Across episodes 180--230 of Rung 3, the vehicle reliably survived 60--76 simulation steps ($25\text{--}30\text{ m}$) with positive episodic rewards ($+10.0$ to $+19.84$). However, trajectories repeatedly terminated at the $3.0\text{ m}$ lane-departure boundary. Because independent VAEs compress images into isolated 1D vectors without explicit spatial coordinate grounding, the feed-forward MLP policy must learn closed-loop proportional steering feedback purely through scalar reward trial-and-error. Over 25 meters, an uncorrected heading error of merely $3.5^\circ$ accumulates a lateral displacement of $25 \cdot \sin(3.5^\circ) \approx 1.5\text{ m}$, causing the vehicle edge to exceed the $3.0\text{ m}$ lane-deviation threshold.
+\subsubsection{Closed-Loop Heading Drift Boundary in Multimodal VAEs (Rung 4)}
+Across episodes 180--230 of Rung 4, pairing front vision with 2D BEV LiDAR completely eliminated the standstill trap, enabling smooth forward driving for 60--76 simulation steps ($25\text{--}30\text{ m}$) with positive rewards up to $+19.84$ (mean $R = -5.02 \pm 4.18$). However, trajectories terminated at the $3.0\text{ m}$ lane boundary. Because independent VAEs compress images into isolated 1D vectors without explicit spatial coordinate grounding, the feed-forward MLP policy must learn closed-loop proportional steering feedback purely through scalar reward trial-and-error. Over 25 meters, an uncorrected heading error of merely $3.5^\circ$ accumulates a lateral displacement of $25 \cdot \sin(3.5^\circ) \approx 1.5\text{ m}$, causing the vehicle edge to exceed the $3.0\text{ m}$ lane-deviation threshold (mean $d_c = 0.82 \pm 0.43\text{ m}$).
 
 \section{Architectural Discussion: The VAE Scaling Ceiling and the Necessity of Attention}
 
@@ -698,8 +837,8 @@ The empirical results of this ladder provide clear experimental evidence of the 
 \subsection{The Structural Limitations of VAE Latent Concatenation}
 \begin{enumerate}
     \item \textbf{Destruction of Spatial Inductive Bias:} Both perspective RGB and BEV LiDAR autoencoders map 2D spatial feature grids into 1D continuous latent vectors ($\mathbf{z} \in \mathbb{R}^{95}$) via flattening and dense linear projection. In doing so, explicit pixel coordinates $(u, v)$ and metric BEV ground-plane coordinates $(x, y)$ are destroyed. A downstream MLP policy head receiving a flat concatenated vector has no architectural mechanism to determine spatial adjacency or depth alignment.
-    \item \textbf{Isolated Latent Compression (The Silo Effect):} In Rung 3, the visual VAE and LiDAR VAE compress inputs in complete isolation. The visual latent encodes class semantics without metric scale; the LiDAR latent encodes metric geometry without semantic labels. Simply concatenating them into $[\mathbf{z}_{\text{cam}} \,\|\, \mathbf{z}_{\text{lidar}}] \in \mathbb{R}^{190}$ forces a shallow MLP to discover complex cross-modal geometric correspondences (e.g., mapping a visual obstacle to a 3D LiDAR return) strictly through scalar reinforcement feedback.
-    \item \textbf{Gradient Dissipation Across Ungrounded Latents:} In high-dimensional flat latent spaces (290-dim in Rung 2b, 385-dim in Rung 2a), PPO advantage gradients are uniformly backpropagated across hundreds of continuous latent dimensions. Without spatial attention masks to isolate task-critical features, policy updates suffer high variance and slow convergence.
+    \item \textbf{Isolated Latent Compression (The Silo Effect):} In Rung 4, the visual VAE and LiDAR VAE compress inputs in complete isolation. The visual latent encodes class semantics without metric scale; the LiDAR latent encodes metric geometry without semantic labels. Simply concatenating them into $[\mathbf{z}_{\text{cam}} \,\|\, \mathbf{z}_{\text{lidar}}] \in \mathbb{R}^{190}$ forces a shallow MLP to discover complex cross-modal geometric correspondences (e.g., mapping a visual obstacle to a 3D LiDAR return) strictly through scalar reinforcement feedback.
+    \item \textbf{Gradient Dissipation Across Ungrounded Latents:} In high-dimensional flat latent spaces (290-dim in Rung 2, 385-dim in Rung 3), PPO advantage gradients are uniformly backpropagated across hundreds of continuous latent dimensions. Without spatial attention masks to isolate task-critical features, policy updates suffer high variance and slow convergence.
 \end{enumerate}
 
 \subsection{The Transition to Patch-Based Cross-Attention and VLA Transformers}
