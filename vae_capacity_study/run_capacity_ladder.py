@@ -53,6 +53,21 @@ CSV_FIELDS = [
 ]
 
 
+def _connect(town):
+    conn = ClientConnection()
+    conn.host = getattr(P, 'CARLA_HOST', 'localhost')
+    conn.port = getattr(P, 'CARLA_PORT', 2000)
+    conn.timeout = getattr(P, 'CARLA_TIMEOUT', 60.0)
+    conn.town = town
+    client, world = conn.setup()
+    if client is None or world is None:
+        raise ConnectionError(
+            f"Could not reach CARLA server at {conn.host}:{conn.port}. Is CarlaUE4.exe running?"
+        )
+    print(f"CARLA connection established ({town}) at {conn.host}:{conn.port}.")
+    return client, world
+
+
 def run_evaluation(env, agent, encoder, n_episodes, out_csv):
     os.makedirs(os.path.dirname(out_csv), exist_ok=True)
     f_csv = open(out_csv, 'w', newline='')
@@ -80,14 +95,13 @@ def run_evaluation(env, agent, encoder, n_episodes, out_csv):
         encoder.timings.clear()
 
         done = False
-        reason = 'max_steps'
+        info = {}
 
         while not done and step_count < P.EPISODE_LENGTH:
             t0_step = time.perf_counter()
-            action = agent.actor(state)
-            action_np = action.numpy() if hasattr(action, 'numpy') else np.asarray(action)
+            action, _ = agent(state, False)
 
-            next_obs_raw, reward, done, info = env.step(action_np)
+            next_obs_raw, reward, done, info = env.step(action)
             next_state = encoder.process(next_obs_raw)
 
             total_reward += reward
@@ -98,16 +112,13 @@ def run_evaluation(env, agent, encoder, n_episodes, out_csv):
             step_latencies.append(dt_step)
 
         wall_time = time.time() - t0_ep
-        collided = getattr(env, 'collision', False)
-        completion = getattr(env, 'route_completion', 0.0)
-        distance = getattr(env, 'distance_traveled', 0.0)
-        lane_dev = getattr(env, 'avg_lane_deviation', 0.0)
-        if completion >= P.SUCCESS_COMPLETION_THRESHOLD:
-            reason = 'success'
-        elif collided:
-            reason = 'collision'
-        elif getattr(env, 'stalled', False):
-            reason = 'standstill_trap'
+        success = int(info.get('success', False))
+        collided = int(info.get('collided', False))
+        collision_count = info.get('collision_count', 0)
+        completion = info.get('route_completion', 0.0)
+        distance = info.get('distance_covered', 0.0)
+        lane_dev = info.get('center_lane_deviation', 0.0)
+        reason = info.get('termination_reason', 'max_steps')
 
         enc_mean = float(np.mean(encoder.timings)) if encoder.timings else 0.0
         enc_p95  = float(np.percentile(encoder.timings, 95)) if encoder.timings else 0.0
@@ -120,15 +131,15 @@ def run_evaluation(env, agent, encoder, n_episodes, out_csv):
             'town': P.TOWN,
             'episode': ep,
             'reward': round(total_reward, 2),
-            'success': int(completion >= P.SUCCESS_COMPLETION_THRESHOLD),
-            'collided': int(collided),
-            'collision_count': getattr(env, 'collision_count', 0),
+            'success': success,
+            'collided': collided,
+            'collision_count': collision_count,
             'route_completion': round(completion * 100.0, 1),
             'distance_covered_m': round(distance, 1),
             'center_lane_deviation_m': round(lane_dev, 3),
             'termination_reason': reason,
             'timesteps': step_count,
-            'mean_speed_kmh': round(getattr(env, 'mean_speed', 0.0), 1),
+            'mean_speed_kmh': round(info.get('mean_speed_kmh', 0.0), 1),
             'episode_wall_time_s': round(wall_time, 1),
             'encoder_latency_mean_ms': round(enc_mean, 2),
             'encoder_latency_p95_ms': round(enc_p95, 2),
@@ -163,15 +174,36 @@ def main():
     for d in [P.RESULTS_PATH, P.CHECKPOINT_PATH, P.LOG_PATH_TRAIN, P.LOG_PATH_TEST]:
         os.makedirs(d, exist_ok=True)
 
-    print(f"[init] Connecting to CARLA ({P.CARLA_HOST}:{P.CARLA_PORT}) ...")
-    client_conn = ClientConnection()
-    client_conn.set_client()
+    print(f"[init] Connecting to CARLA ({getattr(P, 'CARLA_HOST', 'localhost')}:{getattr(P, 'CARLA_PORT', 2000)}) ...")
+    client, world = _connect(P.TOWN)
 
     print(f"[init] Initializing LadderEnvironment in {P.TOWN} ...")
-    env = LadderEnvironment(client_conn)
+    env = LadderEnvironment(client, world, P.TOWN, P)
 
     print(f"[init] Initializing PPOAgent with observation_dim={P.OBSERVATION_DIM} ...")
-    agent = PPOAgent(P.OBSERVATION_DIM, P.ACTION_DIM)
+    agent = PPOAgent()
+
+    if args.mode == 'test':
+        if os.path.isdir(os.path.join(P.PPO_MODEL_PATH, 'actor')):
+            agent.load()
+            print(f"[PPOAgent] Loaded trained model from {P.PPO_MODEL_PATH}")
+        elif P.OBSERVATION_DIM == 100:
+            candidates = [
+                '../btp_prev/results/Results_05/ppo_model',
+                '../MTP_TESTING/Results_05/ppo_model',
+                '../btp_prev/Results_05/ppo_model',
+                'Results_05/ppo_model'
+            ]
+            loaded = False
+            for c in candidates:
+                if os.path.isdir(os.path.join(c, 'actor')):
+                    agent.models_dir = c
+                    agent.load()
+                    print(f"[PPOAgent] Loaded pre-trained baseline policy for evaluation from: {c}")
+                    loaded = True
+                    break
+            if not loaded:
+                print("[PPOAgent] Warning: No baseline actor found. Driving with initialized policy.")
 
     encoder = EncodeStateCapacity(P)
 
