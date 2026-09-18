@@ -17,28 +17,50 @@ import numpy as np
 
 def collect_probe_results(models_dir):
     probe_files = glob.glob(os.path.join(models_dir, '*', 'latent_probe_results.json'))
+    
+    # Also include baseline probe results if present
+    baseline_candidates = [
+        os.path.join(models_dir, '..', '..', 'btp_prev', 'VAE', 'latent_probe_results.json'),
+        os.path.join(models_dir, '..', '..', 'VAE', 'latent_probe_results.json'),
+        '../btp_prev/VAE/latent_probe_results.json',
+        '../../btp_prev/VAE/latent_probe_results.json'
+    ]
+    for bc in baseline_candidates:
+        if os.path.isfile(bc) and bc not in probe_files:
+            probe_files.append(bc)
+            break
+
     data = []
     for pf in probe_files:
         try:
             with open(pf) as f:
                 d = json.load(f)
             folder = os.path.basename(os.path.dirname(pf))
-            parts = folder.split('_')
-            arch = parts[1] if len(parts) > 1 else 'unknown'
-            dz = int(parts[2]) if len(parts) > 2 else d.get('latent_dim', 95)
+            if 'baseline' in pf.lower() or folder == 'VAE':
+                arch = 'baseline'
+                dz = 95
+            else:
+                parts = folder.split('_')
+                arch = parts[1] if len(parts) > 1 else 'unknown'
+                dz = int(parts[2]) if len(parts) > 2 else d.get('latent_dim', 95)
+            
             data.append({
                 'arch': arch,
                 'latent_dim': dz,
-                'effective_rank': d.get('effective_rank', np.nan),
-                'r2_mean': d.get('r2_mean', np.nan),
-                'r2_lane_offset': d.get('r2_scores', {}).get('lane_offset', np.nan),
-                'r2_heading': d.get('r2_scores', {}).get('lane_heading', np.nan),
-                'latency_mean_ms': d.get('latency', {}).get('mean_ms', np.nan),
-                'fps': d.get('latency', {}).get('fps', np.nan),
+                'effective_rank': round(d.get('effective_rank', np.nan), 2),
+                'r2_mean': round(d.get('r2_mean', np.nan), 4),
+                'r2_lane_offset': round(d.get('r2_scores', {}).get('lane_offset', np.nan), 4),
+                'r2_heading': round(d.get('r2_scores', {}).get('lane_heading', np.nan), 4),
+                'r2_road_frac': round(d.get('r2_scores', {}).get('road_frac', np.nan), 4),
+                'latency_mean_ms': round(d.get('latency', {}).get('mean_ms', np.nan), 2),
+                'fps': round(d.get('latency', {}).get('fps', np.nan), 1),
             })
         except Exception as e:
             print(f"Warning: could not parse {pf}: {e}")
-    return pd.DataFrame(data)
+    df = pd.DataFrame(data)
+    if not df.empty:
+        df = df.sort_values(by=['arch', 'latent_dim']).reset_index(drop=True)
+    return df
 
 
 def collect_carla_results(results_dir):
@@ -54,17 +76,27 @@ def collect_carla_results(results_dir):
             rows.append({
                 'arch': arch,
                 'latent_dim': dz,
-                'route_completion_mean': df['route_completion'].mean(),
-                'route_completion_std': df['route_completion'].std(),
-                'reward_mean': df['reward'].mean(),
-                'reward_std': df['reward'].std(),
-                'lane_dev_mean': df['center_lane_deviation_m'].mean(),
-                'step_latency_ms': df['step_latency_mean_ms'].mean() if 'step_latency_mean_ms' in df else np.nan,
-                'n_episodes': len(df)
+                'episodes': len(df),
+                'route_completion_mean': round(df['route_completion'].mean(), 1),
+                'reward_mean': round(df['reward'].mean(), 2),
+                'reward_std': round(df['reward'].std(), 2),
+                'lane_dev_mean': round(df['center_lane_deviation_m'].mean(), 3),
+                'collision_rate': round(df['collided'].mean() * 100.0, 1),
+                'enc_latency_p95': round(df['encoder_latency_p95_ms'].mean(), 2) if 'encoder_latency_p95_ms' in df else np.nan
             })
         except Exception as e:
             print(f"Warning: could not parse {cf}: {e}")
-    return pd.DataFrame(rows)
+    df = pd.DataFrame(rows)
+    if not df.empty:
+        df = df.sort_values(by=['arch', 'latent_dim']).reset_index(drop=True)
+    return df
+
+
+def _print_df(df):
+    try:
+        print(df.to_markdown(index=False))
+    except Exception:
+        print(df.to_string(index=False))
 
 
 def main():
@@ -79,17 +111,14 @@ def main():
 
     if not df_probe.empty:
         print("\n--- Latent Space Quality & Probing Results ---")
-        print(df_probe.to_markdown(index=False))
+        _print_df(df_probe)
 
     if not df_carla.empty:
         print("\n--- CARLA Closed-Loop Driving Benchmark Results ---")
-        print(df_carla.to_markdown(index=False))
+        _print_df(df_carla)
 
     if df_probe.empty and df_carla.empty:
-        print("No evaluation results found yet. Run training and evaluation first:")
-        print("  1. python train_vae_capacity.py --arch wide --latent 95")
-        print("  2. python eval_latent_probe.py --model models/vae_wide_95/var_auto_encoder_model")
-        print("  3. python run_capacity_ladder.py --arch wide --latent 95 --mode test")
+        print("No evaluation results found yet.")
     print("=" * 80 + "\n")
 
 
