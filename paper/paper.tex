@@ -75,7 +75,7 @@ Projecting raw 3D LiDAR point clouds into 2D Bird's-Eye-View (BEV) spatial grids
 
 \subsection{Representation Learning \& Dimensionality in RL}
 Model-free reinforcement learning directly from raw high-dimensional pixels suffers from extreme sample inefficiency and optimization instability~\cite{schulman2017, toromanoff2020}.
-\textit{CARL}~\cite{toromanoff2020} demonstrated in CARLA benchmark evaluations that policy gradient convergence is heavily constrained by observation representation dimensionality.
+\textit{CARL}~\cite{toromanoff2020} demonstrated in CARLA benchmark evaluations that reinforcement learning sample efficiency and convergence are heavily constrained by observation representation dimensionality.
 \textit{Roach}~\cite{roach2021} addressed high-dimensional sample inefficiency by pre-training policies over privileged BEV affordance masks.
 Variational Autoencoders (VAEs)~\cite{kingma2014} are widely deployed to compress high-dimensional observation frames into compact, regularized continuous latent vectors $\mathbf{z} \in \mathbb{R}^{d_z}$ to feed downstream policy heads.
 Furthermore, abstracting natural RGB streams into Cityscapes-style semantic class palettes~\cite{cordts2016} reduces perceptual complexity. In simulation, semantic segmentation masks are provided as ground-truth labels directly by the rendering engine, bypassing the need for learned perception.
@@ -873,13 +873,13 @@ To isolate whether the sensory scaling bottlenecks observed in Rung 2 and Rung 3
 }
 \end{table*}
 
-\subsubsection{The Information Bottleneck Sweet Spot ($d_z = 95$)}
+\subsubsection{The Information Bottleneck Sweet Spot (\texorpdfstring{$d_z = 95$}{dz = 95})}
 As shown in Table~\ref{tab:vae_ablation}, the baseline 4-layer autoencoder achieves the highest overall affordance decodability ($\text{mean } R^2 = 0.8170$, lane offset $R^2 = 0.9713$, heading $R^2 = 0.8842$) with compact parameterization ($13.7\text{M}$ weights). This strikes the optimal Information Bottleneck frontier: compressing $38,400$ input pixels ($160 \times 80 \times 3$) into a $95$-dimensional latent vector ($404\times$ spatial compression) while preserving actionable geometric telemetry.
 
 \subsubsection{Filter Width Scaling: Capacity Inflation vs. Affordance Dilution}
 Doubling the convolutional channel widths ($64 \to 128 \to 256 \to 512$) quadruples the parameter footprint to $54.60\text{M}$ weights. While the effective rank increases from $4.77$ to $8.29$ ($+73.8\%$), linear decodability of lane offset degrades significantly ($R^2 = 0.9713 \to 0.8821$). Because unregularized wide filters possess excessive capacity relative to the semantic input manifold, the network allocates latent variance toward high-frequency peripheral distractors (building textures, distant trees, sky gradients) rather than core driving affordances.
 
-\subsubsection{Latent Space Scaling ($d_z = 95 \to 190$): The Invariance of Effective Rank}
+\subsubsection{Latent Space Scaling (\texorpdfstring{$d_z = 95 \to 190$}{dz = 95 to 190}): The Invariance of Effective Rank}
 Comparing \textbf{Deep-95} ($d_z = 95$) against \textbf{Deep-190} ($d_z = 190$) provides empirical evidence that the latent bottleneck is over-provisioned. When doubling the latent dimension from 95 to 190, the empirical effective rank remains virtually identical:
 \begin{equation}
     \text{Rank}_{\text{eff}}(d_z = 95) = 7.06 \quad \longleftrightarrow \quad \text{Rank}_{\text{eff}}(d_z = 190) = 7.14
@@ -951,7 +951,7 @@ In closed-loop CARLA rollouts, hot-swapping newly trained VAE encoders into the 
 
 \end{tikzpicture}
 }
-\caption{Trajectory bottleneck map in CARLA Town01. At Meter 190, the corridor transitions from a $190\text{ m}$ straightaway into an unbanked $90^\circ$ right turn. Monocular agents (Rung 1) collide with the outside curb at $195\text{ m}$; forward 3-camera agents (Rung 2) terminate via curb collision at $125\text{ m}$ on the straight section; 4-camera surround agents (Rung 3) stall at $17\text{ m}$; camera-LiDAR agents (Rung 4) depart the lane boundary at $\sim$28--30\text{ m}$.}
+\caption{Trajectory bottleneck map in CARLA Town01. At Meter 190, the corridor transitions from a $190\text{ m}$ straightaway into an unbanked $90^\circ$ right turn. Monocular agents (Rung 1) collide with the outside curb at $195\text{ m}$; forward 3-camera agents (Rung 2) terminate via curb collision at $125\text{ m}$ on the straight section; 4-camera surround agents (Rung 3) stall at $17\text{ m}$; camera-LiDAR agents (Rung 4) depart the lane boundary at approximately $28\text{--}30\text{ m}$.}
 \label{fig:trajectory_map}
 \end{figure}
 
@@ -976,26 +976,21 @@ In Rung 3, scaling from 3 to 4 cameras by adding a $180^\circ$ rear camera cause
 Across episodes 180--230 of Rung 4, pairing front vision with 2D BEV LiDAR completely eliminated the standstill trap, enabling smooth forward driving for 60--76 simulation steps ($25\text{--}30\text{ m}$) with positive rewards up to $+19.84$ (mean $R = -5.02 \pm 4.18$, lane deviation $0.35 \pm 0.09\text{ m}$). However, all trajectories terminated at the $3.0\text{ m}$ lane boundary after only $\sim$30~m (6.0\% route completion). Several factors likely contribute to this early termination: (i)~the training budget of only 13.2k steps is substantially less than Rung~1's $\sim$105k steps; (ii)~the LiDAR BEV height clip of $[-2.0, +2.0]\text{ m}$ relative to the sensor at $z = 2.4\text{ m}$ may erase curb geometry ($\sim$0.15~m above ground), limiting the BEV channel's ability to perceive road boundaries; and (iii)~the latent variance mismatch between visual ($\sigma \approx 11$) and BEV ($\sigma \approx 87$) encoders, combined with the absence of observation normalization, may saturate the policy's $\tanh$ activations. We note that the policy does receive ground-truth lane deviation $d_{\text{center}}$ and heading error $\theta_{\text{heading}}$ in $\mathbf{x}_{\text{nav}}$, so the steering challenge is not purely perceptual but likely reflects insufficient training and the optimization difficulties of the high-variance multimodal input space.
 
 \section{Architectural Discussion: The VAE Scaling Ceiling and the Motivation for Attention}
-
 The empirical results of this ladder illustrate limitations encountered when scaling multi-sensor systems via monolithic autoencoders and flat latent concatenation.
 
 \subsection{The Structural Limitations of VAE Latent Concatenation}
-\begin{enumerate}
-    \item \textbf{Destruction of Spatial Inductive Bias:} Both perspective RGB and BEV LiDAR autoencoders map 2D spatial feature grids into 1D continuous latent vectors ($\mathbf{z} \in \mathbb{R}^{95}$) via flattening and dense linear projection. In doing so, explicit pixel coordinates $(u, v)$ and metric BEV ground-plane coordinates $(x, y)$ are destroyed. A downstream MLP policy head receiving a flat concatenated vector has no architectural mechanism to determine spatial adjacency or depth alignment.
-    \item \textbf{Isolated Latent Compression (The Silo Effect):} In Rung 4, the visual VAE and LiDAR VAE compress inputs in complete isolation. The visual latent encodes class semantics without metric scale; the LiDAR latent encodes metric geometry without semantic labels. Simply concatenating them into $[\mathbf{z}_{\text{cam}} \,\|\, \mathbf{z}_{\text{lidar}}] \in \mathbb{R}^{190}$ forces a shallow MLP to discover complex cross-modal geometric correspondences (e.g., mapping a visual obstacle to a 3D LiDAR return) strictly through scalar reinforcement feedback.
+\begin{enumerate}\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}
+    \item \textbf{Destruction of Spatial Inductive Bias:} Both perspective RGB and BEV LiDAR autoencoders map 2D spatial feature grids into 1D continuous latent vectors ($\mathbf{z} \in \mathbb{R}^{95}$) via flattening and dense linear projection, destroying explicit pixel coordinates $(u, v)$ and metric ground-plane coordinates $(x, y)$. A downstream MLP policy head has no architectural mechanism to determine spatial adjacency or depth alignment.
+    \item \textbf{Isolated Latent Compression (The Silo Effect):} In Rung 4, the visual and LiDAR VAEs compress inputs in isolation. Concatenating them into $[\mathbf{z}_{\text{cam}} \,\|\, \mathbf{z}_{\text{lidar}}] \in \mathbb{R}^{190}$ forces a shallow MLP to discover complex cross-modal geometric correspondences strictly through scalar reinforcement feedback.
     \item \textbf{Gradient Dissipation Across Ungrounded Latents:} In high-dimensional flat latent spaces (290-dim in Rung 2, 385-dim in Rung 3), PPO advantage gradients are uniformly backpropagated across hundreds of continuous latent dimensions. Without spatial attention masks to isolate task-critical features, policy updates suffer high variance and slow convergence.
 \end{enumerate}
 
 \subsection{The Transition to Patch-Based Cross-Attention and VLA Transformers}
-These empirical observations motivate the investigation of patch-based tokenization and cross-attention transformer architectures~\cite{transfuser2021, interfuser2022, vaswani2017attention} as a potential solution to these limitations:
-\begin{itemize}
-    \item \textbf{Patch Tokenization Preserves 2D Geometry:} Rather than compressing an entire sensor stream into a single global vector, patch tokenization divides visual and BEV feature maps into discrete tokens with retained 2D positional embeddings~\cite{dosovitskiy2020vit}, preserving topological structure throughout the network.
-    \item \textbf{Cross-Attention as Explicit Spatial Alignment:} Multi-head cross-attention provides a mathematically principled mechanism to query cross-modal correspondences natively:
-    \begin{equation}
-        \text{Attn}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \text{softmax}\left(\frac{\mathbf{Q}_{\text{c}} \mathbf{K}_{\text{b}}^T}{\sqrt{d_k}}\right) \mathbf{V}_{\text{b}}
-    \end{equation}
-    where visual tokens attend directly to metric depth pillars, resolving scale-distance ambiguities without relying on ungrounded MLP concatenation.
-    \item \textbf{Feature-wise Linear Modulation (FiLM) for Intent Guidance:} Rather than appending navigational scalars to the tail of an ungrounded state vector, Feature-wise Linear Modulation (FiLM)~\cite{perez2018film} applies affine transformations directly to intermediate feature activations, dynamically steering the perceptual representations based on high-level navigation goals.
+These empirical observations motivate the investigation of patch-based tokenization and cross-attention transformer architectures~\cite{transfuser2021, interfuser2022, vaswani2017attention}:
+\begin{itemize}\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}
+    \item \textbf{Patch Tokenization Preserves 2D Geometry:} Rather than compressing an entire sensor stream into a single global vector, patch tokenization divides feature maps into discrete tokens with retained 2D positional embeddings~\cite{dosovitskiy2020vit}, preserving topological structure throughout the network.
+    \item \textbf{Cross-Attention as Explicit Spatial Alignment:} Multi-head cross-attention $\text{Attn}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \text{softmax}(\mathbf{Q}_{\text{c}} \mathbf{K}_{\text{b}}^T / \sqrt{d_k}) \mathbf{V}_{\text{b}}$ queries cross-modal correspondences natively, allowing visual tokens to attend directly to metric depth pillars without relying on ungrounded MLP concatenation.
+    \item \textbf{Feature-wise Linear Modulation (FiLM) for Intent Guidance:} Rather than appending navigational scalars to the tail of an ungrounded state vector, FiLM~\cite{perez2018film} applies affine transformations directly to intermediate feature activations, dynamically steering perceptual representations based on high-level navigation goals.
 \end{itemize}
 
 \section{Conclusion}
@@ -1033,10 +1028,10 @@ A.~H. Lang, S.~Vora, H.~Caesar, L.~Zhou, J.~Yang, and O.~Beijbom, ``PointPillars
 J.~Huang, G.~Huang, Z.~Zhu, Y.~Ye, and D.~Du, ``BEVDet: High-performance multi-camera 3D object detection in bird-eye-view,'' \emph{arXiv preprint arXiv:2112.11790}, 2022.
 
 \bibitem{toromanoff2020}
-M.~Toromanoff, E.~Wirbel, and F.~Moutarde, ``End-to-end model-free reinforcement learning for urban driving using implicit affordances,'' in \emph{Proc. IEEE Int. Conf. Robot. Autom. (ICRA)}, 2020, pp. 7153--7159.
+M.~Toromanoff, E.~Wirbel, and F.~Moutarde, ``End-to-end model-free reinforcement learning for urban driving using implicit affordances,'' in \emph{Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR)}, 2020, pp. 7153--7162.
 
 \bibitem{roach2021}
-Z.~Zhang, A.~Liniger, R.~Sakai, and F.~Yu, ``End-to-end autonomous driving with Roach,'' in \emph{Proc. IEEE/CVF Int. Conf. Comput. Vis. (ICCV)}, 2021, pp. 2875--2885.
+Z.~Zhang, A.~Liniger, D.~Dai, F.~Yu, and L.~Van~Gool, ``End-to-end urban driving by imitating a reinforcement learning coach,'' in \emph{Proc. IEEE/CVF Int. Conf. Comput. Vis. (ICCV)}, 2021, pp. 15222--15232.
 
 \bibitem{schulman2017}
 J.~Schulman, F.~Wolski, P.~Dhariwal, A.~Radford, and O.~Klimov, ``Proximal policy optimization algorithms,'' \emph{arXiv preprint arXiv:1707.06347}, 2017.
