@@ -292,6 +292,20 @@ class LadderEnvironment(CarlaEnvironment):
                 self.previous_steer = applied_steer
                 self.throttle = applied_throttle
                 self.brake = applied_brake
+            else:
+                # Discrete action space fallback
+                steer_options = [-0.5, -0.3, -0.1, 0.0, 0.1, 0.3, 0.5]
+                raw_idx = int(action_idx) if np.isscalar(action_idx) else int(action_idx[0])
+                steer = steer_options[raw_idx % len(steer_options)]
+                applied_steer = self.previous_steer * 0.8 + steer * 0.2
+                applied_throttle = 0.5
+                self.vehicle.apply_control(carla.VehicleControl(
+                    steer=applied_steer,
+                    throttle=applied_throttle,
+                    brake=0.0))
+                self.previous_steer = applied_steer
+                self.throttle = applied_throttle
+                self.brake = 0.0
 
             if self.vehicle.is_at_traffic_light():
                 tl = self.vehicle.get_traffic_light()
@@ -306,10 +320,14 @@ class LadderEnvironment(CarlaEnvironment):
             self.rotation = self.vehicle.get_transform().rotation.yaw
             self.location = self.vehicle.get_location()
 
-            waypoint_index = self.current_waypoint_index
-            for _ in range(len(self.route_waypoints)):
+            # Robust Waypoint Advancement (Bounded to prevent end-of-route wraparound to 0)
+            max_wp_idx = len(self.route_waypoints) - 1
+            waypoint_index = min(self.current_waypoint_index, max_wp_idx)
+            for _ in range(max(0, max_wp_idx - waypoint_index)):
                 next_waypoint_index = waypoint_index + 1
-                wp = self.route_waypoints[next_waypoint_index % len(self.route_waypoints)]
+                if next_waypoint_index > max_wp_idx:
+                    break
+                wp = self.route_waypoints[next_waypoint_index]
                 dot = np.dot(self.vector(wp.transform.get_forward_vector())[:2],
                              self.vector(self.location - wp.transform.location)[:2])
                 if dot > 0.0:
@@ -318,24 +336,39 @@ class LadderEnvironment(CarlaEnvironment):
                     break
 
             self.current_waypoint_index = waypoint_index
-            self.current_waypoint = self.route_waypoints[self.current_waypoint_index % len(self.route_waypoints)]
-            self.next_waypoint = self.route_waypoints[(self.current_waypoint_index + 1) % len(self.route_waypoints)]
+            self.current_waypoint = self.route_waypoints[min(self.current_waypoint_index, max_wp_idx)]
+            self.next_waypoint = self.route_waypoints[min(self.current_waypoint_index + 1, max_wp_idx)]
 
-            self.distance_from_center = self.distance_to_line(
+            # 2D Ground Plane Distance to Line (eliminates vertical elevation bias)
+            self.distance_from_center = self.distance_to_line_2d(
                 self.vector(self.current_waypoint.transform.location),
                 self.vector(self.next_waypoint.transform.location),
                 self.vector(self.location))
             self.center_lane_deviation += self.distance_from_center
 
-            fwd = self.vector(self.vehicle.get_velocity())
+            # Use vehicle forward orientation when velocity is near-zero to prevent arctan2(0,0) heading jump
+            if self.velocity >= 0.5:
+                fwd = self.vector(self.vehicle.get_velocity())
+            else:
+                fwd = self.vector(self.vehicle.get_transform().rotation.get_forward_vector())
             wp_fwd = self.vector(self.current_waypoint.transform.rotation.get_forward_vector())
             self.angle = self.angle_diff(fwd, wp_fwd)
 
             done = False
             reward = 0
 
-            # --- termination criteria --------------------------------------
-            if len(self.collision_history) != 0:
+            # --- termination criteria (ROUTE_COMPLETE evaluated first to prevent false lane departures) ---
+            if self.current_waypoint_index >= len(self.route_waypoints) - 2:
+                done, reward = True, 100.0
+                self.termination_reason = ROUTE_COMPLETE
+                self.fresh_start = True
+                if self.checkpoint_frequency is not None:
+                    if self.checkpoint_frequency < self.total_distance // 2:
+                        self.checkpoint_frequency += 2
+                    else:
+                        self.checkpoint_frequency = None
+                        self.checkpoint_waypoint_index = 0
+            elif len(self.collision_history) != 0:
                 done, reward = True, -10
                 self.termination_reason = COLLISION
                 self.collision_count = len(self.collision_history)
@@ -364,17 +397,6 @@ class LadderEnvironment(CarlaEnvironment):
                 else:
                     # velocity > max_speed (35 km/h): negative speeding penalty, removes reward hack
                     reward = -1.0 * min((self.velocity - self.max_speed) / 10.0, 2.0)
-
-            if self.current_waypoint_index >= len(self.route_waypoints) - 2:
-                done = True
-                self.termination_reason = ROUTE_COMPLETE
-                self.fresh_start = True
-                if self.checkpoint_frequency is not None:
-                    if self.checkpoint_frequency < self.total_distance // 2:
-                        self.checkpoint_frequency += 2
-                    else:
-                        self.checkpoint_frequency = None
-                        self.checkpoint_waypoint_index = 0
 
             while not self.camera_obj.ready():
                 self._tick() if self.p.SYNCHRONOUS_MODE else time.sleep(0.0001)
@@ -471,3 +493,12 @@ class LadderEnvironment(CarlaEnvironment):
     def remove_sensors(self):
         super().remove_sensors()
         self.lidar_obj = None
+
+    def distance_to_line_2d(self, A, B, p):
+        """2D lateral perpendicular distance to line segment in ground plane (X, Y)."""
+        A_2d, B_2d, p_2d = A[:2], B[:2], p[:2]
+        denom = float(np.linalg.norm(B_2d - A_2d))
+        if np.isclose(denom, 0.0):
+            return float(np.linalg.norm(p_2d - A_2d))
+        num = float(np.abs((B_2d[0] - A_2d[0]) * (A_2d[1] - p_2d[1]) - (A_2d[0] - p_2d[0]) * (B_2d[1] - A_2d[1])))
+        return float(num / denom)

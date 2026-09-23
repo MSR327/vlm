@@ -102,6 +102,10 @@ def main():
                         help="Ridge regularization strength")
     parser.add_argument('--data', type=str, default='../btp_prev/VAE/dataset',
                         help="Path to dataset directory")
+    parser.add_argument('--raw-base', dest='raw_base', action='store_true', default=True,
+                        help="Feed unscaled [0, 255] frames to baseline encoder matching Results_05 deployed policy (default: True)")
+    parser.add_argument('--scaled-base', dest='raw_base', action='store_false',
+                        help="Feed scaled [0, 1] frames to baseline encoder")
     args = parser.parse_args()
 
     data_dir = find_dataset(args.data)
@@ -147,15 +151,18 @@ def main():
     target_encoder = load_vae_encoder(target_model_path)
 
     # 3. Extract Representations
-    print("[align] Computing latent representations across dataset ...")
+    print(f"[align] Computing latent representations (raw_base={args.raw_base}) ...")
     batch_size = 64
     z_base_list = []
     z_target_list = []
 
     for i in range(0, len(images), batch_size):
         b = images[i:i + batch_size]
-        zb = np.asarray(base_encoder(b))
+        b_base = b * 255.0 if args.raw_base else b
+        zb = np.asarray(base_encoder(b_base))
+        zb = np.clip(np.nan_to_num(zb, nan=0.0, posinf=1e8, neginf=-1e8), -1e8, 1e8)
         zt = np.asarray(target_encoder(b))
+        zt = np.clip(np.nan_to_num(zt, nan=0.0, posinf=1e8, neginf=-1e8), -1e8, 1e8)
         z_base_list.append(zb)
         z_target_list.append(zt)
 
