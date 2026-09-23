@@ -28,6 +28,29 @@ class EncodeStateCapacity:
         print(f"[EncodeStateCapacity] Arch: {params.VAE_ARCH}, Latent Dim: {self.latent_dim}, "
               f"Obs Dim: {self.expected_dim}")
 
+        # Check for Latent Alignment Adapter (Zero-Shot Bridge)
+        self.align_W = None
+        self.align_b = None
+        self.use_alignment = getattr(params, 'USE_ALIGNMENT', True)
+
+        if self.use_alignment and params.VAE_ARCH != 'baseline':
+            align_candidates = [
+                os.path.join(os.path.dirname(self.model_path), 'alignment.npz'),
+                os.path.join(self.model_path, 'alignment.npz'),
+                os.path.join(os.path.dirname(__file__), 'models', f'vae_{params.VAE_ARCH}_{self.latent_dim}', 'alignment.npz')
+            ]
+            for ac in align_candidates:
+                if os.path.isfile(ac):
+                    try:
+                        data = np.load(ac)
+                        self.align_W = data['W']
+                        self.align_b = data['b']
+                        r2 = float(data.get('mean_r2', 0.0))
+                        print(f"[EncodeStateCapacity] -> Applied Latent Alignment Adapter: {ac} (R^2 = {r2:.4f})")
+                        break
+                    except Exception as e:
+                        print(f"[EncodeStateCapacity] Warning: failed loading alignment from {ac}: {e}")
+
     def _prepare_image(self, img):
         if not isinstance(img, np.ndarray):
             img = np.asarray(img)
@@ -58,6 +81,10 @@ class EncodeStateCapacity:
         # Flatten if needed
         if latent.ndim > 1:
             latent = latent.reshape(-1)
+
+        # Apply latent alignment adapter if present (maps Wide/Deep -> Baseline coordinate system)
+        if self.align_W is not None:
+            latent = latent @ self.align_W + self.align_b
 
         # Telemetry: [speed, dist_center, heading, steer_prev, throttle_prev]
         nav_vec = np.asarray(nav, dtype=np.float32).reshape(-1)

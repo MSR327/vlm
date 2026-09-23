@@ -23,3 +23,11 @@ Thumbs.db
 
 # Collected driving data (generated at runtime, too large)
 data_collected_*/
+
+# LaTeX build artifacts & temporary renders
+*.aux
+*.log
+*.out
+paper/page-*.png
+paper/page_new-*.png
+paper/rendered/

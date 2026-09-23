@@ -29,6 +29,10 @@ parser.add_argument('--town', type=str, default='Town01',
                     help="CARLA benchmark town (Town01 or Town02)")
 parser.add_argument('--episodes', type=int, default=20,
                     help="Number of evaluation episodes")
+parser.add_argument('--align', dest='align', action='store_true', default=True,
+                    help="Enable latent alignment adapter for zero-shot transfer (default: True)")
+parser.add_argument('--no-align', dest='align', action='store_false',
+                    help="Disable latent alignment adapter (evaluate raw unaligned latents)")
 args = parser.parse_args()
 
 os.environ['VAE_ARCH'] = args.arch
@@ -169,8 +173,50 @@ def run_evaluation(env, agent, encoder, n_episodes, out_csv):
     print("=" * 60 + "\n")
 
 
+def run_training(env, agent, encoder, n_episodes, save_dir):
+    print(f"\n=======================================================")
+    print(f" PPO TRAINING RUN: {P.VAE_ARCH.upper()} (dz={P.LATENT_DIM})")
+    print(f" Town: {P.TOWN} | Episodes: {n_episodes} | Obs Dim: {getattr(agent, 'observation_dim', P.OBSERVATION_DIM)}")
+    print(f" Checkpoint Out: {save_dir}")
+    print(f"=======================================================\n")
+
+    timestep = 0
+    update_interval = 2000
+
+    for ep in range(1, n_episodes + 1):
+        obs_raw = env.reset()
+        state = encoder.process(obs_raw)
+        ep_reward = 0.0
+        done = False
+        step = 0
+
+        while not done and step < P.EPISODE_LENGTH:
+            timestep += 1
+            step += 1
+            action, log_prob = agent(state, True)
+            next_obs_raw, reward, done, info = env.step(action)
+            next_state = encoder.process(next_obs_raw)
+
+            agent.remember(state, action, log_prob, reward, done)
+            ep_reward += reward
+            state = next_state
+
+            if timestep % update_interval == 0:
+                agent.learn()
+
+        print(f"Train Ep {ep:3d}/{n_episodes:3d} | Reward: {ep_reward:7.1f} | Steps: {step} | Total TS: {timestep}")
+
+        if ep % 10 == 0:
+            agent.save()
+            print(f"[PPOAgent] Saved checkpoint to {agent.models_dir}")
+
+    agent.save()
+    print(f"[PPOAgent] Final training complete. Model saved to: {save_dir}\n")
+
+
 def main():
     P.TOWN = args.town
+    P.USE_ALIGNMENT = args.align
     for d in [P.RESULTS_PATH, P.CHECKPOINT_PATH, P.LOG_PATH_TRAIN, P.LOG_PATH_TEST]:
         os.makedirs(d, exist_ok=True)
 
@@ -180,14 +226,23 @@ def main():
     print(f"[init] Initializing LadderEnvironment in {P.TOWN} ...")
     env = LadderEnvironment(client, world, P.TOWN, P)
 
-    print(f"[init] Initializing PPOAgent with observation_dim={P.OBSERVATION_DIM} ...")
-    agent = PPOAgent()
+    # Initialize encoder first to resolve whether alignment is active
+    encoder = EncodeStateCapacity(P)
+    effective_obs_dim = 100 if (encoder.align_W is not None) else P.OBSERVATION_DIM
 
-    if args.mode == 'test':
+    print(f"[init] Initializing PPOAgent with observation_dim={effective_obs_dim} ...")
+    agent = PPOAgent()
+    agent.observation_dim = effective_obs_dim
+    agent.models_dir = P.PPO_MODEL_PATH
+
+    if args.mode == 'train':
+        run_training(env, agent, encoder, args.episodes, P.PPO_MODEL_PATH)
+    else:
+        # Test / Evaluation Mode
         if os.path.isdir(os.path.join(P.PPO_MODEL_PATH, 'actor')):
             agent.load()
             print(f"[PPOAgent] Loaded trained model from {P.PPO_MODEL_PATH}")
-        elif P.OBSERVATION_DIM == 100:
+        elif effective_obs_dim == 100:
             candidates = [
                 '../btp_prev/results/Results_05/ppo_model',
                 '../MTP_TESTING/Results_05/ppo_model',
@@ -204,11 +259,11 @@ def main():
                     break
             if not loaded:
                 print("[PPOAgent] Warning: No baseline actor found. Driving with initialized policy.")
+        else:
+            print(f"[PPOAgent] Warning: No trained model found for obs_dim={effective_obs_dim}. Driving with initialized policy.")
 
-    encoder = EncodeStateCapacity(P)
-
-    out_csv = os.path.join(P.RESULTS_PATH, f"eval_{P.TOWN}_{args.arch}_d{args.latent}.csv")
-    run_evaluation(env, agent, encoder, args.episodes, out_csv)
+        out_csv = os.path.join(P.RESULTS_PATH, f"eval_{P.TOWN}_{args.arch}_d{args.latent}.csv")
+        run_evaluation(env, agent, encoder, args.episodes, out_csv)
 
 
 if __name__ == '__main__':

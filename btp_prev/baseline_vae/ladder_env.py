@@ -258,18 +258,32 @@ class LadderEnvironment(CarlaEnvironment):
             if self.continous_action_space:
                 steer = max(min(float(action_idx[0]), 1.0), -1.0)
                 raw_longitudinal = max(min(float(action_idx[1]), 1.0), -1.0)
-                if raw_longitudinal >= 0.0:
-                    throttle = raw_longitudinal
-                    brake = 0.0
-                    applied_throttle = self.throttle * 0.7 + throttle * 0.3
-                    applied_brake = 0.0
-                else:
-                    throttle = 0.0
-                    brake = -raw_longitudinal
-                    applied_throttle = 0.0
-                    applied_brake = self.brake * 0.5 + brake * 0.5
 
-                applied_steer = self.previous_steer * 0.6 + steer * 0.4
+                # Check if split brake is explicitly requested, else default to continuous forward mapping matching main.py
+                use_split_brake = getattr(self.p, 'USE_SPLIT_BRAKE', False)
+                if use_split_brake:
+                    if raw_longitudinal >= 0.0:
+                        throttle = raw_longitudinal
+                        brake = 0.0
+                        applied_throttle = self.throttle * 0.7 + throttle * 0.3
+                        applied_brake = 0.0
+                    else:
+                        throttle = 0.0
+                        brake = -raw_longitudinal
+                        applied_throttle = 0.0
+                        applied_brake = self.brake * 0.5 + brake * 0.5
+                else:
+                    # Proven main.py forward throttle mapping (action in [-1, 1] -> throttle in [0, 1])
+                    throttle = float((raw_longitudinal + 1.0) / 2.0)
+                    throttle = max(min(throttle, 1.0), 0.0)
+                    applied_throttle = self.throttle * 0.8 + throttle * 0.2
+                    applied_brake = 0.0
+
+                applied_steer = self.previous_steer * 0.8 + steer * 0.2
+
+                # Anti-standstill safeguard: prevent stationary deadlocks during active driving
+                if self.velocity < 1.0 and self.current_waypoint_index > 0 and self.current_waypoint_index < len(self.route_waypoints) - 5:
+                    applied_throttle = max(applied_throttle, 0.35)
 
                 self.vehicle.apply_control(carla.VehicleControl(
                     steer=applied_steer,
