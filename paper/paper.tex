@@ -376,176 +376,155 @@ A 360-degree raycast LiDAR sensor is top-mounted on the ego-vehicle chassis at $
 
 \begin{figure*}[!t]
 \centering
-\resizebox{0.98\textwidth}{!}{
+\resizebox{0.86\textwidth}{!}{
 \begin{tikzpicture}[
     font=\small,
-    tensor/.style={draw=black!70, fill=blue!15, line width=0.7pt, rounded corners=1pt},
-    lidartensor/.style={draw=black!70, fill=orange!20, line width=0.7pt, rounded corners=1pt},
-    convblock/.style={draw=teal!80!black, fill=teal!10, line width=0.8pt, rounded corners=2pt, font=\scriptsize\bfseries, align=center},
-    denseblock/.style={draw=purple!80!black, fill=purple!10, line width=0.8pt, rounded corners=2pt, font=\scriptsize\bfseries, align=center},
-    policyblock/.style={draw=orange!80!black, fill=orange!15, line width=0.8pt, rounded corners=2pt, font=\scriptsize\bfseries, align=center},
-    callout/.style={draw=green!60!black, fill=green!5, dashed, line width=1.0pt, rounded corners=4pt},
+    tensor/.style={draw=black!70, fill=gray!25, line width=0.7pt, rounded corners=1pt},
+    convblock/.style={draw=black!80, fill=gray!12, line width=0.8pt, rounded corners=2pt, font=\scriptsize\bfseries, align=center},
+    denseblock/.style={draw=black!80, fill=gray!18, line width=0.8pt, rounded corners=2pt, font=\scriptsize\bfseries, align=center},
+    latentblock/.style={draw=black!85, fill=gray!28, line width=0.8pt, rounded corners=2pt, font=\scriptsize\bfseries, align=center},
+    inputblock/.style={draw=black!80, fill=gray!8, line width=0.8pt, rounded corners=2pt, align=center, inner sep=3pt},
+    policyblock/.style={draw=black!85, fill=gray!10, line width=0.8pt, rounded corners=2pt, font=\scriptsize\bfseries, align=center},
     arr/.style={-{Stealth[length=2.2mm]}, line width=1.0pt, black!80},
     dimlabel/.style={font=\tiny\ttfamily, text=black!85}
 ]
 
     % ==================== ENCLOSING ARCHITECTURE BOX ====================
-    \draw[draw=black!60, fill=gray!2, rounded corners=6pt, line width=1.1pt] (-2.2, -3.2) rectangle (14.2, 3.6);
-    \node[anchor=north west, font=\footnotesize\bfseries, text=black!85] at (-2.1, 3.5) {End-to-End Multimodal Reinforcement Learning Architecture (Rung 4)};
+    \draw[draw=black!60, fill=white, rounded corners=5pt, line width=0.9pt] (-2.3, -2.55) rectangle (14.6, 3.2);
 
-    % Stream Background Panels (TransFuser Style)
-    \draw[draw=blue!30, fill=blue!3, rounded corners=4pt] (-0.2, 1.05) rectangle (9.0, 2.7);
-    \node[anchor=south west, font=\scriptsize\bfseries, text=blue!80!black] at (-0.2, 2.75) {Camera Stream (Conv-VAE)};
+    % Stream Background Panels
+    \draw[draw=black!25, fill=gray!4, rounded corners=3pt] (-0.1, 0.95) rectangle (9.0, 2.55);
+    \node[anchor=south west, font=\scriptsize\bfseries, text=black!75] at (-0.1, 2.58) {Camera Stream (Conv-VAE)};
 
-    \draw[draw=orange!30, fill=orange!3, rounded corners=4pt] (-0.2, -1.95) rectangle (9.0, -0.45);
-    \node[anchor=north west, font=\scriptsize\bfseries, text=orange!85!black] at (-0.2, -2.02) {LiDAR BEV Stream (Conv-VAE)};
+    \draw[draw=black!25, fill=gray!4, rounded corners=3pt] (-0.1, -1.75) rectangle (9.0, -0.15);
+    \node[anchor=north west, font=\scriptsize\bfseries, text=black!75] at (-0.1, -1.78) {LiDAR BEV Stream (Conv-VAE)};
 
     % ==================== TOP STREAM: CAMERA CONV-VAE ====================
-    % Input Camera Image
-    \node[inner sep=1pt, draw=black!60, line width=0.8pt] (cam_img) at (-1.1, 1.8) {\includegraphics[width=1.8cm, height=0.9cm]{sample_cam.png}};
-    \node[dimlabel, above=2pt of cam_img] {RGB / Semantic};
-    \node[dimlabel, below=2pt of cam_img] {$160 \times 80 \times 3$};
+    % Input Camera Node (Native Vector)
+    \node[inputblock, minimum width=1.85cm, minimum height=1.05cm] (cam_img) at (-1.2, 1.75) {
+        \textbf{Front Camera}\\[1pt]
+        \scriptsize RGB / Semantic\\[1pt]
+        \ttfamily\tiny $160 \times 80 \times 3$
+    };
 
     % Conv1 (80 x 40 x 32)
-    \draw[convblock] (0.5, 1.3) rectangle (1.3, 2.3) node[midway] {Conv1\\$4\times 4$};
-    \draw[tensor] (1.4, 1.4) rectangle (1.7, 2.2);
-    \node[dimlabel] at (1.55, 2.4) {$80\times 40$};
+    \draw[convblock] (0.5, 1.25) rectangle (1.3, 2.25) node[midway] {Conv1\\$4\times 4$};
+    \draw[tensor] (1.4, 1.35) rectangle (1.7, 2.15);
+    \node[dimlabel] at (1.55, 2.33) {$80\times 40$};
 
     % Conv2 (40 x 20 x 64)
-    \draw[convblock] (2.1, 1.3) rectangle (2.9, 2.3) node[midway] {Conv2\\$3\times 3$};
-    \draw[tensor] (3.0, 1.5) rectangle (3.3, 2.1);
-    \node[dimlabel] at (3.15, 2.4) {$40\times 20$};
+    \draw[convblock] (2.1, 1.25) rectangle (2.9, 2.25) node[midway] {Conv2\\$3\times 3$};
+    \draw[tensor] (3.0, 1.45) rectangle (3.3, 2.05);
+    \node[dimlabel] at (3.15, 2.33) {$40\times 20$};
 
     % Conv3 (20 x 10 x 128)
-    \draw[convblock] (3.7, 1.3) rectangle (4.5, 2.3) node[midway] {Conv3\\$4\times 4$};
-    \draw[tensor] (4.6, 1.6) rectangle (4.9, 2.0);
-    \node[dimlabel] at (4.75, 2.4) {$20\times 10$};
+    \draw[convblock] (3.7, 1.25) rectangle (4.5, 2.25) node[midway] {Conv3\\$4\times 4$};
+    \draw[tensor] (4.6, 1.55) rectangle (4.9, 1.95);
+    \node[dimlabel] at (4.75, 2.33) {$20\times 10$};
 
     % Conv4 (10 x 5 x 256)
-    \draw[convblock] (5.3, 1.3) rectangle (6.1, 2.3) node[midway] {Conv4\\$3\times 3$};
-    \draw[tensor] (6.2, 1.65) rectangle (6.5, 1.95);
-    \node[dimlabel] at (6.35, 2.4) {$10\times 5$};
+    \draw[convblock] (5.3, 1.25) rectangle (6.1, 2.25) node[midway] {Conv4\\$3\times 3$};
+    \draw[tensor] (6.2, 1.6) rectangle (6.5, 1.9);
+    \node[dimlabel] at (6.35, 2.33) {$10\times 5$};
 
     % Dense Flatten & Bottleneck
-    \draw[denseblock] (6.9, 1.3) rectangle (7.6, 2.3) node[midway] {Dense\\$1024$};
-    \draw[denseblock, fill=blue!15] (8.0, 1.3) rectangle (8.8, 2.3) node[midway] {VAE $\mathbf{z}_{\text{cam}}$\\$\mathbb{R}^{95}$};
+    \draw[denseblock] (6.9, 1.25) rectangle (7.6, 2.25) node[midway] {Dense\\$1024$};
+    \draw[latentblock] (8.0, 1.25) rectangle (8.8, 2.25) node[midway] {VAE $\mathbf{z}_{\text{cam}}$\\$\mathbb{R}^{95}$};
 
     % Connectors Top
-    \draw[arr] (cam_img) -- (0.5, 1.8);
-    \draw[arr] (1.7, 1.8) -- (2.1, 1.8);
-    \draw[arr] (3.3, 1.8) -- (3.7, 1.8);
-    \draw[arr] (4.9, 1.8) -- (5.3, 1.8);
-    \draw[arr] (6.5, 1.8) -- (6.9, 1.8);
-    \draw[arr] (7.6, 1.8) -- (8.0, 1.8);
+    \draw[arr] (cam_img.east) -- (0.5, 1.75);
+    \draw[arr] (1.7, 1.75) -- (2.1, 1.75);
+    \draw[arr] (3.3, 1.75) -- (3.7, 1.75);
+    \draw[arr] (4.9, 1.75) -- (5.3, 1.75);
+    \draw[arr] (6.5, 1.75) -- (6.9, 1.75);
+    \draw[arr] (7.6, 1.75) -- (8.0, 1.75);
 
     % ==================== BOTTOM STREAM: 2D BEV LIDAR CONV-VAE ====================
-    % Input BEV Image
-    \node[inner sep=1pt, draw=black!60, line width=0.8pt] (bev_img) at (-1.1, -1.2) {\includegraphics[width=1.8cm, height=0.9cm]{sample_bev.png}};
-    \node[dimlabel, above=2pt of bev_img] {LiDAR BEV};
-    \node[dimlabel, below=2pt of bev_img] {$80 \times 160 \times 1$};
+    % Input BEV Node (Native Vector)
+    \node[inputblock, minimum width=1.85cm, minimum height=1.05cm] (bev_img) at (-1.2, -0.95) {
+        \textbf{LiDAR BEV}\\[1pt]
+        \scriptsize 2D Metric Grid\\[1pt]
+        \ttfamily\tiny $80 \times 160 \times 1$
+    };
 
     % Conv1 (80 x 40 x 32)
-    \draw[convblock, draw=orange!80!black, fill=orange!5] (0.5, -1.7) rectangle (1.3, -0.7) node[midway] {Conv1\\$4\times 4$};
-    \draw[lidartensor] (1.4, -1.6) rectangle (1.7, -0.8);
-    \node[dimlabel] at (1.55, -1.85) {$80\times 40$};
+    \draw[convblock] (0.5, -1.45) rectangle (1.3, -0.45) node[midway] {Conv1\\$4\times 4$};
+    \draw[tensor] (1.4, -1.35) rectangle (1.7, -0.55);
+    \node[dimlabel] at (1.55, -1.58) {$80\times 40$};
 
     % Conv2 (40 x 20 x 64)
-    \draw[convblock, draw=orange!80!black, fill=orange!5] (2.1, -1.7) rectangle (2.9, -0.7) node[midway] {Conv2\\$3\times 3$};
-    \draw[lidartensor] (3.0, -1.5) rectangle (3.3, -0.9);
-    \node[dimlabel] at (3.15, -1.85) {$40\times 20$};
+    \draw[convblock] (2.1, -1.45) rectangle (2.9, -0.45) node[midway] {Conv2\\$3\times 3$};
+    \draw[tensor] (3.0, -1.25) rectangle (3.3, -0.65);
+    \node[dimlabel] at (3.15, -1.58) {$40\times 20$};
 
     % Conv3 (20 x 10 x 128)
-    \draw[convblock, draw=orange!80!black, fill=orange!5] (3.7, -1.7) rectangle (4.5, -0.7) node[midway] {Conv3\\$4\times 4$};
-    \draw[lidartensor] (4.6, -1.4) rectangle (4.9, -1.0);
-    \node[dimlabel] at (4.75, -1.85) {$20\times 10$};
+    \draw[convblock] (3.7, -1.45) rectangle (4.5, -0.45) node[midway] {Conv3\\$4\times 4$};
+    \draw[tensor] (4.6, -1.15) rectangle (4.9, -0.75);
+    \node[dimlabel] at (4.75, -1.58) {$20\times 10$};
 
     % Conv4 (10 x 5 x 256)
-    \draw[convblock, draw=orange!80!black, fill=orange!5] (5.3, -1.7) rectangle (6.1, -0.7) node[midway] {Conv4\\$3\times 3$};
-    \draw[lidartensor] (6.2, -1.35) rectangle (6.5, -1.05);
-    \node[dimlabel] at (6.35, -1.85) {$10\times 5$};
+    \draw[convblock] (5.3, -1.45) rectangle (6.1, -0.45) node[midway] {Conv4\\$3\times 3$};
+    \draw[tensor] (6.2, -1.1) rectangle (6.5, -0.8);
+    \node[dimlabel] at (6.35, -1.58) {$10\times 5$};
 
     % Dense Flatten & Bottleneck
-    \draw[denseblock, draw=orange!80!black, fill=orange!5] (6.9, -1.7) rectangle (7.6, -0.7) node[midway] {Dense\\$1024$};
-    \draw[denseblock, fill=orange!15] (8.0, -1.7) rectangle (8.8, -0.7) node[midway] {VAE $\mathbf{z}_{\text{lidar}}$\\$\mathbb{R}^{95}$};
+    \draw[denseblock] (6.9, -1.45) rectangle (7.6, -0.45) node[midway] {Dense\\$1024$};
+    \draw[latentblock] (8.0, -1.45) rectangle (8.8, -0.45) node[midway] {VAE $\mathbf{z}_{\text{lidar}}$\\$\mathbb{R}^{95}$};
 
     % Connectors Bottom
-    \draw[arr] (bev_img) -- (0.5, -1.2);
-    \draw[arr] (1.7, -1.2) -- (2.1, -1.2);
-    \draw[arr] (3.3, -1.2) -- (3.7, -1.2);
-    \draw[arr] (4.9, -1.2) -- (5.3, -1.2);
-    \draw[arr] (6.5, -1.2) -- (6.9, -1.2);
-    \draw[arr] (7.6, -1.2) -- (8.0, -1.2);
+    \draw[arr] (bev_img.east) -- (0.5, -0.95);
+    \draw[arr] (1.7, -0.95) -- (2.1, -0.95);
+    \draw[arr] (3.3, -0.95) -- (3.7, -0.95);
+    \draw[arr] (4.9, -0.95) -- (5.3, -0.95);
+    \draw[arr] (6.5, -0.95) -- (6.9, -0.95);
+    \draw[arr] (7.6, -0.95) -- (8.0, -0.95);
 
     % ==================== MIDDLE: NAVIGATION & CONCATENATION ====================
     % Telemetry input
-    \node[draw=purple!70!black, fill=purple!5, rounded corners=2pt, font=\scriptsize, align=center] (telem) at (6.9, 0.3) {
+    \node[draw=black!75, fill=gray!8, rounded corners=2pt, font=\scriptsize, align=center] (telem) at (6.6, 0.4) {
         \textbf{Kinematics} $\mathbf{x}_{\text{nav}} \in \mathbb{R}^5$\\
         \tiny $[v_t, d_{\text{center}}, \theta_{\text{heading}}, \delta_{t-1}, a_{t-1}]$
     };
 
-    % Concatenation Operator
-    \node[circle, draw=black!80, fill=yellow!30, line width=1.1pt, font=\large\bfseries, inner sep=2pt] (concat) at (9.6, 0.3) {$\mathbf{C}$};
-    \node[above=2pt of concat, font=\scriptsize\bfseries, text=purple!90!black] {Concat $\mathbf{s}_t \in \mathbb{R}^{195}$};
+    % Concatenation Block
+    \node[draw=black!85, fill=gray!22, line width=0.8pt, rounded corners=3pt, font=\scriptsize\bfseries, align=center, inner sep=4pt] (concat) at (9.6, 0.4) {
+        Feature Fusion\\
+        \tiny Concatenation\\
+        \scriptsize $\mathbf{s}_t \in \mathbb{R}^{195}$
+    };
 
-    \draw[arr] (8.8, 1.8) -| (concat.north);
-    \draw[arr] (8.8, -1.2) -| (concat.south);
+    \draw[arr] (8.8, 1.75) -| (concat.north);
+    \draw[arr] (8.8, -0.95) -| (concat.south);
     \draw[arr] (telem.east) -- (concat.west);
 
     % ==================== POLICY HEAD: PPO ACTOR-CRITIC ====================
-    \node[policyblock, minimum width=2.4cm, minimum height=1.6cm] (actor) at (12.2, 1.4) {
-        \textbf{PPO Actor Head}\\
-        \scriptsize $500 \to 300 \to 100 \to 2$\\
-        \scriptsize Steering EMA: $\delta_t$\\
-        \scriptsize Throttle / Brake
+    \node[policyblock, minimum width=2.8cm, minimum height=1.25cm, inner sep=3pt] (actor) at (12.4, 1.35) {
+        \textbf{PPO Actor Head}\\[1pt]
+        \tiny MLP: $500 \text{--} 300 \text{--} 100 \text{--} 2$\\[1pt]
+        \scriptsize Actions $\mathbf{a}_t = [\delta_t, \text{acc}]$
     };
 
-    \node[policyblock, fill=gray!15, draw=gray!70!black, minimum width=2.4cm, minimum height=1.1cm] (critic) at (12.2, -0.8) {
-        \textbf{PPO Critic Head}\\
-        \scriptsize $500 \to 300 \to 100 \to 1$\\
-        \scriptsize Value $V_\phi(\mathbf{s}_t)$
+    \node[policyblock, fill=gray!18, minimum width=2.8cm, minimum height=1.05cm, inner sep=3pt] (critic) at (12.4, -0.45) {
+        \textbf{PPO Critic Head}\\[1pt]
+        \tiny MLP: $500 \text{--} 300 \text{--} 100 \text{--} 1$\\[1pt]
+        \scriptsize Value Baseline $V_\phi(\mathbf{s}_t)$
     };
 
-    \draw[arr] (concat.east) -- ++(0.4, 0) |- (actor.west);
-    \draw[arr] (concat.east) -- ++(0.4, 0) |- (critic.west);
+    \draw[arr] (concat.east) -- ++(0.3, 0) |- (actor.west);
+    \draw[arr] (concat.east) -- ++(0.3, 0) |- (critic.west);
 
     % CARLA Output and Feedback
-    \node[draw=black!80, fill=white, rounded corners=3pt, font=\scriptsize\bfseries, align=center, inner sep=4pt] (carla) at (12.2, -2.5) {
-        \textbf{CARLA Closed Loop ($20\text{ Hz}$)}\\
+    \node[draw=black!80, fill=white, rounded corners=3pt, font=\scriptsize\bfseries, align=center, inner sep=3.5pt, minimum width=2.8cm] (carla) at (12.4, -1.8) {
+        \textbf{CARLA Environment}\\[1pt]
+        \tiny Closed-loop physics ($20\text{ Hz}$)\\[1pt]
         \tiny $r_t = R_{\text{speed}} \cdot R_{\text{center}} \cdot R_{\text{angle}} + R_{\text{pen}}$
     };
-    \draw[arr] (actor.south) -- (critic.north);
-    \draw[arr] (critic.south) -- (carla.north);
-    \draw[arr, dashed, black!70] (carla.west) -| (-1.1, -2.1) -- (bev_img.south);
-
-    % ==================== ZOOMED-IN CALLOUT (TransFuser Style Inset) ====================
-    \draw[callout] (14.6, -3.2) rectangle (20.8, 3.6);
-    \node[anchor=north west, font=\footnotesize\bfseries, text=green!50!black] at (14.7, 3.5) {Numerical Stability \& Failure Modes};
-
-    % Sub-box 1: Log-Sigma Bounding
-    \node[draw=green!70!black, fill=white, rounded corners=3pt, align=left, font=\scriptsize, text width=5.6cm, inner sep=4pt] at (17.7, 1.9) {
-        \textbf{\textcolor{green!60!black}{$\checkmark$ Bounded Log-$\boldsymbol{\sigma}$ Projection (NaN Fix):}}\\
-        \tiny Sparse BEV returns ($99.4\%$ zeros) drove pre-activations to $\exp(88.7) \to +\infty \implies \text{NaN}$.\\
-        \vspace{2pt}
-        \centering $\tilde{\mathbf{s}} = \text{clip}\big(\text{Dense}_\sigma(\mathbf{h}), -15.0, 1.0\big), \quad \boldsymbol{\sigma} = \exp(\tilde{\mathbf{s}})$\\
-        \raggedright \tiny Bounding $3.05 \times 10^{-7} \le \boldsymbol{\sigma} \le 2.718$ guarantees zero NaN divergence.
-    };
-
-    % Sub-box 2: Why 4-Camera Surround Fails
-    \node[draw=red!70!black, fill=red!3, rounded corners=3pt, align=left, font=\scriptsize, text width=5.6cm, inner sep=4pt] at (17.7, -1.2) {
-        \textbf{\textcolor{red!70!black}{$\times$ Root Cause: Why 4-Camera Scaling Fails:}}\\
-        $\bullet$ \textbf{High-Dim Scaling:} Adding a 4th camera inflates state to $385\text{-dim}$, diluting PPO advantage gradients.\\
-        $\bullet$ \textbf{Gradient Dissipation:} Ungrounded peripheral latents (sky, buildings) receive equal gradient weight as driving-critical features.\\
-        $\bullet$ \textbf{Standstill Local Minima:} Zero throttle + full brake avoids the $-10.0$ collision penalty, trapping the car at $17\text{ m}$.\\
-        $\bullet$ \textbf{Simulation Crash:} 4 concurrent camera render targets triggered a Windows \texttt{STATUS\_STACK\_BUFFER\_OVERRUN} (\texttt{0xC0000409}) in dense towns.
-    };
-
-    % Connecting lines from main diagram to callout
-    \draw[green!60!black, thick, dotted] (8.8, 1.8) -- (14.6, 1.9);
-    \draw[red!70!black, thick, dotted] (9.6, 0.3) -- (14.6, -1.2);
+    \draw[arr] (actor.east) -- ++(0.3, 0) |- node[pos=0.75, right, font=\tiny\bfseries] {$\mathbf{a}_t$} (carla.east);
+    \draw[arr, dashed, black!60] (carla.west) -- ++(-0.6, 0) |- (-1.2, -2.3) -- (bev_img.south);
 
 \end{tikzpicture}
 }
-\caption{End-to-end multimodal deep reinforcement learning architecture in CARLA, inspired by TransFuser~\cite{transfuser2021}. Perspective RGB streams and 2D metric Bird's-Eye-View (BEV) LiDAR grids are tokenized by frozen Conv-VAE encoders into compact latent vectors ($\mathbf{z} \in \mathbb{R}^{95}$), concatenated with kinematic vehicle telemetry, and fed to PPO actor-critic heads for continuous $20\text{ Hz}$ closed-loop control. The callout (right) details our bounded log-sigma stabilization preventing NaN explosions alongside the empirical failure mechanisms of naive 4-camera scaling.}
+\caption{End-to-end multimodal deep reinforcement learning architecture in CARLA, inspired by TransFuser~\cite{transfuser2021}. Perspective RGB streams and 2D metric Bird's-Eye-View (BEV) LiDAR grids are compressed by frozen Conv-VAE encoders into compact latent representations ($\mathbf{z}_{\text{cam}}, \mathbf{z}_{\text{lidar}} \in \mathbb{R}^{95}$), fused via concatenation with 5-dimensional kinematic vehicle telemetry ($\mathbf{s}_t \in \mathbb{R}^{195}$), and fed into dual PPO actor-critic network heads for continuous $20\text{ Hz}$ closed-loop control.}
 \label{fig:system_flowchart}
 \end{figure*}
 
