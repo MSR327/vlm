@@ -33,7 +33,7 @@ class EncodeStateCapacity:
         self.align_b = None
         self.use_alignment = getattr(params, 'USE_ALIGNMENT', True)
 
-        if self.use_alignment and params.VAE_ARCH != 'baseline':
+        if self.use_alignment:
             align_candidates = [
                 os.path.join(os.path.dirname(self.model_path), 'alignment.npz'),
                 os.path.join(self.model_path, 'alignment.npz'),
