@@ -66,41 +66,69 @@ class ResNetEncoder(nn.Module):
         return nn.Sequential(*layers)
 
 
-# --- Multi-Scale Cross-Attention Transformer Fusion ---------------------------
-class CrossAttentionFusionBlock(nn.Module):
+# --- 2D Sinusoidal Positional Embeddings & TransFuser Fusion Block ------------
+def build_2d_sincos_position_embedding(h, w, embed_dim, temperature=10000.0):
+    """Generates fixed 2D sin-cos positional encodings (DETR / TransFuser style)."""
+    grid_w = torch.arange(w, dtype=torch.float32)
+    grid_h = torch.arange(h, dtype=torch.float32)
+    grid_w, grid_h = torch.meshgrid(grid_w, grid_h, indexing='xy')
+    assert embed_dim % 4 == 0, 'Embed dimension must be divisible by 4 for 2D sin-cos pos embedding'
+    pos_dim = embed_dim // 4
+    omega = torch.arange(pos_dim, dtype=torch.float32) / pos_dim
+    omega = 1.0 / (temperature ** omega)
+    out_w = torch.einsum('m,d->md', [grid_w.flatten(), omega])
+    out_h = torch.einsum('m,d->md', [grid_h.flatten(), omega])
+    pos = torch.cat([torch.sin(out_w), torch.cos(out_w), torch.sin(out_h), torch.cos(out_h)], dim=1)
+    return pos.unsqueeze(0)  # (1, H*W, embed_dim)
+
+
+class TransFuserFusionBlock(nn.Module):
     """
-    Bidirectional Cross-Attention Transformer between Vision and LiDAR tokens.
-    Vision tokens query 3D metric distances from LiDAR.
-    LiDAR tokens query semantic lane/traffic context from Vision.
+    TransFuser Multi-Modal Transformer Fusion Block (CVPR 2021 / TPAMI 2022).
+
+    1. Reduces channel dimension from in_channels -> embed_dim with 1x1 conv.
+    2. Spatially downsamples high-resolution feature maps to (8, 8) with adaptive avg pool.
+    3. Adds fixed 2D sinusoidal positional encodings.
+    4. Concatenates Image and LiDAR tokens along sequence length:
+       T = [T_img, T_lidar] in R^(B, 2*8*8, embed_dim) = R^(B, 128, embed_dim).
+    5. Applies TransformerEncoderLayer (Multi-Head Self-Attention + MLP + LayerNorm).
+    6. Splits back into Image and LiDAR tokens, upsamples to input resolution (H, W).
+    7. Projects back to in_channels with 1x1 conv and adds residual connection.
     """
-    def __init__(self, dim, num_heads=4, spatial_res=16):
+    def __init__(self, in_channels, embed_dim=C.TRANSFUSER_EMBED_DIM, num_heads=C.ATTN_HEADS, spatial_pool=8):
         super().__init__()
-        self.dim = dim
-        self.num_heads = num_heads
-        self.num_tokens = spatial_res * spatial_res
+        self.in_channels = in_channels
+        self.embed_dim = embed_dim
+        self.spatial_pool = spatial_pool
+        self.num_tokens = spatial_pool * spatial_pool  # 64 tokens per modality
 
-        # 2D Positional Embeddings
-        self.pos_img = nn.Parameter(torch.randn(1, self.num_tokens, dim) * 0.02)
-        self.pos_lidar = nn.Parameter(torch.randn(1, self.num_tokens, dim) * 0.02)
+        # 1x1 conv channel reductions
+        self.reduce_img = nn.Conv2d(in_channels, embed_dim, kernel_size=1, bias=False)
+        self.reduce_lidar = nn.Conv2d(in_channels, embed_dim, kernel_size=1, bias=False)
 
-        # Multi-Head Cross-Attention: Image queries LiDAR
-        self.cross_attn_img = nn.MultiheadAttention(dim, num_heads, batch_first=True)
-        self.norm_img1 = nn.LayerNorm(dim)
-        self.norm_img2 = nn.LayerNorm(dim)
-        self.mlp_img = nn.Sequential(
-            nn.Linear(dim, dim * 2),
-            nn.GELU(),
-            nn.Linear(dim * 2, dim)
+        # 2D Sin-Cos Positional Encodings (fixed, non-trainable buffer)
+        pos = build_2d_sincos_position_embedding(spatial_pool, spatial_pool, embed_dim)
+        self.register_buffer('pos_embedding', pos)
+
+        # Standard Transformer Encoder Layer with Self-Attention
+        encoder_layer = nn.TransformerEncoderLayer(
+            d_model=embed_dim,
+            nhead=num_heads,
+            dim_feedforward=embed_dim * 2,
+            dropout=0.1,
+            activation='gelu',
+            batch_first=True
         )
+        self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=1)
 
-        # Multi-Head Cross-Attention: LiDAR queries Image
-        self.cross_attn_lidar = nn.MultiheadAttention(dim, num_heads, batch_first=True)
-        self.norm_lidar1 = nn.LayerNorm(dim)
-        self.norm_lidar2 = nn.LayerNorm(dim)
-        self.mlp_lidar = nn.Sequential(
-            nn.Linear(dim, dim * 2),
-            nn.GELU(),
-            nn.Linear(dim * 2, dim)
+        # 1x1 conv projections back to input channel dimension
+        self.expand_img = nn.Sequential(
+            nn.Conv2d(embed_dim, in_channels, kernel_size=1, bias=False),
+            nn.BatchNorm2d(in_channels)
+        )
+        self.expand_lidar = nn.Sequential(
+            nn.Conv2d(embed_dim, in_channels, kernel_size=1, bias=False),
+            nn.BatchNorm2d(in_channels)
         )
 
     def forward(self, img_feat, lidar_feat):
@@ -109,37 +137,60 @@ class CrossAttentionFusionBlock(nn.Module):
             img_feat:   (B, C, H, W)
             lidar_feat: (B, C, H, W)
         Returns:
-            fused_img, fused_lidar: (B, C, H, W)
+            fused_img, fused_lidar: (B, C, H, W) with residual connection
         """
         B, C, H, W = img_feat.shape
-        # Flatten spatial dims to tokens: (B, H*W, C)
-        t_img = img_feat.flatten(2).transpose(1, 2)
-        t_lidar = lidar_feat.flatten(2).transpose(1, 2)
 
-        # Add positional encodings
-        q_img = t_img + self.pos_img[:, :t_img.shape[1], :]
-        q_lidar = t_lidar + self.pos_lidar[:, :t_lidar.shape[1], :]
+        # 1. Channel reduction: (B, C, H, W) -> (B, embed_dim, H, W)
+        r_img = self.reduce_img(img_feat)
+        r_lidar = self.reduce_lidar(lidar_feat)
 
-        # Cross-Attention: Vision queries LiDAR depth
-        attn_img_out, _ = self.cross_attn_img(query=q_img, key=q_lidar, value=t_lidar)
-        t_img = self.norm_img1(t_img + attn_img_out)
-        t_img = self.norm_img2(t_img + self.mlp_img(t_img))
+        # 2. Downsample to (8, 8) if H, W > spatial_pool
+        if H != self.spatial_pool or W != self.spatial_pool:
+            p_img = F.adaptive_avg_pool2d(r_img, (self.spatial_pool, self.spatial_pool))
+            p_lidar = F.adaptive_avg_pool2d(r_lidar, (self.spatial_pool, self.spatial_pool))
+        else:
+            p_img = r_img
+            p_lidar = r_lidar
 
-        # Cross-Attention: LiDAR queries Vision semantics
-        attn_lidar_out, _ = self.cross_attn_lidar(query=q_lidar, key=q_img, value=t_img)
-        t_lidar = self.norm_lidar1(t_lidar + attn_lidar_out)
-        t_lidar = self.norm_lidar2(t_lidar + self.mlp_lidar(t_lidar))
+        # 3. Flatten spatial dimensions into tokens: (B, 64, embed_dim)
+        t_img = p_img.flatten(2).transpose(1, 2)
+        t_lidar = p_lidar.flatten(2).transpose(1, 2)
 
-        # Unflatten back to spatial feature maps
-        img_out = t_img.transpose(1, 2).reshape(B, C, H, W)
-        lidar_out = t_lidar.transpose(1, 2).reshape(B, C, H, W)
-        return img_out, lidar_out
+        # 4. Add 2D sinusoidal positional encodings
+        t_img = t_img + self.pos_embedding
+        t_lidar = t_lidar + self.pos_embedding
+
+        # 5. Concatenate tokens along sequence dimension: (B, 128, embed_dim)
+        tokens = torch.cat([t_img, t_lidar], dim=1)
+
+        # 6. Multi-Head Self-Attention across both intra- and cross-modal tokens
+        tokens_fused = self.transformer(tokens)
+
+        # 7. Split back into Image and LiDAR tokens: each (B, 64, embed_dim)
+        f_img = tokens_fused[:, :self.num_tokens, :]
+        f_lidar = tokens_fused[:, self.num_tokens:, :]
+
+        # 8. Reshape back to (B, embed_dim, 8, 8)
+        f_img = f_img.transpose(1, 2).reshape(B, self.embed_dim, self.spatial_pool, self.spatial_pool)
+        f_lidar = f_lidar.transpose(1, 2).reshape(B, self.embed_dim, self.spatial_pool, self.spatial_pool)
+
+        # 9. Upsample back to (H, W) if downsampled
+        if H != self.spatial_pool or W != self.spatial_pool:
+            f_img = F.interpolate(f_img, size=(H, W), mode='bilinear', align_corners=False)
+            f_lidar = F.interpolate(f_lidar, size=(H, W), mode='bilinear', align_corners=False)
+
+        # 10. Expand channels & add residual skip connection
+        out_img = F.relu(img_feat + self.expand_img(f_img), inplace=True)
+        out_lidar = F.relu(lidar_feat + self.expand_lidar(f_lidar), inplace=True)
+
+        return out_img, out_lidar
 
 
 # --- Full TransFuser Backbone -------------------------------------------------
 class TransFuserBackbone(nn.Module):
     """
-    Complete Multi-Modal TransFuser Backbone.
+    Complete Multi-Modal TransFuser Backbone (CVPR 2021 / TPAMI 2022).
     Input:
         rgb:   (B, 3, 256, 256)
         lidar: (B, 2, 256, 256)
@@ -150,13 +201,15 @@ class TransFuserBackbone(nn.Module):
         super().__init__()
         self.latent_dim = latent_dim
 
-        # Dual encoders
+        # Dual ResNet-34 encoders
         self.img_encoder = ResNetEncoder(in_channels=3, depth=C.IMAGE_BACKBONE)
         self.lidar_encoder = ResNetEncoder(in_channels=C.BEV_CHANNELS, depth=C.LIDAR_BACKBONE)
 
-        # Multi-scale cross-attention fusion blocks
-        self.fusion_stage3 = CrossAttentionFusionBlock(dim=256, num_heads=C.ATTN_HEADS, spatial_res=16)
-        self.fusion_stage4 = CrossAttentionFusionBlock(dim=512, num_heads=C.ATTN_HEADS, spatial_res=8)
+        # Multi-scale Transformer fusion blocks across all 4 stages
+        self.fusion_stage1 = TransFuserFusionBlock(in_channels=64, embed_dim=C.TRANSFUSER_EMBED_DIM, num_heads=C.ATTN_HEADS)
+        self.fusion_stage2 = TransFuserFusionBlock(in_channels=128, embed_dim=C.TRANSFUSER_EMBED_DIM, num_heads=C.ATTN_HEADS)
+        self.fusion_stage3 = TransFuserFusionBlock(in_channels=256, embed_dim=C.TRANSFUSER_EMBED_DIM, num_heads=C.ATTN_HEADS)
+        self.fusion_stage4 = TransFuserFusionBlock(in_channels=512, embed_dim=C.TRANSFUSER_EMBED_DIM, num_heads=C.ATTN_HEADS)
 
         # Global average pooling
         self.pool = nn.AdaptiveAvgPool2d((1, 1))
@@ -238,21 +291,28 @@ class TransFuserBackbone(nn.Module):
 
     def forward(self, rgb, lidar):
         """
-        Forward pass processing camera and BEV LiDAR streams through multi-scale attention.
+        Forward pass processing camera and BEV LiDAR streams through 4-stage multi-scale Transformer fusion.
         """
-        # Stem & Stages 1-2
-        img_f = self.img_encoder.stage1(self.img_encoder.stem(rgb))
+        # Stem
+        img_f = self.img_encoder.stem(rgb)
+        lidar_f = self.lidar_encoder.stem(lidar)
+
+        # Stage 1 (64x64, 64-d) + Transformer Fusion
+        img_f = self.img_encoder.stage1(img_f)
+        lidar_f = self.lidar_encoder.stage1(lidar_f)
+        img_f, lidar_f = self.fusion_stage1(img_f, lidar_f)
+
+        # Stage 2 (32x32, 128-d) + Transformer Fusion
         img_f = self.img_encoder.stage2(img_f)
-
-        lidar_f = self.lidar_encoder.stage1(self.lidar_encoder.stem(lidar))
         lidar_f = self.lidar_encoder.stage2(lidar_f)
+        img_f, lidar_f = self.fusion_stage2(img_f, lidar_f)
 
-        # Stage 3 (16x16, 256-d) + Cross-Attention Fusion
+        # Stage 3 (16x16, 256-d) + Transformer Fusion
         img_f = self.img_encoder.stage3(img_f)
         lidar_f = self.lidar_encoder.stage3(lidar_f)
         img_f, lidar_f = self.fusion_stage3(img_f, lidar_f)
 
-        # Stage 4 (8x8, 512-d) + Cross-Attention Fusion
+        # Stage 4 (8x8, 512-d) + Transformer Fusion
         img_f = self.img_encoder.stage4(img_f)
         lidar_f = self.lidar_encoder.stage4(lidar_f)
         img_f, lidar_f = self.fusion_stage4(img_f, lidar_f)

@@ -26,10 +26,10 @@ NAV_DIM    = 8                  # GPS Target [dx, dy, one_hot_cmd(6)]
 OBS_DIM    = LATENT_DIM + EGO_DIM + NAV_DIM  # 144-d total PPO observation
 ACTION_DIM = 2                  # Continuous control: [steer in [-1, 1], accel in [-1, 1]]
 
-# --- TransFuser Cross-Attention Architecture ----------------------------------
+# --- TransFuser Multi-Scale Transformer Architecture -------------------------
 IMAGE_BACKBONE = 'resnet34'
-LIDAR_BACKBONE = 'resnet18'
-FUSION_SCALES  = [16, 8]        # Feature resolutions where cross-attention exchanges tokens
+LIDAR_BACKBONE = 'resnet34'
+FUSION_SCALES  = [64, 32, 16, 8]  # All 4 ResNet scales with Transformer self-attention
 ATTN_HEADS     = 4
 TRANSFUSER_EMBED_DIM = 64
 
