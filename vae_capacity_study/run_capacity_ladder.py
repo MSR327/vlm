@@ -183,7 +183,6 @@ def run_training(env, agent, encoder, n_episodes, save_dir):
     print(f"=======================================================\n")
 
     timestep = 0
-    update_interval = 2000
 
     for ep in range(1, n_episodes + 1):
         obs_raw = env.reset()
@@ -191,25 +190,29 @@ def run_training(env, agent, encoder, n_episodes, save_dir):
         ep_reward = 0.0
         done = False
         step = 0
+        info = {}
 
         while not done and step < P.EPISODE_LENGTH:
             timestep += 1
             step += 1
-            action, log_prob = agent(state, True)
+            action, _ = agent(state, True)
             next_obs_raw, reward, done, info = env.step(action)
             next_state = encoder.process(next_obs_raw)
 
-            agent.remember(state, action, log_prob, reward, done)
+            agent.memory.rewards.append(reward)
+            agent.memory.dones.append(done)
+
             ep_reward += reward
             state = next_state
-
-            if timestep % update_interval == 0:
-                agent.learn()
 
         if ep % 5 == 0 and len(agent.memory.actions) > 0:
             agent.learn()
 
-        print(f"Train Ep {ep:3d}/{n_episodes:3d} | Reward: {ep_reward:7.1f} | Steps: {step} | Total TS: {timestep}")
+        comp = info.get('route_completion', 0.0) * 100.0
+        dist = info.get('distance_covered', 0.0)
+        dev = info.get('center_lane_deviation', 0.0)
+        term = info.get('termination_reason', 'done')
+        print(f"Train Ep {ep:3d}/{n_episodes:3d} | Reward: {ep_reward:7.1f} | Comp: {comp:4.1f}% ({dist:4.1f}m) | Dev: {dev:.2f}m | Term: {term:<12} | Steps: {step:3d} | TS: {timestep}")
 
         if ep % 10 == 0:
             agent.save()
@@ -267,13 +270,20 @@ def main():
     else:
         print(f"[PPOAgent] Warning: No trained model found for obs_dim={effective_obs_dim}. Driving with initialized policy.")
 
-    if args.mode == 'train':
-        run_training(env, agent, encoder, args.episodes, P.PPO_MODEL_PATH)
-    else:
-        # Test / Evaluation Mode
-        tag_str = f"_{args.tag}" if args.tag else ""
-        out_csv = os.path.join(P.RESULTS_PATH, f"eval_{P.TOWN}_{args.arch}_d{args.latent}{tag_str}.csv")
-        run_evaluation(env, agent, encoder, args.episodes, out_csv)
+    try:
+        if args.mode == 'train':
+            run_training(env, agent, encoder, args.episodes, P.PPO_MODEL_PATH)
+        else:
+            # Test / Evaluation Mode
+            tag_str = f"_{args.tag}" if args.tag else ""
+            out_csv = os.path.join(P.RESULTS_PATH, f"eval_{P.TOWN}_{args.arch}_d{args.latent}{tag_str}.csv")
+            run_evaluation(env, agent, encoder, args.episodes, out_csv)
+    finally:
+        try:
+            env._teardown()
+            env.restore_settings()
+        except Exception:
+            pass
 
 
 if __name__ == '__main__':
