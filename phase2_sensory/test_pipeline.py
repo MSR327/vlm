@@ -23,7 +23,13 @@ def test_bev_lidar():
     print("[Test 1/4] Testing BEV LiDAR Projector ...")
     projector = BEVLidarProjector()
 
-    # Generate synthetic point cloud (10,000 points)
+    # 1. Test empty point cloud edge case
+    pts_empty = np.zeros((0, 4), dtype=np.float32)
+    bev_empty = projector.project(pts_empty)
+    assert bev_empty.shape == (2, 256, 256), f"Expected shape (2, 256, 256), got {bev_empty.shape}"
+    assert bev_empty.sum() == 0.0, "Expected all zeros for empty point cloud"
+
+    # 2. Generate synthetic point cloud (10,000 points)
     # x in [-4, 28], y in [-16, 16], z in [-0.5, 3.5]
     n_pts = 10000
     pts = np.zeros((n_pts, 4), dtype=np.float32)
@@ -38,7 +44,7 @@ def test_bev_lidar():
     assert bev.min() >= 0.0 and bev.max() <= 1.0, f"Values out of bounds: [{bev.min()}, {bev.max()}]"
     assert bev[0].sum() > 0.0, "Obstacle channel is empty!"
     assert bev[1].sum() > 0.0, "Ground plane channel is empty!"
-    print("  -> BEV LiDAR Projector: PASSED (Shape 2x256x256, strictly bounded [0, 1])\n")
+    print("  -> BEV LiDAR Projector: PASSED (Shape 2x256x256, empty cloud robustness, bounded [0, 1])\n")
 
 
 def test_transfuser_backbone():
@@ -65,24 +71,24 @@ def test_transfuser_backbone():
 
 
 def test_ppo_agent():
-    print("[Test 3/4] Testing PyTorch PPO Agent ...")
+    print("[Test 3/4] Testing PyTorch PPO Agent (Squashed Normal Policy) ...")
     agent = PPOAgent(obs_dim=C.OBS_DIM, action_dim=C.ACTION_DIM, device=torch.device("cpu"))
 
-    # Test action selection (returns clamped action, raw action, log_prob, value)
+    # Test action selection (returns action, u, log_prob, value)
     state = np.random.randn(C.OBS_DIM).astype(np.float32)
-    action_clamped, action_raw, log_prob, val = agent.select_action(state)
-    assert action_clamped.shape == (2,), f"Expected action shape (2,), got {action_clamped.shape}"
-    assert action_raw.shape == (2,), f"Expected action_raw shape (2,), got {action_raw.shape}"
-    assert np.all(action_clamped >= -1.0) and np.all(action_clamped <= 1.0), f"Action out of bounds: {action_clamped}"
+    action, u, log_prob, val = agent.select_action(state)
+    assert action.shape == (2,), f"Expected action shape (2,), got {action.shape}"
+    assert u.shape == (2,), f"Expected u shape (2,), got {u.shape}"
+    assert np.all(action >= -1.0) and np.all(action <= 1.0), f"Action out of bounds: {action}"
 
-    # Test buffer and learning update with raw unclipped actions for exact Gaussian policy gradient
+    # Test buffer and learning update with squashed normal change-of-variables
     for _ in range(10):
         s = np.random.randn(C.OBS_DIM).astype(np.float32)
-        a_clamped, a_raw, lp, v = agent.select_action(s)
-        agent.remember(s, a_raw, lp, 1.0, False, v)
+        a, u_sample, lp, v = agent.select_action(s)
+        agent.remember(s, a, u_sample, lp, 1.0, False, v, truncated=False)
 
     a_loss, c_loss = agent.learn()
-    print("  -> PPO Agent Optimization: PASSED (Valid unclipped Gaussian log_prob & gradient update)\n")
+    print("  -> PPO Agent Optimization: PASSED (SquashedNormal policy gradient & GAE update)\n")
 
 
 def test_full_pipeline():
@@ -97,9 +103,9 @@ def test_full_pipeline():
         'nav': np.zeros(8, dtype=np.float32)
     }
 
-    action_clamped, action_raw, log_prob, val, state_np, lat_ms = pipeline.act(dummy_obs)
-    assert action_clamped.shape == (2,), f"Expected action shape (2,), got {action_clamped.shape}"
-    assert action_raw.shape == (2,), f"Expected action_raw shape (2,), got {action_raw.shape}"
+    action, u, log_prob, val, state_np, lat_ms = pipeline.act(dummy_obs)
+    assert action.shape == (2,), f"Expected action shape (2,), got {action.shape}"
+    assert u.shape == (2,), f"Expected u shape (2,), got {u.shape}"
     assert state_np.shape == (144,), f"Expected observation shape (144,), got {state_np.shape}"
     print(f"  -> End-to-End Pipeline Latency: {lat_ms:.2f} ms")
     print("  -> End-to-End Pipeline: PASSED\n")

@@ -16,22 +16,48 @@ from torch.distributions import Normal
 import phase2_sensory.config as C
 
 
+class SquashedNormal:
+    """
+    Squashed Gaussian distribution (SAC/PPO Tanh-Normal) with exact change-of-variables log_prob.
+    Eliminates off-policy clamping discrepancies and boundary probability spikes.
+    """
+    def __init__(self, loc, scale):
+        self.normal = Normal(loc, scale)
+
+    def sample(self):
+        u = self.normal.sample()
+        action = torch.tanh(u)
+        return action, u
+
+    def log_prob(self, action, u):
+        log_prob_u = self.normal.log_prob(u)
+        log_det = torch.log(1.0 - action.pow(2) + 1e-6)
+        return (log_prob_u - log_det).sum(dim=-1)
+
+    def entropy(self):
+        return self.normal.entropy().sum(dim=-1)
+
+
 class RolloutBuffer:
     """Stores experience transitions for episodic PPO updates."""
     def __init__(self):
         self.states = []
         self.actions = []
+        self.u_latents = []
         self.log_probs = []
         self.rewards = []
         self.dones = []
+        self.truncateds = []
         self.values = []
 
     def clear(self):
         self.states.clear()
         self.actions.clear()
+        self.u_latents.clear()
         self.log_probs.clear()
         self.rewards.clear()
         self.dones.clear()
+        self.truncateds.clear()
         self.values.clear()
 
     def __len__(self):
@@ -40,7 +66,7 @@ class RolloutBuffer:
 
 class ActorCritic(nn.Module):
     """
-    Continuous Actor-Critic Network.
+    Continuous Actor-Critic Network with Squashed Gaussian Policy.
     Shared hidden layer architecture with LayerNorm stabilization.
     """
     def __init__(self, obs_dim=C.OBS_DIM, action_dim=C.ACTION_DIM, std_init=C.ACTION_STD_INIT):
@@ -48,7 +74,7 @@ class ActorCritic(nn.Module):
         self.obs_dim = obs_dim
         self.action_dim = action_dim
 
-        # Policy Head (Actor)
+        # Policy Head (Actor): outputs latent mean u in R^2 (squashed strictly to [-1, 1] via tanh)
         self.actor = nn.Sequential(
             nn.Linear(obs_dim, 256),
             nn.LayerNorm(256),
@@ -56,11 +82,10 @@ class ActorCritic(nn.Module):
             nn.Linear(256, 128),
             nn.LayerNorm(128),
             nn.Tanh(),
-            nn.Linear(128, action_dim),
-            nn.Tanh()  # Bounds mean action strictly to [-1.0, +1.0]
+            nn.Linear(128, action_dim)
         )
 
-        # Trainable exploration log standard deviation
+        # Trainable exploration log standard deviation (clamped to [-5.0, 0.5])
         self.log_std = nn.Parameter(torch.ones(action_dim) * math.log(std_init))
 
         # Value Head (Critic)
@@ -77,8 +102,9 @@ class ActorCritic(nn.Module):
     def forward(self, state):
         mean = self.actor(state)
         value = self.critic(state)
-        std = self.log_std.exp().expand_as(mean)
-        dist = Normal(mean, std)
+        clamped_log_std = torch.clamp(self.log_std, -5.0, 0.5)
+        std = clamped_log_std.exp().expand_as(mean)
+        dist = SquashedNormal(mean, std)
         return dist, value
 
     def get_value(self, state):
@@ -87,7 +113,8 @@ class ActorCritic(nn.Module):
 
 class PPOAgent:
     """
-    PPO Agent with Generalized Advantage Estimation (GAE) and clipped surrogate objective.
+    PPO Agent with Generalized Advantage Estimation (GAE), Squashed Gaussian policy,
+    and clipped surrogate objective.
     """
     def __init__(self,
                  obs_dim=C.OBS_DIM,
@@ -114,50 +141,62 @@ class PPOAgent:
     def select_action(self, state_np, deterministic=False):
         """
         Takes numpy observation (obs_dim,), returns:
-            action_clamped_np: bounded control [-1, 1] for CARLA execution
-            action_raw_np: unclipped sample for exact Gaussian log-prob optimization
-            log_prob: float, log-probability under current policy
+            action_np: bounded control in (-1, 1) strictly via tanh
+            u_np: unconstrained latent sample
+            log_prob: float, exact change-of-variables log-probability
             value: float, state-value prediction
         """
         state_t = torch.from_numpy(state_np).float().unsqueeze(0).to(self.device)
         with torch.no_grad():
             dist, value = self.ac(state_t)
             if deterministic:
-                action_raw = dist.mean
+                mean = self.ac.actor(state_t)
+                action = torch.tanh(mean)
+                u = mean
+                log_prob = dist.log_prob(action, u)
             else:
-                action_raw = dist.sample()
-            log_prob = dist.log_prob(action_raw).sum(dim=-1)
-            action_clamped = torch.clamp(action_raw, -1.0, 1.0)
+                action, u = dist.sample()
+                log_prob = dist.log_prob(action, u)
 
         return (
-            action_clamped.squeeze(0).cpu().numpy(),
-            action_raw.squeeze(0).cpu().numpy(),
+            action.squeeze(0).cpu().numpy(),
+            u.squeeze(0).cpu().numpy(),
             log_prob.item(),
             value.item()
         )
 
-    def remember(self, state, action, log_prob, reward, done, value):
+    def remember(self, state, action, u, log_prob, reward, done, value, truncated=False):
         self.buffer.states.append(state)
         self.buffer.actions.append(action)
+        self.buffer.u_latents.append(u)
         self.buffer.log_probs.append(log_prob)
         self.buffer.rewards.append(reward)
         self.buffer.dones.append(done)
+        self.buffer.truncateds.append(truncated)
         self.buffer.values.append(value)
 
     def compute_gae(self, last_value=0.0):
         """
         Computes Generalized Advantage Estimation (GAE) over the stored buffer.
+        Differentiates between terminal failure (mask=0) and time-limit truncation (mask=1, bootstraps value).
         """
         rewards = self.buffer.rewards
         dones = self.buffer.dones
+        truncateds = self.buffer.truncateds
         values = self.buffer.values + [last_value]
 
         advantages = []
         gae = 0.0
 
         for t in reversed(range(len(rewards))):
-            delta = rewards[t] + self.gamma * values[t + 1] * (1.0 - float(dones[t])) - values[t]
-            gae = delta + self.gamma * self.lam * (1.0 - float(dones[t])) * gae
+            # If terminated (crash, lane departure, stall): mask = 0 (no future return)
+            # If truncated (max steps timeout) or running: mask = 1 (bootstrap V(s_{t+1}))
+            is_truncated = truncateds[t] if t < len(truncateds) else False
+            is_done = dones[t]
+            mask = 0.0 if (is_done and not is_truncated) else 1.0
+
+            delta = rewards[t] + self.gamma * values[t + 1] * mask - values[t]
+            gae = delta + self.gamma * self.lam * mask * gae
             advantages.insert(0, gae)
 
         returns = [adv + val for adv, val in zip(advantages, self.buffer.values)]
@@ -165,7 +204,7 @@ class PPOAgent:
 
     def learn(self, last_value=0.0):
         """
-        Executes PPO policy and value updates over the buffer.
+        Executes PPO policy and value updates over the buffer with PPO-2 value clipping.
         """
         if len(self.buffer) == 0:
             return 0.0, 0.0
@@ -175,7 +214,9 @@ class PPOAgent:
         # Convert buffer to tensors
         states_t = torch.tensor(np.array(self.buffer.states), dtype=torch.float32, device=self.device)
         actions_t = torch.tensor(np.array(self.buffer.actions), dtype=torch.float32, device=self.device)
+        u_latents_t = torch.tensor(np.array(self.buffer.u_latents), dtype=torch.float32, device=self.device)
         old_log_probs_t = torch.tensor(np.array(self.buffer.log_probs), dtype=torch.float32, device=self.device)
+        old_values_t = torch.tensor(np.array(self.buffer.values), dtype=torch.float32, device=self.device)
         returns_t = torch.tensor(np.array(returns), dtype=torch.float32, device=self.device)
         advantages_t = torch.tensor(np.array(advantages), dtype=torch.float32, device=self.device)
 
@@ -195,13 +236,15 @@ class PPOAgent:
 
                 b_states = states_t[batch_idx]
                 b_actions = actions_t[batch_idx]
+                b_u = u_latents_t[batch_idx]
                 b_old_log_probs = old_log_probs_t[batch_idx]
+                b_old_values = old_values_t[batch_idx]
                 b_returns = returns_t[batch_idx]
                 b_adv = advantages_t[batch_idx]
 
                 dist, val = self.ac(b_states)
-                log_probs = dist.log_prob(b_actions).sum(dim=-1)
-                entropy = dist.entropy().sum(dim=-1).mean()
+                log_probs = dist.log_prob(b_actions, b_u)
+                entropy = dist.entropy().mean()
 
                 # PPO Clipped Surrogate Loss
                 ratios = torch.exp(log_probs - b_old_log_probs)
@@ -209,8 +252,12 @@ class PPOAgent:
                 surr2 = torch.clamp(ratios, 1.0 - self.clip_eps, 1.0 + self.clip_eps) * b_adv
                 actor_loss = -torch.min(surr1, surr2).mean() - C.ENTROPY_COEF * entropy
 
-                # Value Loss (MSE)
-                critic_loss = C.VALUE_COEF * F.mse_loss(val.squeeze(-1), b_returns)
+                # PPO-2 Clipped Value Loss
+                val_pred = val.squeeze(-1)
+                val_clipped = b_old_values + torch.clamp(val_pred - b_old_values, -self.clip_eps, self.clip_eps)
+                vf_loss1 = F.mse_loss(val_pred, b_returns)
+                vf_loss2 = F.mse_loss(val_clipped, b_returns)
+                critic_loss = C.VALUE_COEF * torch.max(vf_loss1, vf_loss2)
 
                 loss = actor_loss + critic_loss
 

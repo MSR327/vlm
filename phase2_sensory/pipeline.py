@@ -43,8 +43,10 @@ class TransFuserPPOPipeline:
         t0 = time.perf_counter()
 
         # 1. Prepare RGB Tensor: (H, W, 3) -> (1, 3, H, W)
-        rgb_np = sensor_obs['rgb']
-        rgb_t = torch.from_numpy(rgb_np).permute(2, 0, 1).unsqueeze(0).float().to(self.device)
+        rgb_np = np.asarray(sensor_obs['rgb'], dtype=np.float32)
+        if rgb_np.max() > 1.0:
+            rgb_np = rgb_np / 255.0
+        rgb_t = torch.from_numpy(rgb_np).permute(2, 0, 1).unsqueeze(0).to(self.device)
         rgb_t = (rgb_t - self.mean) / self.std
 
         # 2. Rasterize BEV LiDAR Grid: (N, 4) -> (1, 2, H, W)
@@ -66,8 +68,8 @@ class TransFuserPPOPipeline:
 
     def act(self, sensor_obs, deterministic=False):
         """
-        Takes raw sensor observation, returns action_clamped, action_raw, log_prob, value, state_np, latency_ms.
+        Takes raw sensor observation, returns action, u, log_prob, value, state_np, latency_ms.
         """
         state_np, latency_ms = self.process_sensors(sensor_obs)
-        action_clamped, action_raw, log_prob, value = self.agent.select_action(state_np, deterministic=deterministic)
-        return action_clamped, action_raw, log_prob, value, state_np, latency_ms
+        action, u, log_prob, value = self.agent.select_action(state_np, deterministic=deterministic)
+        return action, u, log_prob, value, state_np, latency_ms

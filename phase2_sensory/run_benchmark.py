@@ -40,10 +40,11 @@ def run_training(env, pipeline, n_episodes, save_path):
 
         while not done and step < C.MAX_STEPS_PER_EP:
             step += 1
-            action_clamped, action_raw, log_prob, value, state_np, _ = pipeline.act(sensor_obs, deterministic=False)
-            next_sensor_obs, priv_state, reward, done, info = env.step(action_clamped)
+            action, u, log_prob, value, state_np, _ = pipeline.act(sensor_obs, deterministic=False)
+            next_sensor_obs, priv_state, reward, done, info = env.step(action)
 
-            agent.remember(state_np, action_raw, log_prob, reward, done, value)
+            truncated = (priv_state.get('term_reason') == 'max_steps')
+            agent.remember(state_np, action, u, log_prob, reward, done, value, truncated=truncated)
             ep_reward += reward
             sensor_obs = next_sensor_obs
 
@@ -81,6 +82,7 @@ def run_evaluation(env, pipeline, n_episodes, out_csv):
     summary_rewards = []
     summary_completions = []
     summary_deviations = []
+    summary_collisions = []
     latencies = []
 
     for ep in range(1, n_episodes + 1):
@@ -93,8 +95,8 @@ def run_evaluation(env, pipeline, n_episodes, out_csv):
 
         while not done and step < C.MAX_STEPS_PER_EP:
             step += 1
-            action_clamped, _, _, _, _, lat_ms = pipeline.act(sensor_obs, deterministic=True)
-            next_sensor_obs, priv_state, reward, done, info = env.step(action_clamped)
+            action, _, _, _, _, lat_ms = pipeline.act(sensor_obs, deterministic=True)
+            next_sensor_obs, priv_state, reward, done, info = env.step(action)
 
             ep_reward += reward
             ep_latencies.append(lat_ms)
@@ -129,6 +131,7 @@ def run_evaluation(env, pipeline, n_episodes, out_csv):
         summary_rewards.append(ep_reward)
         summary_completions.append(comp)
         summary_deviations.append(dev)
+        summary_collisions.append(collided)
 
         print(f"Ep {ep:2d}/{n_episodes:2d} | "
               f"Reward: {ep_reward:7.1f} | "
@@ -144,6 +147,7 @@ def run_evaluation(env, pipeline, n_episodes, out_csv):
     mean_c = float(np.mean(summary_completions))
     std_c  = float(np.std(summary_completions))
     mean_d = float(np.mean(summary_deviations))
+    mean_coll = float(np.mean(summary_collisions)) * 100.0 if summary_collisions else 0.0
     mean_lat = float(np.mean(latencies)) if latencies else 0.0
     fps = 1000.0 / mean_lat if mean_lat > 0 else 0.0
 
@@ -151,6 +155,7 @@ def run_evaluation(env, pipeline, n_episodes, out_csv):
     print(f" EVALUATION SUMMARY (PHASE 2 TRANSFUSER-PPO)")
     print(f" Mean Cumulative Reward:    {mean_r:.2f} +/- {std_r:.2f}")
     print(f" Mean Route Completion:    {mean_c:.1f}% +/- {std_c:.1f}%")
+    print(f" Mean Collision Rate:      {mean_coll:.1f}%")
     print(f" Mean Lane Center Dev:     {mean_d:.2f} m")
     print(f" Mean Encoder Latency:     {mean_lat:.2f} ms ({fps:.0f} FPS)")
     print("=" * 60 + "\n")

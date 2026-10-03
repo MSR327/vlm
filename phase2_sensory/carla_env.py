@@ -182,25 +182,33 @@ class CarlaSensoryEnvironment:
             me.lidar_queue.put(pts)
 
     def _retrieve_sensor_data(self, frame_id, timeout=2.0):
-        """Thread-safe lockstep barrier: blocks until camera and LiDAR arrive for frame_id."""
+        """Strict lockstep barrier: blocks until camera and LiDAR arrive for exact frame_id."""
         t0 = time.time()
         img_data = None
         lidar_data = None
 
         while img_data is None or lidar_data is None:
             if time.time() - t0 > timeout:
-                break
+                raise TimeoutError(f"[CarlaEnv] Sensor timeout waiting for tick {frame_id}")
             if img_data is None:
                 try:
                     c = self.camera_queue.get(timeout=0.05)
-                    if c.frame >= frame_id:
+                    if c.frame == frame_id:
+                        img_data = c
+                    elif c.frame < frame_id:
+                        continue  # drop stale frame from prior tick
+                    else:
                         img_data = c
                 except queue.Empty:
                     pass
             if lidar_data is None:
                 try:
                     l = self.lidar_queue.get(timeout=0.05)
-                    if l.frame >= frame_id:
+                    if l.frame == frame_id:
+                        lidar_data = l
+                    elif l.frame < frame_id:
+                        continue  # drop stale frame from prior tick
+                    else:
                         lidar_data = l
                 except queue.Empty:
                     pass
@@ -249,16 +257,21 @@ class CarlaSensoryEnvironment:
         steer_cmd = float(action[0])
         accel_cmd = float(action[1])
 
-        # Smooth action filter
-        applied_steer = self.prev_steer * 0.8 + steer_cmd * 0.2
+        # Responsive action filter (30% persistence, 70% new command)
+        applied_steer = self.prev_steer * 0.3 + steer_cmd * 0.7
 
-        # Smooth Throttle vs. Brake Separation (smoothly decaying opposite pedal)
+        # Responsive Throttle vs. Brake Separation with Emergency Braking Bypass
         if accel_cmd >= 0.0:
-            applied_throttle = self.prev_throttle * 0.8 + accel_cmd * 0.2
-            applied_brake = self.prev_brake * 0.8
+            applied_throttle = self.prev_throttle * 0.3 + accel_cmd * 0.7
+            applied_brake = self.prev_brake * 0.3
         else:
-            applied_throttle = self.prev_throttle * 0.8
-            applied_brake = self.prev_brake * 0.8 + (-accel_cmd) * 0.2
+            if accel_cmd < -0.5:
+                # Emergency braking: cut throttle immediately and apply full braking force
+                applied_throttle = 0.0
+                applied_brake = float(-accel_cmd)
+            else:
+                applied_throttle = self.prev_throttle * 0.3
+                applied_brake = self.prev_brake * 0.3 + (-accel_cmd) * 0.7
 
         self.vehicle.apply_control(carla.VehicleControl(
             steer=float(np.clip(applied_steer, -1.0, 1.0)),
@@ -274,21 +287,35 @@ class CarlaSensoryEnvironment:
         self._retrieve_sensor_data(frame_id, timeout=2.0)
 
         # Update telemetry
-        vel = self.vehicle.get_velocity()
-        self.velocity = math.sqrt(vel.x**2 + vel.y**2 + vel.z**2) * 3.6  # km/h
         ego_tf = self.vehicle.get_transform()
         ego_loc = ego_tf.location
+        veh_fwd = ego_tf.get_forward_vector()
 
-        # Update closest waypoint along route sequentially (prevent skipping curves)
+        vel = self.vehicle.get_velocity()
+        # True longitudinal speed in vehicle forward heading (km/h)
+        self.velocity = (vel.x * veh_fwd.x + vel.y * veh_fwd.y + vel.z * veh_fwd.z) * 3.6
+
+        # Update closest waypoint along route sequentially over lookahead window
         max_idx = len(self.route_waypoints) - 1
-        for i in range(self.current_wp_idx, min(self.current_wp_idx + 4, max_idx)):
+        search_end = min(self.current_wp_idx + 20, max_idx + 1)
+        best_idx = self.current_wp_idx
+        min_dist = float('inf')
+        for i in range(self.current_wp_idx, search_end):
             wp_loc = self.route_waypoints[i].transform.location
-            dist_to_wp = math.sqrt((ego_loc.x - wp_loc.x)**2 + (ego_loc.y - wp_loc.y)**2)
-            if dist_to_wp < 6.0:
-                fwd = self.route_waypoints[i].transform.get_forward_vector()
-                dot = (fwd.x * (ego_loc.x - wp_loc.x) + fwd.y * (ego_loc.y - wp_loc.y))
-                if dot > 0.0:
-                    self.current_wp_idx = i
+            dist = math.hypot(ego_loc.x - wp_loc.x, ego_loc.y - wp_loc.y)
+            if dist < min_dist:
+                min_dist = dist
+                best_idx = i
+
+        if best_idx > self.current_wp_idx:
+            self.current_wp_idx = best_idx
+        elif self.current_wp_idx < max_idx:
+            # Advance if vehicle has passed the current waypoint in the forward direction
+            cur_loc = self.route_waypoints[self.current_wp_idx].transform.location
+            cur_fwd = self.route_waypoints[self.current_wp_idx].transform.get_forward_vector()
+            dot = cur_fwd.x * (ego_loc.x - cur_loc.x) + cur_fwd.y * (ego_loc.y - cur_loc.y)
+            if dot > 0.0 and min_dist < 4.0:
+                self.current_wp_idx = min(self.current_wp_idx + 1, max_idx)
 
         cur_wp = self.route_waypoints[self.current_wp_idx]
         nxt_wp = self.route_waypoints[min(self.current_wp_idx + 1, max_idx)]
@@ -400,7 +427,7 @@ class CarlaSensoryEnvironment:
         # World displacement vector
         dx_w = (tgt_loc.x - ego_loc.x) + np.random.normal(0.0, 1.0)
         dy_w = (tgt_loc.y - ego_loc.y) + np.random.normal(0.0, 1.0)
-        dz_w = (tgt_loc.z - ego_loc.z)
+        dz_w = (tgt_loc.z - ego_loc.z) + np.random.normal(0.0, 0.5)
 
         # Project into Ego Vehicle Frame (Forward +X, Right +Y)
         dx_ego = dx_w * fwd_vec.x + dy_w * fwd_vec.y + dz_w * fwd_vec.z
