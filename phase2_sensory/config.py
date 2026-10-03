@@ -9,14 +9,14 @@ IM_HEIGHT = 256
 CAMERA_FOV = 90.0
 CAMERA_POS = dict(x=1.5, y=0.0, z=2.4, pitch=-10.0, yaw=0.0, roll=0.0)
 
-# LiDAR Bird's-Eye-View (BEV) Projection Parameters
+# LiDAR Bird's-Eye-View (BEV) Projection Parameters (Vehicle Ground Frame)
 LIDAR_POS = dict(x=1.3, y=0.0, z=2.5)
-LIDAR_RANGE_X = (0.0, 32.0)     # meters forward in ego frame
-LIDAR_RANGE_Y = (-16.0, 16.0)   # meters lateral in ego frame
-LIDAR_GROUND_HEIGHT = 0.3       # meters; partition threshold above/below ground
-LIDAR_MIN_HEIGHT = -2.0         # meters; cutoff below road surface
-LIDAR_MAX_HEIGHT = 4.0          # meters; cutoff above road surface
-BEV_GRID_SIZE = 256             # pixels (256x256 grid -> 0.125m resolution per pixel)
+LIDAR_RANGE_X = (-4.0, 28.0)     # meters forward/backward in ego vehicle frame (32m span)
+LIDAR_RANGE_Y = (-16.0, 16.0)   # meters lateral in ego vehicle frame (32m span)
+LIDAR_GROUND_HEIGHT = 0.3       # meters above road surface; partition threshold above/below ground
+LIDAR_MIN_HEIGHT = -0.5         # meters relative to road surface; cutoff below road
+LIDAR_MAX_HEIGHT = 3.5          # meters relative to road surface; cutoff above road
+BEV_GRID_SIZE = 256             # pixels (256x256 grid -> 0.125m resolution per pixel isotropic)
 BEV_CHANNELS = 2                # Channel 0: obstacles (> 0.3m), Channel 1: ground plane (<= 0.3m)
 
 # --- Feature & Latent Dimensions ----------------------------------------------
@@ -60,6 +60,11 @@ MAX_SPEED          = 35.0       # km/h
 MIN_SPEED          = 5.0        # km/h
 MAX_CENTER_DEV     = 3.0        # meters before lane departure termination
 DEFAULT_SPAWN_IDX  = 12
+
+# --- Anti-Stall & Termination Settings ----------------------------------------
+STALL_SPEED_THRESH = 1.0        # km/h; speed below which vehicle is considered stalled
+MAX_STALL_STEPS    = 100        # steps (5.0s at 20 Hz) before episode terminates with stall penalty
+STALL_PENALTY      = -10.0      # reward penalty for standing still / deadlocking
 
 # --- Paths & Logging ----------------------------------------------------------
 BASE_DIR        = os.path.dirname(os.path.abspath(__file__))

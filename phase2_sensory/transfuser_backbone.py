@@ -170,6 +170,72 @@ class TransFuserBackbone(nn.Module):
             nn.LayerNorm(latent_dim)
         )
 
+        # Initialize weights with Kaiming Normal
+        self._init_weights()
+
+        # Attempt to load torchvision ImageNet pretrained weights for RGB ResNet-34
+        self.load_pretrained_image_weights()
+
+    def _init_weights(self):
+        """Kaiming Normal initialization for conv and linear layers."""
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+            elif isinstance(m, (nn.BatchNorm2d, nn.LayerNorm)):
+                nn.init.constant_(m.weight, 1.0)
+                nn.init.constant_(m.bias, 0.0)
+            elif isinstance(m, nn.Linear):
+                nn.init.xavier_uniform_(m.weight)
+                if m.bias is not None:
+                    nn.init.constant_(m.bias, 0.0)
+
+    def load_pretrained_image_weights(self):
+        """Transfers torchvision ImageNet pretrained weights into self.img_encoder if available."""
+        try:
+            import torchvision.models as tv_models
+            weights = tv_models.ResNet34_Weights.DEFAULT
+            tv_model = tv_models.resnet34(weights=weights)
+
+            # Copy stem
+            self.img_encoder.stem[0].weight.data.copy_(tv_model.conv1.weight.data)
+            self.img_encoder.stem[1].weight.data.copy_(tv_model.bn1.weight.data)
+            self.img_encoder.stem[1].bias.data.copy_(tv_model.bn1.bias.data)
+            self.img_encoder.stem[1].running_mean.data.copy_(tv_model.bn1.running_mean.data)
+            self.img_encoder.stem[1].running_var.data.copy_(tv_model.bn1.running_var.data)
+
+            # Stages 1 to 4
+            stages = [
+                (self.img_encoder.stage1, tv_model.layer1),
+                (self.img_encoder.stage2, tv_model.layer2),
+                (self.img_encoder.stage3, tv_model.layer3),
+                (self.img_encoder.stage4, tv_model.layer4),
+            ]
+            for my_stage, tv_layer in stages:
+                for my_blk, tv_blk in zip(my_stage, tv_layer):
+                    my_blk.conv[0].weight.data.copy_(tv_blk.conv1.weight.data)
+                    my_blk.conv[1].weight.data.copy_(tv_blk.bn1.weight.data)
+                    my_blk.conv[1].bias.data.copy_(tv_blk.bn1.bias.data)
+                    my_blk.conv[1].running_mean.data.copy_(tv_blk.bn1.running_mean.data)
+                    my_blk.conv[1].running_var.data.copy_(tv_blk.bn1.running_var.data)
+
+                    my_blk.conv[3].weight.data.copy_(tv_blk.conv2.weight.data)
+                    my_blk.conv[4].weight.data.copy_(tv_blk.bn2.weight.data)
+                    my_blk.conv[4].bias.data.copy_(tv_blk.bn2.bias.data)
+                    my_blk.conv[4].running_mean.data.copy_(tv_blk.bn2.running_mean.data)
+                    my_blk.conv[4].running_var.data.copy_(tv_blk.bn2.running_var.data)
+
+                    if len(my_blk.shortcut) > 0 and tv_blk.downsample is not None:
+                        my_blk.shortcut[0].weight.data.copy_(tv_blk.downsample[0].weight.data)
+                        my_blk.shortcut[1].weight.data.copy_(tv_blk.downsample[1].weight.data)
+                        my_blk.shortcut[1].bias.data.copy_(tv_blk.downsample[1].bias.data)
+                        my_blk.shortcut[1].running_mean.data.copy_(tv_blk.downsample[1].running_mean.data)
+                        my_blk.shortcut[1].running_var.data.copy_(tv_blk.downsample[1].running_var.data)
+            print("[TransFuserBackbone] ImageNet pretrained weights successfully transferred to RGB ResNet-34!")
+            return True
+        except Exception as e:
+            print(f"[TransFuserBackbone] ImageNet pretraining transfer bypassed ({e}); running with Kaiming Normal weights.")
+            return False
+
     def forward(self, rgb, lidar):
         """
         Forward pass processing camera and BEV LiDAR streams through multi-scale attention.

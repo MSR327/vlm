@@ -113,20 +113,28 @@ class PPOAgent:
 
     def select_action(self, state_np, deterministic=False):
         """
-        Takes numpy observation (obs_dim,), returns (action_np, log_prob, value).
+        Takes numpy observation (obs_dim,), returns:
+            action_clamped_np: bounded control [-1, 1] for CARLA execution
+            action_raw_np: unclipped sample for exact Gaussian log-prob optimization
+            log_prob: float, log-probability under current policy
+            value: float, state-value prediction
         """
         state_t = torch.from_numpy(state_np).float().unsqueeze(0).to(self.device)
         with torch.no_grad():
             dist, value = self.ac(state_t)
             if deterministic:
-                action = dist.mean
+                action_raw = dist.mean
             else:
-                action = dist.sample()
-                # Clip to valid vehicle control limits
-                action = torch.clamp(action, -1.0, 1.0)
-            log_prob = dist.log_prob(action).sum(dim=-1)
+                action_raw = dist.sample()
+            log_prob = dist.log_prob(action_raw).sum(dim=-1)
+            action_clamped = torch.clamp(action_raw, -1.0, 1.0)
 
-        return action.squeeze(0).cpu().numpy(), log_prob.item(), value.item()
+        return (
+            action_clamped.squeeze(0).cpu().numpy(),
+            action_raw.squeeze(0).cpu().numpy(),
+            log_prob.item(),
+            value.item()
+        )
 
     def remember(self, state, action, log_prob, reward, done, value):
         self.buffer.states.append(state)

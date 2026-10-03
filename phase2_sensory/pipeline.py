@@ -66,8 +66,8 @@ class TransFuserPPOPipeline:
 
     def act(self, sensor_obs, deterministic=False):
         """
-        Takes raw sensor observation, returns action, log_prob, value, and latency.
+        Takes raw sensor observation, returns action_clamped, action_raw, log_prob, value, state_np, latency_ms.
         """
         state_np, latency_ms = self.process_sensors(sensor_obs)
-        action_np, log_prob, value = self.agent.select_action(state_np, deterministic=deterministic)
-        return action_np, log_prob, value, state_np, latency_ms
+        action_clamped, action_raw, log_prob, value = self.agent.select_action(state_np, deterministic=deterministic)
+        return action_clamped, action_raw, log_prob, value, state_np, latency_ms

@@ -7,6 +7,7 @@ Policy sees ONLY legitimate onboard sensors (RGB, LiDAR, IMU/wheel-speed, noisy 
 Reward reads strictly from privileged ground truth.
 """
 import math
+import queue
 import time
 import weakref
 import numpy as np
@@ -48,7 +49,9 @@ class CarlaSensoryEnvironment:
         self.actor_list = []
         self.sensor_list = []
 
-        # Latest raw sensor buffers
+        # Synchronous sensor queues & buffers
+        self.camera_queue = queue.Queue()
+        self.lidar_queue = queue.Queue()
         self.latest_rgb = None
         self.latest_lidar_points = None
         self.collision_events = []
@@ -59,6 +62,7 @@ class CarlaSensoryEnvironment:
         self.prev_throttle = 0.0
         self.prev_brake = 0.0
         self.timesteps = 0
+        self.stall_steps = 0
         self.distance_covered = 0.0
         self.route_waypoints = []
         self.current_wp_idx = 0
@@ -105,14 +109,29 @@ class CarlaSensoryEnvironment:
         self.prev_throttle = 0.0
         self.prev_brake = 0.0
         self.timesteps = 0
+        self.stall_steps = 0
         self.distance_covered = 0.0
         self.current_wp_idx = 0
         self.collision_events.clear()
 
+        # Clear any stale queue items from prior episodes
+        while not self.camera_queue.empty():
+            try:
+                self.camera_queue.get_nowait()
+            except queue.Empty:
+                break
+        while not self.lidar_queue.empty():
+            try:
+                self.lidar_queue.get_nowait()
+            except queue.Empty:
+                break
+
         # Prime sensors with initial tick
-        self.world.tick()
+        frame_id = self.world.tick()
+        self._retrieve_sensor_data(frame_id, timeout=3.0)
         while self.latest_rgb is None or self.latest_lidar_points is None:
-            self.world.tick()
+            frame_id = self.world.tick()
+            self._retrieve_sensor_data(frame_id, timeout=3.0)
 
         sensor_obs = self._get_sensor_obs()
         return sensor_obs
@@ -153,21 +172,50 @@ class CarlaSensoryEnvironment:
     @staticmethod
     def _on_camera(weak_self, img):
         me = weak_self()
-        if me is None:
-            return
-        # CARLA BGRA -> True RGB float32 in [0, 1]
-        arr = np.frombuffer(img.raw_data, dtype=np.uint8).reshape((C.IM_HEIGHT, C.IM_WIDTH, 4))
-        rgb = arr[:, :, :3][:, :, ::-1].astype(np.float32) / 255.0
-        me.latest_rgb = rgb
+        if me is not None:
+            me.camera_queue.put(img)
 
     @staticmethod
     def _on_lidar(weak_self, pts):
         me = weak_self()
-        if me is None:
-            return
-        # Raw point cloud points [x, y, z, intensity]
-        raw = np.frombuffer(pts.raw_data, dtype=np.float32).reshape((-1, 4))
-        me.latest_lidar_points = raw.copy()
+        if me is not None:
+            me.lidar_queue.put(pts)
+
+    def _retrieve_sensor_data(self, frame_id, timeout=2.0):
+        """Thread-safe lockstep barrier: blocks until camera and LiDAR arrive for frame_id."""
+        t0 = time.time()
+        img_data = None
+        lidar_data = None
+
+        while img_data is None or lidar_data is None:
+            if time.time() - t0 > timeout:
+                break
+            if img_data is None:
+                try:
+                    c = self.camera_queue.get(timeout=0.05)
+                    if c.frame >= frame_id:
+                        img_data = c
+                except queue.Empty:
+                    pass
+            if lidar_data is None:
+                try:
+                    l = self.lidar_queue.get(timeout=0.05)
+                    if l.frame >= frame_id:
+                        lidar_data = l
+                except queue.Empty:
+                    pass
+
+        if img_data is not None:
+            arr = np.frombuffer(img_data.raw_data, dtype=np.uint8).reshape((C.IM_HEIGHT, C.IM_WIDTH, 4))
+            self.latest_rgb = arr[:, :, :3][:, :, ::-1].astype(np.float32) / 255.0
+
+        if lidar_data is not None:
+            raw = np.frombuffer(lidar_data.raw_data, dtype=np.float32).reshape((-1, 4)).copy()
+            # Shift raw points from LiDAR sensor frame into Ego Vehicle Ground frame
+            raw[:, 0] += C.LIDAR_POS['x']
+            raw[:, 1] += C.LIDAR_POS['y']
+            raw[:, 2] += C.LIDAR_POS['z']
+            self.latest_lidar_points = raw
 
     @staticmethod
     def _on_collision(weak_self, event):
@@ -204,12 +252,12 @@ class CarlaSensoryEnvironment:
         # Smooth action filter
         applied_steer = self.prev_steer * 0.8 + steer_cmd * 0.2
 
-        # Proper Throttle vs. Brake Separation
+        # Smooth Throttle vs. Brake Separation (smoothly decaying opposite pedal)
         if accel_cmd >= 0.0:
             applied_throttle = self.prev_throttle * 0.8 + accel_cmd * 0.2
-            applied_brake = 0.0
+            applied_brake = self.prev_brake * 0.8
         else:
-            applied_throttle = 0.0
+            applied_throttle = self.prev_throttle * 0.8
             applied_brake = self.prev_brake * 0.8 + (-accel_cmd) * 0.2
 
         self.vehicle.apply_control(carla.VehicleControl(
@@ -221,8 +269,9 @@ class CarlaSensoryEnvironment:
         self.prev_throttle = applied_throttle
         self.prev_brake = applied_brake
 
-        # Advance simulator by exactly one tick
-        self.world.tick()
+        # Advance simulator by exactly one tick and retrieve synchronized sensor frames
+        frame_id = self.world.tick()
+        self._retrieve_sensor_data(frame_id, timeout=2.0)
 
         # Update telemetry
         vel = self.vehicle.get_velocity()
@@ -230,14 +279,16 @@ class CarlaSensoryEnvironment:
         ego_tf = self.vehicle.get_transform()
         ego_loc = ego_tf.location
 
-        # Update closest waypoint along route
+        # Update closest waypoint along route sequentially (prevent skipping curves)
         max_idx = len(self.route_waypoints) - 1
-        for i in range(self.current_wp_idx, min(self.current_wp_idx + 10, max_idx)):
+        for i in range(self.current_wp_idx, min(self.current_wp_idx + 4, max_idx)):
             wp_loc = self.route_waypoints[i].transform.location
-            fwd = self.route_waypoints[i].transform.get_forward_vector()
-            dot = (fwd.x * (ego_loc.x - wp_loc.x) + fwd.y * (ego_loc.y - wp_loc.y))
-            if dot > 0.0:
-                self.current_wp_idx = i
+            dist_to_wp = math.sqrt((ego_loc.x - wp_loc.x)**2 + (ego_loc.y - wp_loc.y)**2)
+            if dist_to_wp < 6.0:
+                fwd = self.route_waypoints[i].transform.get_forward_vector()
+                dot = (fwd.x * (ego_loc.x - wp_loc.x) + fwd.y * (ego_loc.y - wp_loc.y))
+                if dot > 0.0:
+                    self.current_wp_idx = i
 
         cur_wp = self.route_waypoints[self.current_wp_idx]
         nxt_wp = self.route_waypoints[min(self.current_wp_idx + 1, max_idx)]
@@ -250,6 +301,12 @@ class CarlaSensoryEnvironment:
 
         route_comp = float(self.current_wp_idx) / float(max(1, len(self.route_waypoints)))
         self.distance_covered = float(self.current_wp_idx)
+
+        # Standstill / Stall detection
+        if self.velocity < C.STALL_SPEED_THRESH:
+            self.stall_steps += 1
+        else:
+            self.stall_steps = 0
 
         # Check termination criteria
         done = False
@@ -264,6 +321,10 @@ class CarlaSensoryEnvironment:
             done = True
             term_reason = 'lane_departure'
             reward = -10.0
+        elif self.stall_steps >= C.MAX_STALL_STEPS:
+            done = True
+            term_reason = 'stall'
+            reward = C.STALL_PENALTY
         elif route_comp >= 0.95:
             done = True
             term_reason = 'route_complete'
@@ -278,6 +339,9 @@ class CarlaSensoryEnvironment:
             angle_factor = max(0.0, 1.0 - (abs(heading_err) / 20.0))
             speed_factor = min(self.velocity / C.TARGET_SPEED, 1.0)
             reward = speed_factor * centering_factor * angle_factor
+            # Idle penalty to discourage standstill exploitation
+            if self.velocity < C.STALL_SPEED_THRESH:
+                reward -= 0.05
 
         privileged_state = dict(
             lane_dev=lane_dev,
@@ -304,32 +368,47 @@ class CarlaSensoryEnvironment:
     def _get_sensor_obs(self):
         """Constructs policy-visible observation record (Tier S) with NO telemetry leakage."""
         ego_tf = self.vehicle.get_transform()
+        ego_loc = ego_tf.location
+        fwd_vec = ego_tf.get_forward_vector()
+        right_vec = ego_tf.get_right_vector()
+
+        # Telemetry: onboard IMU and wheel speed only (NO absolute compass yaw)
+        ang_vel = self.vehicle.get_angular_velocity()
+        yaw_rate_norm = float(np.clip(ang_vel.z / 50.0, -1.0, 1.0))
+
+        # Vehicle accelerations projected into ego body frame (Forward +X, Right +Y)
         accel = self.vehicle.get_acceleration()
+        accel_fwd = (accel.x * fwd_vec.x + accel.y * fwd_vec.y + accel.z * fwd_vec.z)
+        accel_right = (accel.x * right_vec.x + accel.y * right_vec.y + accel.z * right_vec.z)
 
         # 8-dim Ego Telemetry
         ego_vec = np.array([
             self.velocity / 30.0,
-            accel.x / 10.0,
-            accel.y / 10.0,
-            ego_tf.rotation.yaw / 180.0,
+            float(np.clip(accel_fwd / 10.0, -1.0, 1.0)),
+            float(np.clip(accel_right / 10.0, -1.0, 1.0)),
+            yaw_rate_norm,
             self.prev_steer,
             self.prev_throttle,
             self.prev_brake,
-            1.0  # Gear flag
+            1.0  # Forward Gear flag
         ], dtype=np.float32)
 
-        # 8-dim GPS Navigation Target (sampled 25-40m ahead with 1.0m noise)
+        # 8-dim GPS Navigation Target (sampled ~30m ahead with 1.0m sensor noise)
         target_idx = min(self.current_wp_idx + 30, len(self.route_waypoints) - 1)
         tgt_loc = self.route_waypoints[target_idx].transform.location
-        ego_loc = ego_tf.location
 
-        # Transform to ego coordinate frame + 1.0m noise
-        dx = (tgt_loc.x - ego_loc.x) + np.random.normal(0.0, 1.0)
-        dy = (tgt_loc.y - ego_loc.y) + np.random.normal(0.0, 1.0)
+        # World displacement vector
+        dx_w = (tgt_loc.x - ego_loc.x) + np.random.normal(0.0, 1.0)
+        dy_w = (tgt_loc.y - ego_loc.y) + np.random.normal(0.0, 1.0)
+        dz_w = (tgt_loc.z - ego_loc.z)
+
+        # Project into Ego Vehicle Frame (Forward +X, Right +Y)
+        dx_ego = dx_w * fwd_vec.x + dy_w * fwd_vec.y + dz_w * fwd_vec.z
+        dy_ego = dx_w * right_vec.x + dy_w * right_vec.y + dz_w * right_vec.z
 
         nav_vec = np.zeros(8, dtype=np.float32)
-        nav_vec[0] = float(np.clip(dx / 50.0, -1.0, 1.0))
-        nav_vec[1] = float(np.clip(dy / 50.0, -1.0, 1.0))
+        nav_vec[0] = float(np.clip(dx_ego / 50.0, -1.0, 1.0))
+        nav_vec[1] = float(np.clip(dy_ego / 50.0, -1.0, 1.0))
         nav_vec[2] = 1.0  # One-hot: Follow Lane command
 
         return {

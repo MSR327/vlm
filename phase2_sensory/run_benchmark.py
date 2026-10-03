@@ -40,10 +40,10 @@ def run_training(env, pipeline, n_episodes, save_path):
 
         while not done and step < C.MAX_STEPS_PER_EP:
             step += 1
-            action, log_prob, value, state_np, _ = pipeline.act(sensor_obs, deterministic=False)
-            next_sensor_obs, priv_state, reward, done, info = env.step(action)
+            action_clamped, action_raw, log_prob, value, state_np, _ = pipeline.act(sensor_obs, deterministic=False)
+            next_sensor_obs, priv_state, reward, done, info = env.step(action_clamped)
 
-            agent.remember(state_np, action, log_prob, reward, done, value)
+            agent.remember(state_np, action_raw, log_prob, reward, done, value)
             ep_reward += reward
             sensor_obs = next_sensor_obs
 
@@ -93,8 +93,8 @@ def run_evaluation(env, pipeline, n_episodes, out_csv):
 
         while not done and step < C.MAX_STEPS_PER_EP:
             step += 1
-            action, _, _, _, lat_ms = pipeline.act(sensor_obs, deterministic=True)
-            next_sensor_obs, priv_state, reward, done, info = env.step(action)
+            action_clamped, _, _, _, _, lat_ms = pipeline.act(sensor_obs, deterministic=True)
+            next_sensor_obs, priv_state, reward, done, info = env.step(action_clamped)
 
             ep_reward += reward
             ep_latencies.append(lat_ms)

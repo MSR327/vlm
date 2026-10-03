@@ -63,9 +63,9 @@ class BEVLidarProjector:
             return torch.zeros((2, self.grid_size, self.grid_size), dtype=torch.float32)
 
         # Discretize into grid pixel coordinates
-        # x_px: Longitudinal distance forward (0 to 32m -> rows 0 to grid_size-1)
-        # y_px: Lateral distance (-16m to +16m -> cols 0 to grid_size-1)
-        x_px = np.clip(np.floor((x_filt - self.x_min) / self.res_x).astype(np.int64), 0, self.grid_size - 1)
+        # Map forward distance (+x) towards row 0 (top of image), matching camera horizon
+        x_raw = np.floor((x_filt - self.x_min) / self.res_x).astype(np.int64)
+        x_px = np.clip((self.grid_size - 1) - x_raw, 0, self.grid_size - 1)
         y_px = np.clip(np.floor((y_filt - self.y_min) / self.res_y).astype(np.int64), 0, self.grid_size - 1)
 
         bev = np.zeros((2, self.grid_size, self.grid_size), dtype=np.float32)
@@ -83,10 +83,9 @@ class BEVLidarProjector:
             # Use max-height per cell to preserve obstacle silhouette
             np.maximum.at(bev[0], (x_px[above_mask], y_px[above_mask]), z_norm)
 
-        # Channel 1: Ground plane occupancy / density (normalized count)
+        # Channel 1: Ground plane occupancy / density (linear count normalized by saturation threshold)
         if np.any(below_mask):
             np.add.at(bev[1], (x_px[below_mask], y_px[below_mask]), 1.0)
-            # Compress count with log1p and normalize
-            bev[1] = np.clip(np.log1p(bev[1]) / 3.0, 0.0, 1.0)
+            bev[1] = np.clip(bev[1] / 8.0, 0.0, 1.0)
 
         return torch.from_numpy(bev).float()

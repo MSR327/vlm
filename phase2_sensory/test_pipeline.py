@@ -24,12 +24,12 @@ def test_bev_lidar():
     projector = BEVLidarProjector()
 
     # Generate synthetic point cloud (10,000 points)
-    # x in [0, 32], y in [-16, 16], z in [-2, 3]
+    # x in [-4, 28], y in [-16, 16], z in [-0.5, 3.5]
     n_pts = 10000
     pts = np.zeros((n_pts, 4), dtype=np.float32)
-    pts[:, 0] = np.random.uniform(0.0, 32.0, n_pts)
+    pts[:, 0] = np.random.uniform(-4.0, 28.0, n_pts)
     pts[:, 1] = np.random.uniform(-16.0, 16.0, n_pts)
-    pts[:, 2] = np.random.uniform(-2.0, 3.0, n_pts)
+    pts[:, 2] = np.random.uniform(-0.5, 3.5, n_pts)
     pts[:, 3] = np.random.uniform(0.0, 1.0, n_pts)
 
     bev = projector.project(pts)
@@ -68,20 +68,21 @@ def test_ppo_agent():
     print("[Test 3/4] Testing PyTorch PPO Agent ...")
     agent = PPOAgent(obs_dim=C.OBS_DIM, action_dim=C.ACTION_DIM, device=torch.device("cpu"))
 
-    # Test action selection
+    # Test action selection (returns clamped action, raw action, log_prob, value)
     state = np.random.randn(C.OBS_DIM).astype(np.float32)
-    action, log_prob, val = agent.select_action(state)
-    assert action.shape == (2,), f"Expected action shape (2,), got {action.shape}"
-    assert np.all(action >= -1.0) and np.all(action <= 1.0), f"Action out of bounds: {action}"
+    action_clamped, action_raw, log_prob, val = agent.select_action(state)
+    assert action_clamped.shape == (2,), f"Expected action shape (2,), got {action_clamped.shape}"
+    assert action_raw.shape == (2,), f"Expected action_raw shape (2,), got {action_raw.shape}"
+    assert np.all(action_clamped >= -1.0) and np.all(action_clamped <= 1.0), f"Action out of bounds: {action_clamped}"
 
-    # Test buffer and learning update
+    # Test buffer and learning update with raw unclipped actions for exact Gaussian policy gradient
     for _ in range(10):
         s = np.random.randn(C.OBS_DIM).astype(np.float32)
-        a, lp, v = agent.select_action(s)
-        agent.remember(s, a, lp, 1.0, False, v)
+        a_clamped, a_raw, lp, v = agent.select_action(s)
+        agent.remember(s, a_raw, lp, 1.0, False, v)
 
     a_loss, c_loss = agent.learn()
-    print("  -> PPO Agent Optimization: PASSED (Valid action sampling & gradient backpropagation)\n")
+    print("  -> PPO Agent Optimization: PASSED (Valid unclipped Gaussian log_prob & gradient update)\n")
 
 
 def test_full_pipeline():
@@ -91,13 +92,14 @@ def test_full_pipeline():
     # Create dummy raw sensor observation
     dummy_obs = {
         'rgb': np.random.rand(256, 256, 3).astype(np.float32),
-        'lidar': np.random.uniform(-10.0, 10.0, (5000, 4)).astype(np.float32),
+        'lidar': np.random.uniform(-4.0, 20.0, (5000, 4)).astype(np.float32),
         'ego': np.zeros(8, dtype=np.float32),
         'nav': np.zeros(8, dtype=np.float32)
     }
 
-    action, log_prob, val, state_np, lat_ms = pipeline.act(dummy_obs)
-    assert action.shape == (2,), f"Expected action shape (2,), got {action.shape}"
+    action_clamped, action_raw, log_prob, val, state_np, lat_ms = pipeline.act(dummy_obs)
+    assert action_clamped.shape == (2,), f"Expected action shape (2,), got {action_clamped.shape}"
+    assert action_raw.shape == (2,), f"Expected action_raw shape (2,), got {action_raw.shape}"
     assert state_np.shape == (144,), f"Expected observation shape (144,), got {state_np.shape}"
     print(f"  -> End-to-End Pipeline Latency: {lat_ms:.2f} ms")
     print("  -> End-to-End Pipeline: PASSED\n")
