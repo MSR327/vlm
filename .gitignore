@@ -31,3 +31,10 @@ data_collected_*/
 paper/page-*.png
 paper/page_new-*.png
 paper/rendered/
+
+# Simulator Binaries & Archives
+*.zip
+*.tar.gz
+WindowsNoEditor/
+CarlaUE4/
+
