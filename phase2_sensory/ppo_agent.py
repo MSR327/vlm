@@ -49,6 +49,7 @@ class RolloutBuffer:
         self.dones = []
         self.truncateds = []
         self.values = []
+        self.next_values = []
 
     def clear(self):
         self.states.clear()
@@ -59,6 +60,7 @@ class RolloutBuffer:
         self.dones.clear()
         self.truncateds.clear()
         self.values.clear()
+        self.next_values.clear()
 
     def __len__(self):
         return len(self.actions)
@@ -165,7 +167,14 @@ class PPOAgent:
             value.item()
         )
 
-    def remember(self, state, action, u, log_prob, reward, done, value, truncated=False):
+    def get_value(self, state_np):
+        """Returns scalar critic value prediction for a given numpy observation."""
+        state_t = torch.from_numpy(state_np).float().unsqueeze(0).to(self.device)
+        with torch.no_grad():
+            val = self.ac.get_value(state_t)
+        return float(val.item())
+
+    def remember(self, state, action, u, log_prob, reward, done, value, truncated=False, next_value=0.0):
         self.buffer.states.append(state)
         self.buffer.actions.append(action)
         self.buffer.u_latents.append(u)
@@ -174,32 +183,39 @@ class PPOAgent:
         self.buffer.dones.append(done)
         self.buffer.truncateds.append(truncated)
         self.buffer.values.append(value)
+        self.buffer.next_values.append(next_value)
 
     def compute_gae(self, last_value=0.0):
         """
         Computes Generalized Advantage Estimation (GAE) over the stored buffer.
         Differentiates between terminal failure (mask=0) and time-limit truncation (mask=1, bootstraps value).
+        Prevents cross-episode advantage leakage when multiple episodes are collected in buffer.
         """
         rewards = self.buffer.rewards
         dones = self.buffer.dones
         truncateds = self.buffer.truncateds
-        values = self.buffer.values + [last_value]
+        values = self.buffer.values
+        next_values = self.buffer.next_values
 
-        advantages = []
+        n = len(rewards)
+        advantages = [0.0] * n
         gae = 0.0
 
-        for t in reversed(range(len(rewards))):
-            # If terminated (crash, lane departure, stall): mask = 0 (no future return)
-            # If truncated (max steps timeout) or running: mask = 1 (bootstrap V(s_{t+1}))
-            is_truncated = truncateds[t] if t < len(truncateds) else False
-            is_done = dones[t]
-            mask = 0.0 if (is_done and not is_truncated) else 1.0
+        for t in reversed(range(n)):
+            if dones[t]:
+                # Episode boundary: reset future GAE to strictly prevent cross-episode leakage
+                is_trunc = truncateds[t] if t < len(truncateds) else False
+                next_val = next_values[t] if is_trunc else 0.0
+                delta = rewards[t] + self.gamma * next_val - values[t]
+                gae = delta
+            else:
+                next_val = values[t + 1] if t + 1 < n else last_value
+                delta = rewards[t] + self.gamma * next_val - values[t]
+                gae = delta + self.gamma * self.lam * gae
 
-            delta = rewards[t] + self.gamma * values[t + 1] * mask - values[t]
-            gae = delta + self.gamma * self.lam * mask * gae
-            advantages.insert(0, gae)
+            advantages[t] = gae
 
-        returns = [adv + val for adv, val in zip(advantages, self.buffer.values)]
+        returns = [adv + val for adv, val in zip(advantages, values)]
         return advantages, returns
 
     def learn(self, last_value=0.0):

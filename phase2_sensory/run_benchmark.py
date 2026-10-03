@@ -44,7 +44,12 @@ def run_training(env, pipeline, n_episodes, save_path):
             next_sensor_obs, priv_state, reward, done, info = env.step(action)
 
             truncated = (priv_state.get('term_reason') == 'max_steps')
-            agent.remember(state_np, action, u, log_prob, reward, done, value, truncated=truncated)
+            next_val = 0.0
+            if truncated:
+                next_state_np, _ = pipeline.process_sensors(next_sensor_obs)
+                next_val = agent.get_value(next_state_np)
+
+            agent.remember(state_np, action, u, log_prob, reward, done, value, truncated=truncated, next_value=next_val)
             ep_reward += reward
             sensor_obs = next_sensor_obs
 
