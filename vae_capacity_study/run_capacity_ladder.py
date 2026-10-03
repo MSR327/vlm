@@ -33,6 +33,8 @@ parser.add_argument('--align', dest='align', action='store_true', default=True,
                     help="Enable latent alignment adapter for zero-shot transfer (default: True)")
 parser.add_argument('--no-align', dest='align', action='store_false',
                     help="Disable latent alignment adapter (evaluate raw unaligned latents)")
+parser.add_argument('--tag', type=str, default='',
+                    help="Optional tag for output CSV (e.g. finetuned, zeroshot)")
 args = parser.parse_args()
 
 os.environ['VAE_ARCH'] = args.arch
@@ -204,12 +206,17 @@ def run_training(env, agent, encoder, n_episodes, save_dir):
             if timestep % update_interval == 0:
                 agent.learn()
 
+        if ep % 5 == 0 and len(agent.memory.actions) > 0:
+            agent.learn()
+
         print(f"Train Ep {ep:3d}/{n_episodes:3d} | Reward: {ep_reward:7.1f} | Steps: {step} | Total TS: {timestep}")
 
         if ep % 10 == 0:
             agent.save()
             print(f"[PPOAgent] Saved checkpoint to {agent.models_dir}")
 
+    if len(agent.memory.actions) > 0:
+        agent.learn()
     agent.save()
     print(f"[PPOAgent] Final training complete. Model saved to: {save_dir}\n")
 
@@ -235,34 +242,37 @@ def main():
     agent.observation_dim = effective_obs_dim
     agent.models_dir = P.PPO_MODEL_PATH
 
+    # Resolve policy weights (warm-start from trained baseline if target checkpoint does not exist)
+    if os.path.isdir(os.path.join(P.PPO_MODEL_PATH, 'actor')):
+        agent.load()
+        print(f"[PPOAgent] Loaded existing model from {P.PPO_MODEL_PATH}")
+    elif effective_obs_dim == 100:
+        candidates = [
+            '../btp_prev/results/Results_05/ppo_model',
+            '../MTP_TESTING/Results_05/ppo_model',
+            '../btp_prev/Results_05/ppo_model',
+            'Results_05/ppo_model'
+        ]
+        loaded = False
+        for c in candidates:
+            if os.path.isdir(os.path.join(c, 'actor')):
+                agent.models_dir = c
+                agent.load()
+                print(f"[PPOAgent] Warm-starting policy from pre-trained baseline: {c}")
+                agent.models_dir = P.PPO_MODEL_PATH
+                loaded = True
+                break
+        if not loaded:
+            print("[PPOAgent] Warning: No baseline actor found. Driving with initialized policy.")
+    else:
+        print(f"[PPOAgent] Warning: No trained model found for obs_dim={effective_obs_dim}. Driving with initialized policy.")
+
     if args.mode == 'train':
         run_training(env, agent, encoder, args.episodes, P.PPO_MODEL_PATH)
     else:
         # Test / Evaluation Mode
-        if os.path.isdir(os.path.join(P.PPO_MODEL_PATH, 'actor')):
-            agent.load()
-            print(f"[PPOAgent] Loaded trained model from {P.PPO_MODEL_PATH}")
-        elif effective_obs_dim == 100:
-            candidates = [
-                '../btp_prev/results/Results_05/ppo_model',
-                '../MTP_TESTING/Results_05/ppo_model',
-                '../btp_prev/Results_05/ppo_model',
-                'Results_05/ppo_model'
-            ]
-            loaded = False
-            for c in candidates:
-                if os.path.isdir(os.path.join(c, 'actor')):
-                    agent.models_dir = c
-                    agent.load()
-                    print(f"[PPOAgent] Loaded pre-trained baseline policy for evaluation from: {c}")
-                    loaded = True
-                    break
-            if not loaded:
-                print("[PPOAgent] Warning: No baseline actor found. Driving with initialized policy.")
-        else:
-            print(f"[PPOAgent] Warning: No trained model found for obs_dim={effective_obs_dim}. Driving with initialized policy.")
-
-        out_csv = os.path.join(P.RESULTS_PATH, f"eval_{P.TOWN}_{args.arch}_d{args.latent}.csv")
+        tag_str = f"_{args.tag}" if args.tag else ""
+        out_csv = os.path.join(P.RESULTS_PATH, f"eval_{P.TOWN}_{args.arch}_d{args.latent}{tag_str}.csv")
         run_evaluation(env, agent, encoder, args.episodes, out_csv)
 
 
