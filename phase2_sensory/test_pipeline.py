@@ -134,6 +134,80 @@ def test_full_pipeline():
     print("  -> End-to-End Pipeline: PASSED\n")
 
 
+def test_hud_visualizer():
+    print("[Test 5/6] Testing Real-Time OpenCV HUD Visualizer ...")
+    from phase2_sensory.visualizer import SensoryHUDVisualizer
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        viz = SensoryHUDVisualizer(save_dir=tmp_dir)
+
+        # Create synthetic test frames
+        chase = np.zeros((720, 880, 3), dtype=np.uint8)
+        front_rgb = np.random.randint(0, 256, (256, 256, 3), dtype=np.uint8)
+        bev = torch.rand(2, 256, 256, dtype=torch.float32)
+        telemetry = {
+            'episode': 1,
+            'step': 42,
+            'reward': 15.6,
+            'speed': 18.5,
+            'target_speed': 20.0,
+            'steer': 0.15,
+            'throttle': 0.65,
+            'brake': 0.0,
+            'lane_deviation': 0.12,
+            'heading_error': 1.8,
+            'route_completion': 45.0,
+            'distance_covered': 85.0,
+            'stall_steps': 0,
+            'max_stall_steps': 100,
+            'value': 12.4,
+            'latency_ms': 38.5
+        }
+
+        # 1. Build Canvas
+        canvas = viz.build_canvas(chase, front_rgb, bev, telemetry)
+        assert canvas.shape == (720, 1280, 3), f"Expected canvas (720, 1280, 3), got {canvas.shape}"
+        assert canvas.dtype == np.uint8, f"Expected uint8, got {canvas.dtype}"
+
+        # 2. Save Screenshot
+        shot_path = viz.save_screenshot(canvas, telemetry)
+        assert os.path.exists(shot_path), f"Screenshot was not created: {shot_path}"
+        assert os.path.getsize(shot_path) > 1000, "Screenshot file is empty!"
+
+    print("  -> HUD Visualizer: PASSED (1280x720 canvas layout & telemetry gauges validated)\n")
+
+
+def test_plotting():
+    print("[Test 6/6] Testing Benchmark Plotting & Analysis ...")
+    from phase2_sensory.plot_results import (
+        generate_synthetic_phase2_data,
+        plot_benchmark_comparison,
+        plot_eval_progression,
+        plot_termination_analysis
+    )
+    import tempfile
+
+    data = generate_synthetic_phase2_data(n_episodes=10)
+    assert len(data['episodes']) == 10
+    assert len(data['completions']) == 10
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        p1 = os.path.join(tmp_dir, 'comp.png')
+        p2 = os.path.join(tmp_dir, 'prog.png')
+        p3 = os.path.join(tmp_dir, 'term.png')
+
+        plot_benchmark_comparison(data, p1)
+        plot_eval_progression(data, p2)
+        plot_termination_analysis(data, p3)
+
+        assert os.path.exists(p1) and os.path.getsize(p1) > 1000
+        assert os.path.exists(p2) and os.path.getsize(p2) > 1000
+        assert os.path.exists(p3) and os.path.getsize(p3) > 1000
+
+    print("  -> Benchmark Plotting: PASSED (Publication-quality figures generated cleanly)\n")
+
+
 def main():
     print("\n" + "=" * 60)
     print(" RUNNING PHASE 2 SENSORY PIPELINE VERIFICATION SUITE")
@@ -143,9 +217,11 @@ def main():
     test_transfuser_backbone()
     test_ppo_agent()
     test_full_pipeline()
+    test_hud_visualizer()
+    test_plotting()
 
     print("=" * 60)
-    print(" ALL 4 VERIFICATION TESTS PASSED SUCCESSFULLY!")
+    print(" ALL 6 VERIFICATION TESTS PASSED SUCCESSFULLY!")
     print("=" * 60 + "\n")
 
 

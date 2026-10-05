@@ -13,6 +13,7 @@ import numpy as np
 
 import phase2_sensory.config as C
 from phase2_sensory.pipeline import TransFuserPPOPipeline
+from phase2_sensory.visualizer import SensoryHUDVisualizer
 
 CSV_FIELDS = [
     'episode', 'reward', 'route_completion_pct', 'distance_covered_m',
@@ -21,11 +22,12 @@ CSV_FIELDS = [
 ]
 
 
-def run_training(env, pipeline, n_episodes, save_path):
+def run_training(env, pipeline, n_episodes, save_path, visualizer=None):
     print(f"\n=======================================================")
     print(f" PHASE 2 TRANSFUSER-PPO TRAINING RUN")
     print(f" Town: {env.town} | Episodes: {n_episodes} | Obs Dim: {C.OBS_DIM}")
     print(f" Checkpoint Out: {save_path}")
+    print(f" Visual HUD Render: {'ENABLED' if visualizer else 'HEADLESS'}")
     print(f"=======================================================\n")
 
     agent = pipeline.agent
@@ -40,7 +42,7 @@ def run_training(env, pipeline, n_episodes, save_path):
 
         while not done and step < C.MAX_STEPS_PER_EP:
             step += 1
-            action, u, log_prob, value, state_np, _ = pipeline.act(sensor_obs, deterministic=False)
+            action, u, log_prob, value, state_np, lat_ms = pipeline.act(sensor_obs, deterministic=False)
             next_sensor_obs, priv_state, reward, done, info = env.step(action)
 
             truncated = (priv_state.get('term_reason') == 'max_steps')
@@ -51,6 +53,34 @@ def run_training(env, pipeline, n_episodes, save_path):
 
             agent.remember(state_np, action, u, log_prob, reward, done, value, truncated=truncated, next_value=next_val)
             ep_reward += reward
+
+            # Real-time HUD Visualization
+            if visualizer is not None:
+                chase_img = env.get_chase_image()
+                bev_tensor = pipeline.projector.project(sensor_obs['lidar'])
+                telemetry = {
+                    'episode': ep,
+                    'step': step,
+                    'reward': ep_reward,
+                    'speed': priv_state.get('velocity_kmh', env.velocity),
+                    'target_speed': C.TARGET_SPEED,
+                    'steer': float(action[0]),
+                    'throttle': float(env.prev_throttle),
+                    'brake': float(env.prev_brake),
+                    'lane_deviation': priv_state.get('distance_to_center', 0.0),
+                    'heading_error': priv_state.get('heading_error_deg', 0.0),
+                    'route_completion': priv_state.get('route_completion', 0.0) * 100.0,
+                    'distance_covered': priv_state.get('distance_covered', 0.0),
+                    'stall_steps': env.stall_steps,
+                    'max_stall_steps': C.MAX_STALL_STEPS,
+                    'value': value,
+                    'latency_ms': lat_ms
+                }
+                action_hud = visualizer.render(chase_img, sensor_obs['rgb'], bev_tensor, telemetry)
+                if action_hud == 'quit':
+                    print("[HUD] User requested termination via 'Q'.")
+                    done = True
+
             sensor_obs = next_sensor_obs
 
         # Update policy every EPISODES_PER_BATCH episodes
@@ -72,7 +102,7 @@ def run_training(env, pipeline, n_episodes, save_path):
     print(f"[PPOAgent] Training complete. Checkpoint saved to: {save_path}\n")
 
 
-def run_evaluation(env, pipeline, n_episodes, out_csv):
+def run_evaluation(env, pipeline, n_episodes, out_csv, visualizer=None):
     os.makedirs(os.path.dirname(out_csv), exist_ok=True)
     f_csv = open(out_csv, 'w', newline='')
     writer = csv.DictWriter(f_csv, fieldnames=CSV_FIELDS)
@@ -82,6 +112,7 @@ def run_evaluation(env, pipeline, n_episodes, out_csv):
     print(f" PHASE 2 TRANSFUSER-PPO BENCHMARK EVALUATION")
     print(f" Town: {env.town} | Episodes: {n_episodes} | Obs Dim: {C.OBS_DIM}")
     print(f" Results CSV: {out_csv}")
+    print(f" Visual HUD Render: {'ENABLED' if visualizer else 'HEADLESS'}")
     print(f"=======================================================\n")
 
     summary_rewards = []
@@ -100,11 +131,39 @@ def run_evaluation(env, pipeline, n_episodes, out_csv):
 
         while not done and step < C.MAX_STEPS_PER_EP:
             step += 1
-            action, _, _, _, _, lat_ms = pipeline.act(sensor_obs, deterministic=True)
+            action, _, _, value, _, lat_ms = pipeline.act(sensor_obs, deterministic=True)
             next_sensor_obs, priv_state, reward, done, info = env.step(action)
 
             ep_reward += reward
             ep_latencies.append(lat_ms)
+
+            # Real-time HUD Visualization
+            if visualizer is not None:
+                chase_img = env.get_chase_image()
+                bev_tensor = pipeline.projector.project(sensor_obs['lidar'])
+                telemetry = {
+                    'episode': ep,
+                    'step': step,
+                    'reward': ep_reward,
+                    'speed': priv_state.get('velocity_kmh', env.velocity),
+                    'target_speed': C.TARGET_SPEED,
+                    'steer': float(action[0]),
+                    'throttle': float(env.prev_throttle),
+                    'brake': float(env.prev_brake),
+                    'lane_deviation': priv_state.get('distance_to_center', 0.0),
+                    'heading_error': priv_state.get('heading_error_deg', 0.0),
+                    'route_completion': priv_state.get('route_completion', 0.0) * 100.0,
+                    'distance_covered': priv_state.get('distance_covered', 0.0),
+                    'stall_steps': env.stall_steps,
+                    'max_stall_steps': C.MAX_STALL_STEPS,
+                    'value': value,
+                    'latency_ms': lat_ms
+                }
+                action_hud = visualizer.render(chase_img, sensor_obs['rgb'], bev_tensor, telemetry)
+                if action_hud == 'quit':
+                    print("[HUD] User requested termination via 'Q'.")
+                    done = True
+
             sensor_obs = next_sensor_obs
 
         comp = info.get('route_completion', 0.0) * 100.0
@@ -112,6 +171,31 @@ def run_evaluation(env, pipeline, n_episodes, out_csv):
         dev = info.get('center_lane_deviation', 0.0)
         term = info.get('termination_reason', 'done')
         collided = int(info.get('collided', False))
+
+        # Automatically save termination snapshot if visualizer is active
+        if visualizer is not None:
+            chase_img = env.get_chase_image()
+            bev_tensor = pipeline.projector.project(sensor_obs['lidar'])
+            telemetry = {
+                'episode': ep,
+                'step': step,
+                'reward': ep_reward,
+                'speed': env.velocity,
+                'target_speed': C.TARGET_SPEED,
+                'steer': float(env.prev_steer),
+                'throttle': float(env.prev_throttle),
+                'brake': float(env.prev_brake),
+                'lane_deviation': dev,
+                'heading_error': info.get('heading_error_deg', 0.0),
+                'route_completion': comp,
+                'distance_covered': dist,
+                'stall_steps': env.stall_steps,
+                'max_stall_steps': C.MAX_STALL_STEPS,
+                'value': 0.0,
+                'latency_ms': 0.0
+            }
+            canvas_snap = visualizer.build_canvas(chase_img, sensor_obs['rgb'], bev_tensor, telemetry)
+            visualizer.save_screenshot(canvas_snap, telemetry, custom_tag=f"{term}")
 
         lat_mean = float(np.mean(ep_latencies)) if ep_latencies else 0.0
         lat_p95  = float(np.percentile(ep_latencies, 95)) if ep_latencies else 0.0
@@ -173,13 +257,15 @@ def main():
     parser.add_argument('--episodes', type=int, default=20)
     parser.add_argument('--checkpoint', type=str, default=os.path.join(C.CHECKPOINT_DIR, 'transfuser_ppo.pth'))
     parser.add_argument('--tag', type=str, default='')
+    parser.add_argument('--render', action='store_true', help='Enable real-time OpenCV HUD visualizer')
     args = parser.parse_args()
 
     # Deferred import to ensure CARLA availability
     from phase2_sensory.carla_env import CarlaSensoryEnvironment
 
     print(f"[init] Initializing CARLA environment ({args.town}) ...")
-    env = CarlaSensoryEnvironment(town=args.town)
+    env = CarlaSensoryEnvironment(town=args.town, enable_render=args.render)
+    visualizer = SensoryHUDVisualizer() if args.render else None
 
     pipeline = TransFuserPPOPipeline()
 
@@ -188,12 +274,14 @@ def main():
 
     try:
         if args.mode == 'train':
-            run_training(env, pipeline, args.episodes, args.checkpoint)
+            run_training(env, pipeline, args.episodes, args.checkpoint, visualizer=visualizer)
         else:
             tag_str = f"_{args.tag}" if args.tag else ""
             out_csv = os.path.join(C.RESULTS_DIR, f"eval_{args.town}_transfuser_ppo{tag_str}.csv")
-            run_evaluation(env, pipeline, args.episodes, out_csv)
+            run_evaluation(env, pipeline, args.episodes, out_csv, visualizer=visualizer)
     finally:
+        if visualizer is not None:
+            visualizer.close()
         env.close()
 
 

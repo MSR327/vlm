@@ -25,7 +25,7 @@ class CarlaSensoryEnvironment:
     Closed-loop CARLA environment providing synchronized Front RGB, 3D LiDAR,
     and vehicle proprioception.
     """
-    def __init__(self, town=C.DEFAULT_TOWN, host=C.CARLA_HOST, port=C.CARLA_PORT, timeout=C.CARLA_TIMEOUT):
+    def __init__(self, town=C.DEFAULT_TOWN, host=C.CARLA_HOST, port=C.CARLA_PORT, timeout=C.CARLA_TIMEOUT, enable_render=False):
         if carla is None:
             raise ImportError("carla python egg/package is not installed.")
 
@@ -33,6 +33,7 @@ class CarlaSensoryEnvironment:
         self.host = host
         self.port = port
         self.timeout = timeout
+        self.enable_render = enable_render
 
         self.client = carla.Client(self.host, self.port)
         self.client.set_timeout(self.timeout)
@@ -45,6 +46,7 @@ class CarlaSensoryEnvironment:
         self.camera_sensor = None
         self.lidar_sensor = None
         self.collision_sensor = None
+        self.chase_sensor = None
 
         self.actor_list = []
         self.sensor_list = []
@@ -52,8 +54,10 @@ class CarlaSensoryEnvironment:
         # Synchronous sensor queues & buffers
         self.camera_queue = queue.Queue()
         self.lidar_queue = queue.Queue()
+        self.chase_queue = queue.Queue()
         self.latest_rgb = None
         self.latest_lidar_points = None
+        self.latest_chase_rgb = None
         self.collision_events = []
 
         # Vehicle internal state
@@ -125,6 +129,12 @@ class CarlaSensoryEnvironment:
                 self.lidar_queue.get_nowait()
             except queue.Empty:
                 break
+        if self.enable_render:
+            while not self.chase_queue.empty():
+                try:
+                    self.chase_queue.get_nowait()
+                except queue.Empty:
+                    break
 
         # Prime sensors with initial tick
         frame_id = self.world.tick()
@@ -169,6 +179,20 @@ class CarlaSensoryEnvironment:
         self.collision_sensor.listen(lambda event: CarlaSensoryEnvironment._on_collision(weak_self, event))
         self.sensor_list.append(self.collision_sensor)
 
+        # 4. Optional 3rd-Person Chase Camera for Live HUD Visualization
+        if self.enable_render:
+            chase_bp = bp_lib.find('sensor.camera.rgb')
+            chase_bp.set_attribute('image_size_x', '880')
+            chase_bp.set_attribute('image_size_y', '720')
+            chase_bp.set_attribute('fov', '90.0')
+            chase_tf = carla.Transform(
+                carla.Location(x=-5.5, y=0.0, z=2.8),
+                carla.Rotation(pitch=-15.0, yaw=0.0, roll=0.0)
+            )
+            self.chase_sensor = self.world.spawn_actor(chase_bp, chase_tf, attach_to=self.vehicle)
+            self.chase_sensor.listen(lambda img: CarlaSensoryEnvironment._on_chase(weak_self, img))
+            self.sensor_list.append(self.chase_sensor)
+
     @staticmethod
     def _on_camera(weak_self, img):
         me = weak_self()
@@ -181,11 +205,18 @@ class CarlaSensoryEnvironment:
         if me is not None:
             me.lidar_queue.put(pts)
 
+    @staticmethod
+    def _on_chase(weak_self, img):
+        me = weak_self()
+        if me is not None:
+            me.chase_queue.put(img)
+
     def _retrieve_sensor_data(self, frame_id, timeout=2.0):
         """Strict lockstep barrier: blocks until camera and LiDAR arrive for exact frame_id."""
         t0 = time.time()
         img_data = None
         lidar_data = None
+        chase_data = None
 
         while img_data is None or lidar_data is None:
             if time.time() - t0 > timeout:
@@ -213,6 +244,22 @@ class CarlaSensoryEnvironment:
                 except queue.Empty:
                     pass
 
+        # Retrieve chase frame if HUD visualization is active
+        if self.enable_render:
+            while chase_data is None and (time.time() - t0 <= timeout):
+                try:
+                    ch = self.chase_queue.get(timeout=0.02)
+                    if ch.frame == frame_id or ch.frame > frame_id:
+                        chase_data = ch
+                    elif ch.frame < frame_id:
+                        continue
+                except queue.Empty:
+                    break
+
+            if chase_data is not None:
+                arr_ch = np.frombuffer(chase_data.raw_data, dtype=np.uint8).reshape((720, 880, 4))
+                self.latest_chase_rgb = arr_ch[:, :, :3]  # Keep in BGR for direct OpenCV rendering
+
         if img_data is not None:
             arr = np.frombuffer(img_data.raw_data, dtype=np.uint8).reshape((C.IM_HEIGHT, C.IM_WIDTH, 4))
             self.latest_rgb = arr[:, :, :3][:, :, ::-1].astype(np.float32) / 255.0
@@ -224,6 +271,15 @@ class CarlaSensoryEnvironment:
             raw[:, 1] += C.LIDAR_POS['y']
             raw[:, 2] += C.LIDAR_POS['z']
             self.latest_lidar_points = raw
+
+    def get_chase_image(self):
+        """Returns BGR 880x720 chase camera image for HUD visualization, or synthesized frame."""
+        if self.latest_chase_rgb is not None:
+            return self.latest_chase_rgb
+        if self.latest_rgb is not None:
+            front_bgr = (np.clip(self.latest_rgb, 0.0, 1.0) * 255.0).astype(np.uint8)[:, :, ::-1]
+            return cv2.resize(front_bgr, (880, 720)) if 'cv2' in globals() else None
+        return None
 
     @staticmethod
     def _on_collision(weak_self, event):
