@@ -24,13 +24,14 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server_socket.bind((EDGE_IP, PORT))
 server_socket.listen(1)
 print()
-print(f"waiting for connection.....")
+print(f"[PIL Server] Listening on {EDGE_IP}:{PORT} ... Waiting for Raspberry Pi edge connection...")
 
 client_socket, client_address = server_socket.accept()
-print(f"Connection established with {client_address}:{client_socket}")
+print(f"[PIL Server] ✅ Connection established with Edge Device at {client_address}")
 
 
 
@@ -668,42 +669,80 @@ def run():
 
     episode = 0
     print()
-    print('TESTING.....')
+    print('TESTING PROCESSOR-IN-THE-LOOP (PIL)...')
     print()
-    while episode < TEST_EPISODES+1:
 
+    # Mentor Metrics Tracking Across Episodes (ICML / ACML / TR-C Papers Alignment)
+    all_ep_rewards = []
+    all_ep_successes = []
+    all_ep_collisions = []
+    all_ep_speeds = []
+    all_ep_latencies = []
+    all_ep_frequencies = []
+    all_ep_steers = []
+    all_ep_throttles = []
+    all_ep_jerks = []
+    all_ep_deviations = []
+    all_ep_distances = []
+
+    # File paths
+    detailed_csv_path = f'{RESULTS_PATH}/PIL_metrics_detailed.csv'
+    summary_csv_path = f'{RESULTS_PATH}/PIL_mentor_summary.csv'
+    os.makedirs(RESULTS_PATH, exist_ok=True)
+
+    # Initialize detailed CSV with comprehensive headers
+    with open(detailed_csv_path, mode="w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow([
+            "Episode", "Success", "Collision", "Termination_Reason",
+            "TimeTaken_sec", "Reward", "Distance_Covered_m", "Avg_Speed_ms",
+            "Mean_Lane_Deviation_m", "Avg_Latency_ms", "Actuation_Freq_Hz",
+            "Mean_Steer", "Std_Steer", "Mean_Throttle", "Std_Throttle",
+            "Action_Jerk"
+        ])
+
+    while episode < TEST_EPISODES:
         total_time = 0
         current_ep_reward = 0
         deviation_from_center = 0
         distance_covered = 0
         t1 = datetime.now()
-        avg_latency = []
+        ep_latencies = []
+        ep_steers = []
+        ep_throttles = []
+        ep_jerks = []
 
         observation = env.reset()
         t3 = datetime.now()
 
         data = data_processing(observation)
-
         client_socket.sendall(data)
 
+        prev_action = None
+        term_reason = "max_steps"
+
         for i in range(EPISODE_LENGTH):
-
             d = client_socket.recv(8)
-            action = struct.unpack('2f',d)
-
-            print()
-            print(f'Action_values:{action}')
-            print()
+            action = struct.unpack('2f', d)
             t4 = datetime.now()
 
-            avg_latency.append(abs((t4-t3).total_seconds()))
+            step_lat_s = abs((t4 - t3).total_seconds())
+            ep_latencies.append(step_lat_s * 1000.0)
+
+            steer_cmd = float(action[0])
+            throttle_cmd = float((action[1] + 1.0) / 2.0)
+            ep_steers.append(steer_cmd)
+            ep_throttles.append(throttle_cmd)
+
+            if prev_action is not None:
+                jerk = abs(steer_cmd - prev_action[0]) + abs(throttle_cmd - prev_action[1])
+                ep_jerks.append(jerk)
+            prev_action = (steer_cmd, throttle_cmd)
 
             observation, reward, done, info = env.step(action)
             t3 = datetime.now()
 
             data = data_processing(observation)
-            #181print(data)
-
             client_socket.sendall(data)
 
             current_ep_reward += reward
@@ -712,31 +751,113 @@ def run():
                 episode += 1
                 break
 
-        deviation_from_center += info[1]
-        distance_covered += info[0]
+        # Determine termination cause & success (Paper 2 & 3 criteria)
+        collided = 1 if len(env.collision_history) > 0 else 0
+        if collided:
+            term_reason = "collision"
+            success = 0
+        elif env.current_waypoint_index >= len(env.route_waypoints) - 2:
+            term_reason = "completed"
+            success = 1
+        elif env.distance_from_center > env.max_distance_from_center:
+            term_reason = "out_of_lane"
+            success = 0
+        elif env.velocity < 1.0:
+            term_reason = "stalled"
+            success = 0
+        else:
+            term_reason = "timeout"
+            success = 0
 
         t2 = datetime.now()
-        total_time = abs((t2-t1).total_seconds())
+        total_time = abs((t2 - t1).total_seconds())
 
-        
-        #print('Episode: {}'.format(episode),', Timetaken: {:.2f} sec'.format(total_time),', Reward:  {:.2f}'.format(current_ep_reward),', Distance Covered: {} m '.format(info[0]), ', Avg Latency: {:.2f} msec'.format(np.mean(avg_latency)*1000))
+        mean_lat = float(np.mean(ep_latencies)) if ep_latencies else 0.0
+        act_freq_hz = (1000.0 / mean_lat) if mean_lat > 0 else 0.0
+        avg_speed = float(info[0] / total_time) if total_time > 0 else 0.0
+        mean_dev = float(info[1])
+        mean_steer = float(np.mean(ep_steers)) if ep_steers else 0.0
+        std_steer = float(np.std(ep_steers)) if ep_steers else 0.0
+        mean_throttle = float(np.mean(ep_throttles)) if ep_throttles else 0.0
+        std_throttle = float(np.std(ep_throttles)) if ep_throttles else 0.0
+        mean_jerk = float(np.mean(ep_jerks)) if ep_jerks else 0.0
+
+        all_ep_rewards.append(current_ep_reward)
+        all_ep_successes.append(success)
+        all_ep_collisions.append(collided)
+        all_ep_speeds.append(avg_speed)
+        all_ep_latencies.append(mean_lat)
+        all_ep_frequencies.append(act_freq_hz)
+        all_ep_steers.append(mean_steer)
+        all_ep_throttles.append(mean_throttle)
+        all_ep_jerks.append(mean_jerk)
+        all_ep_deviations.append(mean_dev)
+        all_ep_distances.append(info[0])
+
+        with open(detailed_csv_path, mode="a", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow([
+                episode, success, collided, term_reason,
+                round(total_time, 2), round(current_ep_reward, 2), round(info[0], 2), round(avg_speed, 2),
+                round(mean_dev, 3), round(mean_lat, 2), round(act_freq_hz, 2),
+                round(mean_steer, 3), round(std_steer, 3), round(mean_throttle, 3), round(std_throttle, 3),
+                round(mean_jerk, 4)
+            ])
+
+        print(f"Ep {episode:2d}/{TEST_EPISODES} | Reward: {current_ep_reward:7.2f} | Dist: {info[0]:5.1f}m | "
+              f"Freq: {act_freq_hz:5.1f}Hz ({mean_lat:4.1f}ms) | Term: {term_reason:<12} | Succ: {success}")
 
         with summary_writer.as_default():
-
             tf.summary.scalar('Metrics/Time Taken', total_time, step=episode)
             tf.summary.scalar('Metrics/Reward', current_ep_reward, step=episode)
             tf.summary.scalar('Metrics/Distance Covered', info[0], step=episode)
+            tf.summary.scalar('Metrics/Actuation Frequency Hz', act_freq_hz, step=episode)
             summary_writer.flush()
 
-        with open(f'{RESULTS_PATH}/PIL_test_results_16bit.csv', mode="a", newline="") as file:
-            writer = csv.writer(file)
-            
-            if file.tell() == 0:
-                writer.writerow(["Episode", "TimeTaken (sec)", "Reward", "Distance Covered (m)", "Avg Latency (msec)","Avg speed (m/sec)"])
+    # Write and Print Comprehensive Mentor Benchmark Summary
+    sr_pct = (float(np.mean(all_ep_successes)) * 100.0) if all_ep_successes else 0.0
+    cr_pct = (float(np.mean(all_ep_collisions)) * 100.0) if all_ep_collisions else 0.0
+    mean_r = float(np.mean(all_ep_rewards)) if all_ep_rewards else 0.0
+    std_r = float(np.std(all_ep_rewards)) if all_ep_rewards else 0.0
+    max_r = float(np.max(all_ep_rewards)) if all_ep_rewards else 0.0
+    min_r = float(np.min(all_ep_rewards)) if all_ep_rewards else 0.0
+    mean_freq = float(np.mean(all_ep_frequencies)) if all_ep_frequencies else 0.0
+    mean_lat_all = float(np.mean(all_ep_latencies)) if all_ep_latencies else 0.0
+    mean_spd_all = float(np.mean(all_ep_speeds)) if all_ep_speeds else 0.0
+    mean_jerk_all = float(np.mean(all_ep_jerks)) if all_ep_jerks else 0.0
 
-            writer.writerow([episode, total_time, current_ep_reward, info[0], np.mean(avg_latency) * 1000 , info[0]/total_time])
+    with open(summary_csv_path, mode="w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Metric", "Value", "Unit"])
+        writer.writerow(["Success Rate (SR)", round(sr_pct, 2), "%"])
+        writer.writerow(["Collision Rate (CR)", round(cr_pct, 2), "%"])
+        writer.writerow(["Mean Reward", round(mean_r, 2), "Scalar"])
+        writer.writerow(["Std Dev Reward", round(std_r, 2), "Scalar"])
+        writer.writerow(["Max Reward", round(max_r, 2), "Scalar"])
+        writer.writerow(["Min Reward", round(min_r, 2), "Scalar"])
+        writer.writerow(["Mean Actuation Frequency", round(mean_freq, 2), "Hz"])
+        writer.writerow(["Mean Round-Trip Latency", round(mean_lat_all, 2), "ms"])
+        writer.writerow(["Average Driving Speed", round(mean_spd_all, 2), "m/s"])
+        writer.writerow(["Action Jerk / Smoothness", round(mean_jerk_all, 4), "a_t - a_{t-1}"])
 
+    print("\n" + "=" * 78)
+    print("           PROCESSOR-IN-THE-LOOP (PIL) EVALUATION BENCHMARK SUMMARY")
+    print("=" * 78)
+    print(f" Total Episodes Evaluated:     {len(all_ep_rewards)}")
+    print(f" Success Rate (SR):            {sr_pct:.1f}%")
+    print(f" Collision Rate (CR):          {cr_pct:.1f}%")
+    print(f" Mean Cumulative Reward:       {mean_r:.2f} +/- {std_r:.2f}")
+    print(f" Reward Extremes [Min, Max]:   [{min_r:.2f}, {max_r:.2f}]")
+    print(f" Mean Actuation Frequency:     {mean_freq:.2f} Hz  (Planning loop ~14 Hz)")
+    print(f" Mean Round-Trip Latency:      {mean_lat_all:.2f} ms")
+    print(f" Average Driving Speed:        {mean_spd_all:.2f} m/s ({mean_spd_all * 3.6:.1f} km/h)")
+    print(f" Action Jerk / Smoothness:     {mean_jerk_all:.4f}")
+    print("=" * 78)
+    print(f" Detailed CSV saved to: {detailed_csv_path}")
+    print(f" Summary CSV saved to:  {summary_csv_path}\n")
 
+    client_socket.close()
+    server_socket.close()
     sys.exit()
 
 
