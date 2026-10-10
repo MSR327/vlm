@@ -1,0 +1,5 @@
+Model_Variant,Nominal_Clean_Return_R_clean,Attacked_Return_R_atk,Reward_Sensitivity_Delta_R_pct,Lateral_Tracking_Error_d_RMS_m,Max_Excursion_d_max_m,Action_Stability_Rate_ASR,Edge_Compute_Latency_T_inf_ms,Effective_Control_Rate_Hz,Emergency_Brake_Latency_ms
+SAPPO,109.41,106.25 ± 66.35,2.89%,0.76,3.21,0.0067,37.1,27.0 Hz,122.10 ms
+RADIAL_PPO,98.02,106.83 ± 79.23,0.00%,0.74,3.21,0.0068,37.4,26.7 Hz,123.50 ms
+ATLA_PPO,115.27,101.50 ± 49.09,11.94%,0.76,3.2,0.0067,36.91,27.2 Hz,120.00 ms
+PA_ATLA_PPO,92.29,116.60 ± 92.87,0.00%,0.74,3.17,0.0069,37.01,27.1 Hz,121.20 ms

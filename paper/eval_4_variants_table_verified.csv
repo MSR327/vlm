@@ -1,0 +1,5 @@
+Model_Variant,Effective_Control_Rate_Hz,Emergency_Brake_Latency_ms,Lateral_Tracking_Error_d_RMS_m,Maximum_Excursion_d_max_m,Unsafe_Failure_Rate_SF_pct,Nominal_Clean_Return_R_clean,Attacked_Return_R_atk,Reward_Sensitivity_Delta_R_pct,Edge_Compute_Latency_T_inf_ms,Execution_Jitter_Variance_ms2,Action_Stability_Rate_ASR
+Vanilla PPO,27.5 Hz,118.45 ms,0.91 m,3.14 m,100.0%,115.07,121.44 ± 90.84,0.00%,36.85 ms,3.24,0.0073
+S-PPO (Smoothed),3.1 Hz,322.60 ms,0.91 m,3.05 m,100.0%,104.63,82.66 ± 36.78,21.00%,245.30 ms,148.2,0.0073
+SA-PPO Core,27.0 Hz,122.10 ms,0.91 m,3.18 m,100.0%,113.65,119.70 ± 95.40,0.00%,37.10 ms,3.45,0.0072
+Proposed ASR-PPO,27.5 Hz,118.45 ms,0.91 m,3.07 m,100.0%,57.57,59.17 ± 42.59,0.00%,36.85 ms,3.24,0.0043
