@@ -86,16 +86,12 @@ LIDAR_SPECS = {
     'x': 0.0, 'y': 0.0, 'z': 2.4
 }
 
-LATENT_DIM = 95          # VAE latent dimension for PIL (95 values from mentor notes)
-
 # ==============================================================================
 # PROCESSOR-IN-THE-LOOP (PIL) NETWORKING
 # ==============================================================================
-import os as _os
-SIMULATION_IP = _os.environ.get('SIMULATION_IP', '127.0.0.1')
-EDGE_IP = _os.environ.get('EDGE_IP', '0.0.0.0')
-PORT = int(_os.environ.get('PIL_PORT', '5000'))
-VAE_MODEL_PATH = 'Results_05/vae_model'
+SIMULATION_IP = '127.0.0.1'
+EDGE_IP = '0.0.0.0'
+PORT = 5000
 
 # ==============================================================================
 # PATHS & DIRECTORIES

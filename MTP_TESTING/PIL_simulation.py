@@ -28,10 +28,10 @@ server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server_socket.bind((EDGE_IP, PORT))
 server_socket.listen(1)
 print()
-print(f"[PIL Server] Listening on {EDGE_IP}:{PORT} ... Waiting for Raspberry Pi edge connection...")
+print(f"waiting for connection on {EDGE_IP}:{PORT}.....")
 
 client_socket, client_address = server_socket.accept()
-print(f"[PIL Server] ✅ Connection established with Edge Device at {client_address}")
+print(f"Connection established with {client_address}:{client_socket}")
 
 
 
@@ -53,7 +53,7 @@ class ClientConnection:
         self.town = TOWN
         self.client = None
         self.port = 2000
-        self.timeout= 20.0
+        self.timeout = 40.0
 
     def setup(self):
         try:
@@ -134,14 +134,27 @@ class CarlaEnvironment():
                 self.total_distance = 500
 
             self.vehicle = self.world.try_spawn_actor(vehicle_bp, transform)
+            if self.vehicle is None:
+                for sp in self.map.get_spawn_points():
+                    self.vehicle = self.world.try_spawn_actor(vehicle_bp, sp)
+                    if self.vehicle is not None:
+                        break
+            if self.vehicle is None:
+                raise RuntimeError("Failed to spawn ego vehicle at any spawn point!")
             self.actor_list.append(self.vehicle)
-
 
             # Camera Sensor
             self.camera_obj = CameraSensor(self.vehicle)
+            t_wait = time.time()
             while(len(self.camera_obj.front_camera) == 0):
-                time.sleep(0.0001)
-            self.image_obs = self.camera_obj.front_camera.pop(-1)
+                time.sleep(0.002)
+                if time.time() - t_wait > 5.0:
+                    print("[WARNING] Front camera wait timed out during reset!")
+                    break
+            if len(self.camera_obj.front_camera) > 0:
+                self.image_obs = self.camera_obj.front_camera.pop(-1)
+            else:
+                self.image_obs = np.zeros((80, 160, 3), dtype=np.uint8)
             self.sensor_list.append(self.camera_obj.sensor)
 
             # Third person view of our vehicle in the Simulated env
@@ -161,7 +174,7 @@ class CarlaEnvironment():
             self.distance_traveled = 0.0
             self.center_lane_deviation = 0.0
             self.target_speed = 22 #km/h
-            self.max_speed = 35.0
+            self.max_speed = 40.0
             self.min_speed = 15.0
             self.max_distance_from_center = 3
             self.throttle = float(0.0)
@@ -219,6 +232,17 @@ class CarlaEnvironment():
                 self.current_waypoint_index = self.checkpoint_waypoint_index
 
 
+            if self.vehicle is not None:
+                try:
+                    veh_tf = self.vehicle.get_transform()
+                    spec_tf = carla.Transform(
+                        veh_tf.location + veh_tf.get_forward_vector() * (-6.0) + carla.Location(z=2.8),
+                        carla.Rotation(pitch=-12, yaw=veh_tf.rotation.yaw)
+                    )
+                    self.world.get_spectator().set_transform(spec_tf)
+                except Exception:
+                    pass
+
             self.navigation_obs = np.array([self.throttle, self.velocity, self.previous_steer, self.distance_from_center, self.angle])                        
             time.sleep(0.5)
             self.collision_history.clear()
@@ -270,6 +294,17 @@ class CarlaEnvironment():
             self.rotation = self.vehicle.get_transform().rotation.yaw
             self.location = self.vehicle.get_location()
 
+            if self.vehicle is not None:
+                try:
+                    veh_tf = self.vehicle.get_transform()
+                    spec_tf = carla.Transform(
+                        veh_tf.location + veh_tf.get_forward_vector() * (-6.0) + carla.Location(z=2.8),
+                        carla.Rotation(pitch=-12, yaw=veh_tf.rotation.yaw)
+                    )
+                    self.world.get_spectator().set_transform(spec_tf)
+                except Exception:
+                    pass
+
             waypoint_index = self.current_waypoint_index
             for _ in range(len(self.route_waypoints)):
                 next_waypoint_index = waypoint_index + 1
@@ -300,24 +335,24 @@ class CarlaEnvironment():
             
             done = False
             reward = 0
+            self.termination_reason = "RUNNING"
 
             if len(self.collision_history) != 0:
-                #print("collison detected")
+                self.termination_reason = "COLLISION"
                 done = True
                 reward = -10
             elif self.distance_from_center > self.max_distance_from_center:
-                #print("moved away from lane")
+                self.termination_reason = "OFF_LANE"
                 done = True
                 reward = -10
             elif self.episode_start_time + 10 < time.time() and self.velocity < 1.0:
-                #print("less than min velocity")
+                self.termination_reason = "STALLED"
                 reward = -10
                 done = True
             elif self.velocity > self.max_speed:
-                #print("exceeded max velocity")
+                self.termination_reason = "OVERSPEED"
                 reward = -10
                 done = True
-
 
             centering_factor = max(1.0 - self.distance_from_center / self.max_distance_from_center, 0.0)
             angle_factor = max(1.0 - abs(self.angle / np.deg2rad(20)), 0.0)
@@ -334,10 +369,11 @@ class CarlaEnvironment():
                     reward = 1.0 * centering_factor * angle_factor
 
             if self.timesteps >= 2e6:
-          
-               done = True
+                self.termination_reason = "MAX_TIMESTEPS"
+                done = True
             elif self.current_waypoint_index >= len(self.route_waypoints) - 2:
                 print("Reached destination -- Repeat")
+                self.termination_reason = "REACHED_DESTINATION"
                 done = True
                 self.fresh_start = True
                 if self.checkpoint_frequency is not None:
@@ -347,32 +383,42 @@ class CarlaEnvironment():
                         self.checkpoint_frequency = None
                         self.checkpoint_waypoint_index = 0
 
-
-
+            t_wait = time.time()
             while(len(self.camera_obj.front_camera) == 0):
-                time.sleep(0.0001)
+                time.sleep(0.001)
+                if time.time() - t_wait > 3.0:
+                    print("[WARNING] Front camera wait timed out during step!")
+                    break
 
-            self.image_obs = self.camera_obj.front_camera.pop(-1)
+            if len(self.camera_obj.front_camera) > 0:
+                self.image_obs = self.camera_obj.front_camera.pop(-1)
+            else:
+                self.image_obs = np.zeros((80, 160, 3), dtype=np.uint8)
+
             normalized_velocity = self.velocity/self.target_speed
             normalized_distance_from_center = self.distance_from_center / self.max_distance_from_center
             normalized_angle = abs(self.angle / np.deg2rad(20))
             self.navigation_obs = np.array([self.throttle, self.velocity, normalized_velocity, normalized_distance_from_center, normalized_angle])
-            
 
             if done:
-
-                self.center_lane_deviation = self.center_lane_deviation / self.timesteps
+                self.center_lane_deviation = self.center_lane_deviation / max(self.timesteps, 1)
                 self.distance_covered = abs(self.current_waypoint_index - self.checkpoint_waypoint_index)
                 
                 for sensor in self.sensor_list:
-                    sensor.destroy()
+                    try:
+                        sensor.destroy()
+                    except:
+                        pass
                 
                 self.remove_sensors()
                 
                 for actor in self.actor_list:
-                    actor.destroy()
+                    try:
+                        actor.destroy()
+                    except:
+                        pass
             
-            return [self.image_obs, self.navigation_obs], reward, done, [self.distance_covered, self.center_lane_deviation]
+            return [self.image_obs, self.navigation_obs], reward, done, [self.distance_covered, self.center_lane_deviation, self.termination_reason]
 
         except Exception as e:
             print(f"Error while step  : {e}")
@@ -555,11 +601,17 @@ class CameraSensor():
         self.front_camera.append(target)#/255.0)
 
 class CameraSensorEnv:
+    _display = None
+    _pygame_initialized = False
 
     def __init__(self, vehicle):
+        if not CameraSensorEnv._pygame_initialized:
+            pygame.init()
+            CameraSensorEnv._display = pygame.display.set_mode((720, 720), pygame.HWSURFACE | pygame.DOUBLEBUF)
+            pygame.display.set_caption("CARLA PIL 3rd Person View")
+            CameraSensorEnv._pygame_initialized = True
 
-        pygame.init()
-        self.display = pygame.display.set_mode((720, 720),pygame.HWSURFACE | pygame.DOUBLEBUF)
+        self.display = CameraSensorEnv._display
         self.sensor_name = 'sensor.camera.rgb'
         self.parent = vehicle
         self.surface = None
@@ -584,6 +636,7 @@ class CameraSensorEnv:
         self = weak_self()
         if not self:
             return
+        pygame.event.pump()
         array = np.frombuffer(image.raw_data, dtype=np.dtype("uint8"))
         placeholder1 = array.reshape((image.width, image.height, 4))
         placeholder2 = placeholder1[:, :, :3]
@@ -669,48 +722,43 @@ def run():
 
     episode = 0
     print()
-    print('TESTING PROCESSOR-IN-THE-LOOP (PIL)...')
+    print('TESTING.....')
+    print()
+    step_telemetry_file = f'{RESULTS_PATH}/PIL_step_telemetry.csv'
+    detailed_episodes_file = f'{RESULTS_PATH}/PIL_detailed_analysis.csv'
+    legacy_results_file = f'{RESULTS_PATH}/PIL_test_results_16bit.csv'
+
+    model_name = sys.argv[2] if len(sys.argv) > 2 else "SAPPO"
+
+    # Initialize CSV headers if files do not exist
+    if not os.path.exists(step_telemetry_file) or os.path.getsize(step_telemetry_file) == 0:
+        with open(step_telemetry_file, mode="w", newline="") as f:
+            csv.writer(f).writerow(["Model", "Episode", "Step", "Timestamp", "Steer", "Throttle", "Velocity_kmh", "DistFromCenter_m", "Angle_deg", "Reward", "Latency_ms", "Steer_Delta"])
+
+    if not os.path.exists(detailed_episodes_file) or os.path.getsize(detailed_episodes_file) == 0:
+        with open(detailed_episodes_file, mode="w", newline="") as f:
+            csv.writer(f).writerow(["Model", "Episode", "Duration_sec", "Reward", "Distance_m", "Termination_Reason", "Mean_Latency_ms", "P50_Latency_ms", "P95_Latency_ms", "P99_Latency_ms", "Latency_Std_ms", "Effective_Hz", "Avg_Speed_mps", "Mean_Lane_Deviation_m", "Mean_Steer_Jitter", "Steps_Count"])
+
+    episode = 0
+    print()
+    print('======================================================================')
+    print(f' PROCESSOR-IN-THE-LOOP (PIL) EVALUATION: {model_name}')
+    print('======================================================================')
     print()
 
-    # Mentor Metrics Tracking Across Episodes (ICML / ACML / TR-C Papers Alignment)
-    all_ep_rewards = []
-    all_ep_successes = []
-    all_ep_collisions = []
-    all_ep_speeds = []
-    all_ep_latencies = []
-    all_ep_frequencies = []
-    all_ep_steers = []
-    all_ep_throttles = []
-    all_ep_jerks = []
-    all_ep_deviations = []
-    all_ep_distances = []
+    client_socket.settimeout(20.0)
 
-    # File paths
-    detailed_csv_path = f'{RESULTS_PATH}/PIL_metrics_detailed.csv'
-    summary_csv_path = f'{RESULTS_PATH}/PIL_mentor_summary.csv'
-    os.makedirs(RESULTS_PATH, exist_ok=True)
+    target_episodes = int(sys.argv[1]) if len(sys.argv) > 1 and sys.argv[1].isdigit() else NO_OF_TEST_EPISODES
+    while episode < target_episodes:
 
-    # Initialize detailed CSV with comprehensive headers
-    with open(detailed_csv_path, mode="w", newline="") as file:
-        writer = csv.writer(file)
-        writer.writerow([
-            "Episode", "Success", "Collision", "Termination_Reason",
-            "TimeTaken_sec", "Reward", "Distance_Covered_m", "Avg_Speed_ms",
-            "Mean_Lane_Deviation_m", "Avg_Latency_ms", "Actuation_Freq_Hz",
-            "Mean_Steer", "Std_Steer", "Mean_Throttle", "Std_Throttle",
-            "Action_Jerk"
-        ])
-
-    while episode < TEST_EPISODES:
         total_time = 0
         current_ep_reward = 0
         deviation_from_center = 0
         distance_covered = 0
         t1 = datetime.now()
-        ep_latencies = []
-        ep_steers = []
-        ep_throttles = []
-        ep_jerks = []
+        avg_latency = []
+        episode_steer_deltas = []
+        prev_steer = 0.0
 
         observation = env.reset()
         t3 = datetime.now()
@@ -718,146 +766,93 @@ def run():
         data = data_processing(observation)
         client_socket.sendall(data)
 
-        prev_action = None
-        term_reason = "max_steps"
-
+        step_count = 0
         for i in range(EPISODE_LENGTH):
-            d = client_socket.recv(8)
-            action = struct.unpack('2f', d)
+            step_count += 1
+            try:
+                d = client_socket.recv(8)
+                if not d or len(d) < 8:
+                    print("[WARNING] Socket closed by client.")
+                    break
+                action = struct.unpack('2f', d)
+            except socket.timeout:
+                print(f"[ERROR] Socket timed out waiting for action at step {step_count}!")
+                break
+
             t4 = datetime.now()
+            step_lat_sec = abs((t4 - t3).total_seconds())
+            avg_latency.append(step_lat_sec)
 
-            step_lat_s = abs((t4 - t3).total_seconds())
-            ep_latencies.append(step_lat_s * 1000.0)
-
-            steer_cmd = float(action[0])
-            throttle_cmd = float((action[1] + 1.0) / 2.0)
-            ep_steers.append(steer_cmd)
-            ep_throttles.append(throttle_cmd)
-
-            if prev_action is not None:
-                jerk = abs(steer_cmd - prev_action[0]) + abs(throttle_cmd - prev_action[1])
-                ep_jerks.append(jerk)
-            prev_action = (steer_cmd, throttle_cmd)
+            steer_delta = abs(action[0] - prev_steer)
+            episode_steer_deltas.append(steer_delta)
+            prev_steer = action[0]
 
             observation, reward, done, info = env.step(action)
             t3 = datetime.now()
 
+            # Per-step telemetry logging
+            with open(step_telemetry_file, mode="a", newline="") as f_step:
+                csv.writer(f_step).writerow([
+                    episode, step_count, datetime.now().isoformat(),
+                    round(action[0], 4), round(action[1], 4),
+                    round(env.velocity, 2), round(env.distance_from_center, 4),
+                    round(env.angle, 4), round(reward, 4),
+                    round(step_lat_sec * 1000.0, 2), round(steer_delta, 4)
+                ])
+
             data = data_processing(observation)
             client_socket.sendall(data)
-
             current_ep_reward += reward
 
             if done:
                 episode += 1
                 break
 
-        # Determine termination cause & success (Paper 2 & 3 criteria)
-        collided = 1 if len(env.collision_history) > 0 else 0
-        if collided:
-            term_reason = "collision"
-            success = 0
-        elif env.current_waypoint_index >= len(env.route_waypoints) - 2:
-            term_reason = "completed"
-            success = 1
-        elif env.distance_from_center > env.max_distance_from_center:
-            term_reason = "out_of_lane"
-            success = 0
-        elif env.velocity < 1.0:
-            term_reason = "stalled"
-            success = 0
-        else:
-            term_reason = "timeout"
-            success = 0
+        deviation_from_center += info[1]
+        distance_covered += info[0]
+        term_reason = info[2] if len(info) > 2 else "DONE"
 
         t2 = datetime.now()
         total_time = abs((t2 - t1).total_seconds())
 
-        mean_lat = float(np.mean(ep_latencies)) if ep_latencies else 0.0
-        act_freq_hz = (1000.0 / mean_lat) if mean_lat > 0 else 0.0
-        avg_speed = float(info[0] / total_time) if total_time > 0 else 0.0
-        mean_dev = float(info[1])
-        mean_steer = float(np.mean(ep_steers)) if ep_steers else 0.0
-        std_steer = float(np.std(ep_steers)) if ep_steers else 0.0
-        mean_throttle = float(np.mean(ep_throttles)) if ep_throttles else 0.0
-        std_throttle = float(np.std(ep_throttles)) if ep_throttles else 0.0
-        mean_jerk = float(np.mean(ep_jerks)) if ep_jerks else 0.0
+        lat_arr = np.array(avg_latency) * 1000.0 if len(avg_latency) > 0 else np.array([0.0])
+        mean_lat = float(np.mean(lat_arr))
+        p50_lat = float(np.percentile(lat_arr, 50))
+        p95_lat = float(np.percentile(lat_arr, 95))
+        p99_lat = float(np.percentile(lat_arr, 99))
+        std_lat = float(np.std(lat_arr))
+        effective_hz = round(1000.0 / mean_lat, 1) if mean_lat > 0 else 0.0
+        avg_speed = round(info[0] / max(total_time, 0.001), 2)
+        mean_steer_jitter = float(np.mean(episode_steer_deltas)) if len(episode_steer_deltas) > 0 else 0.0
 
-        all_ep_rewards.append(current_ep_reward)
-        all_ep_successes.append(success)
-        all_ep_collisions.append(collided)
-        all_ep_speeds.append(avg_speed)
-        all_ep_latencies.append(mean_lat)
-        all_ep_frequencies.append(act_freq_hz)
-        all_ep_steers.append(mean_steer)
-        all_ep_throttles.append(mean_throttle)
-        all_ep_jerks.append(mean_jerk)
-        all_ep_deviations.append(mean_dev)
-        all_ep_distances.append(info[0])
-
-        with open(detailed_csv_path, mode="a", newline="") as file:
-            writer = csv.writer(file)
-            writer.writerow([
-                episode, success, collided, term_reason,
-                round(total_time, 2), round(current_ep_reward, 2), round(info[0], 2), round(avg_speed, 2),
-                round(mean_dev, 3), round(mean_lat, 2), round(act_freq_hz, 2),
-                round(mean_steer, 3), round(std_steer, 3), round(mean_throttle, 3), round(std_throttle, 3),
-                round(mean_jerk, 4)
-            ])
-
-        print(f"Ep {episode:2d}/{TEST_EPISODES} | Reward: {current_ep_reward:7.2f} | Dist: {info[0]:5.1f}m | "
-              f"Freq: {act_freq_hz:5.1f}Hz ({mean_lat:4.1f}ms) | Term: {term_reason:<12} | Succ: {success}")
+        print(f"\n[EPISODE {episode:02d}/{TEST_EPISODES}] Status: {term_reason} | Time: {total_time:.2f}s | Reward: {current_ep_reward:+.2f} | Dist: {info[0]}m | Latency: {mean_lat:.1f}ms (P95: {p95_lat:.1f}ms, {effective_hz} Hz) | Steer Jitter (ASR): {mean_steer_jitter:.3f}")
 
         with summary_writer.as_default():
             tf.summary.scalar('Metrics/Time Taken', total_time, step=episode)
             tf.summary.scalar('Metrics/Reward', current_ep_reward, step=episode)
             tf.summary.scalar('Metrics/Distance Covered', info[0], step=episode)
-            tf.summary.scalar('Metrics/Actuation Frequency Hz', act_freq_hz, step=episode)
+            tf.summary.scalar('Metrics/Mean Latency ms', mean_lat, step=episode)
+            tf.summary.scalar('Metrics/P95 Latency ms', p95_lat, step=episode)
+            tf.summary.scalar('Metrics/Effective Hz', effective_hz, step=episode)
+            tf.summary.scalar('Metrics/Steer Jitter', mean_steer_jitter, step=episode)
             summary_writer.flush()
 
-    # Write and Print Comprehensive Mentor Benchmark Summary
-    sr_pct = (float(np.mean(all_ep_successes)) * 100.0) if all_ep_successes else 0.0
-    cr_pct = (float(np.mean(all_ep_collisions)) * 100.0) if all_ep_collisions else 0.0
-    mean_r = float(np.mean(all_ep_rewards)) if all_ep_rewards else 0.0
-    std_r = float(np.std(all_ep_rewards)) if all_ep_rewards else 0.0
-    max_r = float(np.max(all_ep_rewards)) if all_ep_rewards else 0.0
-    min_r = float(np.min(all_ep_rewards)) if all_ep_rewards else 0.0
-    mean_freq = float(np.mean(all_ep_frequencies)) if all_ep_frequencies else 0.0
-    mean_lat_all = float(np.mean(all_ep_latencies)) if all_ep_latencies else 0.0
-    mean_spd_all = float(np.mean(all_ep_speeds)) if all_ep_speeds else 0.0
-    mean_jerk_all = float(np.mean(all_ep_jerks)) if all_ep_jerks else 0.0
+        # Detailed analysis CSV
+        with open(detailed_episodes_file, mode="a", newline="") as f_det:
+            csv.writer(f_det).writerow([
+                model_name, episode, round(total_time, 2), round(current_ep_reward, 2), info[0],
+                term_reason, round(mean_lat, 2), round(p50_lat, 2), round(p95_lat, 2),
+                round(p99_lat, 2), round(std_lat, 2), effective_hz, avg_speed,
+                round(info[1], 4), round(mean_steer_jitter, 4), step_count
+            ])
 
-    with open(summary_csv_path, mode="w", newline="") as file:
-        writer = csv.writer(file)
-        writer.writerow(["Metric", "Value", "Unit"])
-        writer.writerow(["Success Rate (SR)", round(sr_pct, 2), "%"])
-        writer.writerow(["Collision Rate (CR)", round(cr_pct, 2), "%"])
-        writer.writerow(["Mean Reward", round(mean_r, 2), "Scalar"])
-        writer.writerow(["Std Dev Reward", round(std_r, 2), "Scalar"])
-        writer.writerow(["Max Reward", round(max_r, 2), "Scalar"])
-        writer.writerow(["Min Reward", round(min_r, 2), "Scalar"])
-        writer.writerow(["Mean Actuation Frequency", round(mean_freq, 2), "Hz"])
-        writer.writerow(["Mean Round-Trip Latency", round(mean_lat_all, 2), "ms"])
-        writer.writerow(["Average Driving Speed", round(mean_spd_all, 2), "m/s"])
-        writer.writerow(["Action Jerk / Smoothness", round(mean_jerk_all, 4), "a_t - a_{t-1}"])
+        # Legacy backward-compatible CSV
+        with open(legacy_results_file, mode="a", newline="") as file:
+            writer = csv.writer(file)
+            if file.tell() == 0:
+                writer.writerow(["Episode", "TimeTaken (sec)", "Reward", "Distance Covered (m)", "Avg Latency (msec)", "Avg speed (m/sec)"])
+            writer.writerow([episode, total_time, current_ep_reward, info[0], mean_lat, avg_speed])
 
-    print("\n" + "=" * 78)
-    print("           PROCESSOR-IN-THE-LOOP (PIL) EVALUATION BENCHMARK SUMMARY")
-    print("=" * 78)
-    print(f" Total Episodes Evaluated:     {len(all_ep_rewards)}")
-    print(f" Success Rate (SR):            {sr_pct:.1f}%")
-    print(f" Collision Rate (CR):          {cr_pct:.1f}%")
-    print(f" Mean Cumulative Reward:       {mean_r:.2f} +/- {std_r:.2f}")
-    print(f" Reward Extremes [Min, Max]:   [{min_r:.2f}, {max_r:.2f}]")
-    print(f" Mean Actuation Frequency:     {mean_freq:.2f} Hz  (Planning loop ~14 Hz)")
-    print(f" Mean Round-Trip Latency:      {mean_lat_all:.2f} ms")
-    print(f" Average Driving Speed:        {mean_spd_all:.2f} m/s ({mean_spd_all * 3.6:.1f} km/h)")
-    print(f" Action Jerk / Smoothness:     {mean_jerk_all:.4f}")
-    print("=" * 78)
-    print(f" Detailed CSV saved to: {detailed_csv_path}")
-    print(f" Summary CSV saved to:  {summary_csv_path}\n")
-
-    client_socket.close()
-    server_socket.close()
     sys.exit()
 
 
@@ -871,4 +866,12 @@ if __name__ == "__main__":
         sys.exit()
         
     finally:
+        try:
+            client_socket.close()
+        except Exception:
+            pass
+        try:
+            server_socket.close()
+        except Exception:
+            pass
         print("\nTerminating...")
