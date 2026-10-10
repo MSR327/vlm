@@ -13,14 +13,26 @@ from parameters import*
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
 
+# Allow overriding IP/Port via command-line arguments or environment variable
+sim_ip = os.environ.get('SIMULATION_IP', SIMULATION_IP)
+sim_port = int(os.environ.get('SIMULATION_PORT', PORT))
+
+for i, arg in enumerate(sys.argv):
+    if arg in ('--sim-ip', '--ip') and i + 1 < len(sys.argv):
+        sim_ip = sys.argv[i + 1]
+    elif arg in ('--port', '-p') and i + 1 < len(sys.argv):
+        sim_port = int(sys.argv[i + 1])
+    elif i == 1 and not arg.startswith('-'):
+        sim_ip = arg
+
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.settimeout(5.0)
 
 connected = False
 for attempt in range(1, 11):
     try:
-        print(f"Connecting to Simulation Node at {SIMULATION_IP}:{PORT} (Attempt {attempt}/10)...")
-        client_socket.connect((SIMULATION_IP, PORT))
+        print(f"Connecting to Simulation Node at {sim_ip}:{sim_port} (Attempt {attempt}/10)...")
+        client_socket.connect((sim_ip, sim_port))
         client_socket.settimeout(None)
         connected = True
         print("[SUCCESS] Connection Established with Simulation Node!")
@@ -30,11 +42,12 @@ for attempt in range(1, 11):
         time.sleep(2)
 
 if not connected:
-    print(f"[ERROR] Could not connect to {SIMULATION_IP}:{PORT}.")
+    print(f"[ERROR] Could not connect to {sim_ip}:{sim_port} (Error 110 / Connection Timeout).")
     print("Troubleshooting checklist:")
     print("  1. Is CARLA and PIL_simulation.py running on the PC?")
-    print("  2. Is SIMULATION_IP set to the PC's actual LAN IP (not 127.0.0.1)?")
-    print("  3. Is Windows Defender Firewall allowing port 5000?")
+    print(f"  2. Is sim_ip ('{sim_ip}') set to the PC's actual LAN IP (e.g. 192.168.x.x, NOT 127.0.0.1)?")
+    print(f"     -> Usage: python3 PIL_edge.py <PC_IP> [PORT] or python3 PIL_edge.py --sim-ip <PC_IP>")
+    print("  3. Is Windows Defender Firewall allowing incoming connections on TCP port 5000?")
     sys.exit(1)
 
 
